@@ -142,8 +142,8 @@ node tools/capture-screenshots.mjs exa-energy furfoo-pet
 npm run build
 ```
 
-产出 `dist/index.html`，CSS 和 JS 都内联进去了。发邮件附件或者传给客户很方便
-（图片还是读 `assets/` 文件夹，所以要一起打包）。
+产出 `dist/index.html` —— CSS、JS、图片**全部内联**，这一个文件就是完整网站。
+双击就能打开，不需要任何其他文件。发邮件附件、拷 U 盘、没网演示都可以。
 
 ---
 
@@ -188,5 +188,5 @@ python3 -m http.server 8000
 ```
 
 **中文字体为什么没用 Google Fonts？**
-中文字体文件动辄几 MB，会拖慢打开速度。标题和英文用 Google Fonts，中文用系统自带字体
+中文字体文件动辄几 MB，会拖慢打开速度。标题用 Archivo、正文用 Instrument Sans（Google Fonts），中文用系统自带字体
 （苹方 / 微软雅黑）—— 显示效果一样好，但快很多。网站速度本身就是你的卖点。

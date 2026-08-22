@@ -29,8 +29,14 @@
   }
 
   /* ---------- WhatsApp 链接 ---------- */
+  var warned = false;
   function waLink() {
     var num = (SITE.whatsapp || "").replace(/[^0-9]/g, "");
+    if (!num) return "#contact";                    // 还没填号码时，不要把客户丢去空的 WhatsApp
+    if (num === "60123456789" && !warned) {
+      warned = true;
+      console.warn("[提醒] assets/js/data.js 里的 WhatsApp 号码还是示例号码，记得改成你自己的。");
+    }
     var msg = (SITE.waMessage && SITE.waMessage[state.lang]) || "";
     return "https://wa.me/" + num + (msg ? "?text=" + encodeURIComponent(msg) : "");
   }

@@ -50,10 +50,10 @@ PROJECTS.forEach((p, i) => {
   <rect x="0" y="0" width="1600" height="76" fill="#0A0A0C" opacity=".62"/>
   <circle cx="46" cy="38" r="9" fill="#FF5F57"/><circle cx="80" cy="38" r="9" fill="#FEBC2E"/><circle cx="114" cy="38" r="9" fill="#28C840"/>
   <rect x="156" y="22" width="480" height="32" rx="16" fill="#fff" opacity=".14"/>
-  <text x="180" y="45" font-family="Inter,Helvetica,Arial,sans-serif" font-size="19" fill="#fff" opacity=".62">${esc(host)}</text>
-  <text x="800" y="512" text-anchor="middle" font-family="'Space Grotesk',Helvetica,Arial,sans-serif" font-size="188" font-weight="700" fill="#fff" opacity=".95" letter-spacing="6">${esc(initials(p.name))}</text>
-  <text x="800" y="592" text-anchor="middle" font-family="Inter,Helvetica,Arial,sans-serif" font-size="36" font-weight="500" fill="#fff" opacity=".82">${esc(p.name)}</text>
-  <text x="800" y="908" text-anchor="middle" font-family="Inter,Helvetica,Arial,sans-serif" font-size="22" fill="#fff" opacity=".5" letter-spacing="3">SCREENSHOT PENDING</text>
+  <text x="180" y="45" font-family="'Instrument Sans',Inter,Helvetica,Arial,sans-serif" font-size="19" fill="#fff" opacity=".62">${esc(host)}</text>
+  <text x="800" y="512" text-anchor="middle" font-family="Archivo,Helvetica,Arial,sans-serif" font-size="188" font-weight="700" fill="#fff" opacity=".95" letter-spacing="6">${esc(initials(p.name))}</text>
+  <text x="800" y="592" text-anchor="middle" font-family="'Instrument Sans',Inter,Helvetica,Arial,sans-serif" font-size="36" font-weight="500" fill="#fff" opacity=".82">${esc(p.name)}</text>
+  <text x="800" y="908" text-anchor="middle" font-family="'Instrument Sans',Inter,Helvetica,Arial,sans-serif" font-size="22" fill="#fff" opacity=".5" letter-spacing="3">SCREENSHOT PENDING</text>
 </svg>`;
   writeFileSync(resolve(root, `assets/img/placeholder/${p.slug}.svg`), svg);
   console.log("  ✓ " + p.slug + ".svg");
@@ -65,9 +65,9 @@ writeFileSync(resolve(root, "assets/img/og-cover.svg"), `<svg xmlns="http://www.
   <rect width="1200" height="630" fill="#0A0A0C"/>
   <circle cx="120" cy="60" r="300" fill="#FFC24B" opacity=".10"/>
   <rect x="72" y="72" width="86" height="86" rx="22" fill="url(#a)"/>
-  <text x="115" y="130" text-anchor="middle" font-family="'Space Grotesk',Helvetica,Arial,sans-serif" font-size="38" font-weight="700" fill="#17120A">JH</text>
-  <text x="72" y="330" font-family="'Space Grotesk',Helvetica,Arial,sans-serif" font-size="72" font-weight="700" fill="#F4F2EF">Web Design &amp;</text>
-  <text x="72" y="412" font-family="'Space Grotesk',Helvetica,Arial,sans-serif" font-size="72" font-weight="700" fill="url(#a)">Development</text>
-  <text x="72" y="486" font-family="Inter,Helvetica,Arial,sans-serif" font-size="27" fill="#9B9BA6">Corporate sites · Landing pages · E-commerce · Malaysia</text>
+  <text x="115" y="130" text-anchor="middle" font-family="Archivo,Helvetica,Arial,sans-serif" font-size="38" font-weight="700" fill="#17120A">JH</text>
+  <text x="72" y="330" font-family="Archivo,Helvetica,Arial,sans-serif" font-size="72" font-weight="700" fill="#F4F2EF">Web Design &amp;</text>
+  <text x="72" y="412" font-family="Archivo,Helvetica,Arial,sans-serif" font-size="72" font-weight="700" fill="url(#a)">Development</text>
+  <text x="72" y="486" font-family="'Instrument Sans',Inter,Helvetica,Arial,sans-serif" font-size="27" fill="#9B9BA6">Corporate sites · Landing pages · E-commerce · Malaysia</text>
 </svg>`);
 console.log("  ✓ og-cover.svg");

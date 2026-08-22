@@ -116,23 +116,47 @@ node tools/capture-screenshots.mjs exa-energy furfoo-pet
 
 ---
 
-## 🚀 上线（选一个，都是免费的）
+## 🚀 上线（不需要买域名）
 
-### GitHub Pages（最简单，已经配好了）
+**你现在没有域名也完全没问题** —— 下面几家都送你一个免费网址，直接就能发给客户。
+以后买了域名再绑上去，网站不用重做，链接换掉就行。
 
-1. 把代码推到 GitHub
-2. 仓库 → **Settings** → **Pages**
-3. Source 选 **Deploy from a branch**，分支选你的分支，目录选 `/ (root)`
-4. 等 1 分钟，网址就是 `https://<你的用户名>.github.io/<仓库名>/`
+> 💡 **这个网址会被你贴进 WhatsApp 发给客户，所以它长什么样很重要。**
+> `jhstudio.netlify.app` 和 `rachelrow1998-sys.github.io/Website-profolio` 给客户的感觉差很远。
 
-### Netlify（想绑自己域名，推荐）
+### ⭐ Netlify（推荐 —— 网址可以自己取名）
 
-把整个文件夹拖进 [app.netlify.com/drop](https://app.netlify.com/drop) 就上线了。
-之后在 Domain settings 里绑 `你的域名.com`，免费送 HTTPS。
+1. 去 [app.netlify.com/drop](https://app.netlify.com/drop)
+2. 把整个项目文件夹拖进去
+3. 上线了。会给你一个随机网址，例如 `random-name-123.netlify.app`
+4. **Site settings → Change site name**，改成 `jhstudio` 之类
+   → 你的网址变成 `https://jhstudio.netlify.app`
 
-### Cloudflare Pages / Vercel
+免费、自动 HTTPS、不限流量。以后买了域名，在 Domain settings 里绑上就行。
 
-连上 GitHub 仓库，**build command 留空**，**output directory 填 `/`**。这是纯静态站，不用编译。
+### GitHub Pages（不用注册新账号，已经配好了）
+
+1. 仓库 → **Settings** → **Pages**
+2. Source 选 **Deploy from a branch**，分支选你的分支，目录选 `/ (root)`
+3. 等 1 分钟，网址是 `https://<用户名>.github.io/<仓库名>/`
+
+⚠️ 两个要注意的：
+- 网址里会带你的 GitHub 用户名和仓库名，改不了
+- 仓库名如果拼错了（例如 `Website-profolio` 少了 t），客户会看到。
+  Settings → 最上面 **Repository name** 可以改成 `portfolio`
+
+### Vercel / Cloudflare Pages
+
+连 GitHub 仓库就行，**build command 留空**，**output directory 填 `/`**（纯静态站，不用编译）。
+一样送免费子域名：`jhstudio.vercel.app` / `jhstudio.pages.dev`。
+
+### 以后买域名要多少钱？
+
+`.com` 一年大概 US$10–15，`.com.my` 看注册商。买了之后：
+在 Netlify/Vercel 的 Domain settings 里填上域名 → 按提示改一下 DNS → 完成，网站本身一个字都不用改。
+
+**建议**：先用免费子域名把网站跑起来接单，有收入了再买域名。
+先上线永远比等完美重要 —— 你现在每贴一次 9 条链接，就损失一次机会。
 
 ---
 

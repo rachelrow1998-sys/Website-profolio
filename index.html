@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>JH Studio — 网页设计与开发 | Web Design & Development Malaysia</title>
 <meta name="description" content="马来西亚独立网页设计师与开发者。企业官网、品牌落地页、电商与询盘系统，设计开发上线一站式。Independent web designer & developer in Malaysia.">
-<meta name="theme-color" content="#04060C">
+<meta name="theme-color" content="#EDEAE3">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="JH Studio — 网页设计与开发 | Web Design & Development">
@@ -13,11 +13,10 @@
 <meta property="og:image" content="assets/img/og-cover.svg">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2304060C'/><text x='50' y='70' font-size='54' font-family='sans-serif' font-weight='700' fill='%236FB4FF' text-anchor='middle'>JH</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23EDEAE3'/><text x='50' y='72' font-size='58' font-family='Georgia,serif' fill='%2314120F' text-anchor='middle'>JH</text></svg>">
 
-
-<link rel="preload" href="assets/fonts/big-shoulders-display.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/chakra-petch-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/instrument-serif-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 
 <script>document.documentElement.className += " js";</script>
 <link rel="stylesheet" href="assets/css/style.css">
@@ -26,7 +25,7 @@
 
 <a class="skip-link" href="#work">Skip to work</a>
 
-<!-- ============ 开机载入画面 ============ -->
+<!-- ===== 载入 ===== -->
 <div class="boot" id="boot" aria-hidden="true">
   <div class="boot__inner">
     <span class="boot__mark">JH</span>
@@ -35,16 +34,13 @@
   </div>
 </div>
 
-<!-- 胶片颗粒 + 扫描线 -->
-<div class="grain" aria-hidden="true"></div>
-<div class="scan" aria-hidden="true"></div>
-
-<!-- 自定义光标 -->
+<!-- 纸张纹理 -->
+<div class="paper" aria-hidden="true"></div>
 <div class="cursor" id="cursor" aria-hidden="true"><i class="cursor__ring"></i><i class="cursor__dot"></i></div>
 
-<!-- ============ 顶部 HUD ============ -->
-<header class="hud" id="hud">
-  <a class="hud__logo" href="#home" data-magnetic aria-label="Home"><span id="logo-mark">JH</span></a>
+<!-- ===== 顶栏 ===== -->
+<header class="rail rail--top" id="hud">
+  <a class="rail__brand" href="#home" data-magnetic aria-label="Home"><b id="logo-mark">JH</b>&nbsp;<span data-i18n="role.short">网页设计</span></a>
 
   <nav class="tabs" id="tabs" aria-label="Main">
     <span class="tabs__glide" id="tabs-glide" aria-hidden="true"></span>
@@ -54,13 +50,13 @@
     <a href="#contact"  data-i18n="hud.contact">联系</a>
   </nav>
 
-  <div class="hud__right">
+  <div class="rail__right">
     <div class="langswitch" role="group" aria-label="Language">
       <button type="button" data-lang-btn="zh" class="is-active">中</button>
       <button type="button" data-lang-btn="en">EN</button>
       <button type="button" data-lang-btn="ms">BM</button>
     </div>
-    <a class="btn btn--wa hud__cta" data-wa data-magnetic href="#contact">
+    <a class="btn btn--wa rail__cta" data-wa data-magnetic href="#contact">
       <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2A10 10 0 0 0 3.5 17.2L2 22l4.94-1.44A10 10 0 1 0 12.04 2Zm0 1.9a8.1 8.1 0 1 1-4.13 15.06l-.3-.18-2.93.86.87-2.85-.19-.3A8.1 8.1 0 0 1 12.04 3.9Zm4.7 10.1c-.25-.13-1.5-.74-1.73-.83s-.4-.13-.57.13-.65.82-.8.99-.3.19-.55.06a6.6 6.6 0 0 1-1.95-1.2 7.3 7.3 0 0 1-1.34-1.68c-.14-.25 0-.38.11-.5s.25-.3.37-.44a1.7 1.7 0 0 0 .25-.42.46.46 0 0 0 0-.44c0-.12-.56-1.37-.77-1.87s-.41-.43-.56-.44h-.48a.92.92 0 0 0-.67.31 2.8 2.8 0 0 0-.87 2.08 4.86 4.86 0 0 0 1.02 2.58 11.15 11.15 0 0 0 4.27 3.78 14.4 14.4 0 0 0 1.43.53 3.43 3.43 0 0 0 1.57.1 2.57 2.57 0 0 0 1.69-1.19 2.09 2.09 0 0 0 .14-1.18c-.06-.11-.23-.18-.48-.3Z"/></svg>
       <span>WhatsApp</span>
     </a>
@@ -68,156 +64,162 @@
   </div>
 </header>
 
-<!-- ============ 滚动容器 ============ -->
 <div class="scroller" id="scroller">
 <main class="skew" id="skew">
 
-  <!-- ---------- 1. 主菜单 ---------- -->
-  <section class="screen screen--menu" id="home">
-    <div class="screen__glow" data-parallax="0.18" aria-hidden="true"></div>
-    <div class="screen__pad menu">
+  <!-- ===== 封面 ===== -->
+  <section class="sheet sheet--cover" id="home">
+    <span class="reg reg--tl" aria-hidden="true"></span><span class="reg reg--tr" aria-hidden="true"></span>
+    <span class="reg reg--bl" aria-hidden="true"></span><span class="reg reg--br" aria-hidden="true"></span>
 
-      <div class="menu__head">
-        <div class="menu__portrait" data-parallax="0.06">
-          <span class="menu__disc" aria-hidden="true"></span>
-          <img id="hero-photo" alt="" loading="eager">
-        </div>
-        <div class="menu__title">
-          <h1 class="display display--xl" data-split>PORTFOLIO</h1>
-          <span class="menu__year" data-reveal>2026</span>
-        </div>
+    <div class="cover">
+      <p class="cover__by" data-reveal><span id="cover-name">JH STUDIO</span><i>'s</i></p>
+
+      <div class="cover__word">
+        <span class="cover__ghost" aria-hidden="true">Portfolio</span>
+        <h1 class="serif cover__title" data-split>Portfolio</h1>
+        <svg class="cover__stroke" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.026 0.5" numOctaves="4" seed="7"/>
+              <feDisplacementMap in="SourceGraphic" scale="16" xChannelSelector="R" yChannelSelector="G"/></filter>
+          </defs>
+          <path d="M14 34 C 180 20, 300 42, 470 30 S 800 18, 986 32 L 984 46 C 780 36, 560 52, 380 44 S 120 50, 16 46 Z" filter="url(#rough)"/>
+        </svg>
       </div>
 
-      <p class="menu__role" data-reveal><i aria-hidden="true"></i><span data-i18n="role">网页设计师 / 开发者</span></p>
+      <p class="cover__meta" data-reveal>
+        <span data-i18n="cover.years">2023 — 2026</span>
+        <i aria-hidden="true"></i>
+        <span data-i18n="cover.selected">精选作品</span>
+      </p>
 
-      <ul class="menu__list" id="menu-list">
-        <li data-reveal><a href="#work"     data-magnetic><em>01</em><span data-i18n="menu.start">开始</span></a></li>
-        <li data-reveal><a href="#about"    data-magnetic><em>02</em><span data-i18n="menu.profile">个人档案</span></a></li>
-        <li data-reveal><a href="#services" data-magnetic><em>03</em><span data-i18n="menu.services">服务项目</span></a></li>
-        <li data-reveal><a href="#contact"  data-magnetic><em>04</em><span data-i18n="menu.contact">联系方式</span></a></li>
+      <ul class="cover__menu">
+        <li data-reveal><a href="#work"     data-magnetic><em>01</em><span data-i18n="menu.start">作品</span></a></li>
+        <li data-reveal><a href="#about"    data-magnetic><em>02</em><span data-i18n="menu.profile">关于</span></a></li>
+        <li data-reveal><a href="#services" data-magnetic><em>03</em><span data-i18n="menu.services">服务</span></a></li>
+        <li data-reveal><a href="#contact"  data-magnetic><em>04</em><span data-i18n="menu.contact">联系</span></a></li>
       </ul>
-
-      <p class="menu__hint" data-reveal data-i18n="menu.hint">选择一项进入</p>
     </div>
 
     <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee"></div></div>
   </section>
 
-  <!-- ---------- 2. 个人档案 ---------- -->
-  <section class="screen" id="about">
-    <div class="screen__pad profile">
-      <div class="profile__left">
-        <p class="label" data-reveal data-i18n="profile.hello">你好，我是</p>
-        <h2 class="display display--md" data-split id="profile-name">YUDHA / JH</h2>
-        <div class="profile__photo" data-parallax="0.05">
-          <span class="profile__aura" aria-hidden="true"></span>
-          <img id="profile-photo" alt="" loading="lazy">
-        </div>
-      </div>
+  <!-- ===== 作品 ===== -->
+  <section class="sheet" id="work">
+    <header class="head">
+      <p class="kicker" data-reveal><span data-i18n="work.eyebrow">作品集</span></p>
+      <h2 class="serif h-lg" data-split><span data-i18n="work.recap">精选作品</span></h2>
+      <p class="lede" data-reveal data-i18n="work.sub"></p>
+    </header>
 
-      <div class="profile__right">
-        <h3 class="display display--sm" data-reveal data-i18n="profile.about">关于我</h3>
-        <p class="body" data-reveal data-i18n="about.p1"></p>
+    <ul class="stats" id="stats">
+      <li data-reveal><b data-stat="projects" data-count="10" data-suffix="+">0</b><span data-i18n="stats.projects">上线项目</span></li>
+      <li data-reveal><b data-stat="industries" data-count="5" data-suffix="">0</b><span data-i18n="stats.industries">服务行业</span></li>
+      <li data-reveal><b data-count="0" data-suffix="+" id="stat-years">0</b><span data-i18n="stats.years">年经验</span></li>
+      <li data-reveal><b data-count="100" data-suffix="%">0</b><span data-i18n="stats.mobile">手机端适配</span></li>
+    </ul>
+
+    <div class="filters" id="filters" role="group" aria-label="Filter projects"></div>
+    <div class="grid" id="work-grid"></div>
+    <p class="empty" id="work-empty" hidden data-i18n="work.empty"></p>
+  </section>
+
+  <!-- ===== 关于 ===== -->
+  <section class="sheet" id="about">
+    <header class="head">
+      <p class="kicker" data-reveal><span data-i18n="profile.hello">你好，我是</span></p>
+      <h2 class="serif h-lg" data-split id="profile-name">JH</h2>
+    </header>
+
+    <div class="about">
+      <figure class="about__photo" data-parallax="0.04">
+        <img id="profile-photo" alt="" loading="lazy">
+        <figcaption data-i18n="role">网页设计师 / 开发者</figcaption>
+      </figure>
+
+      <div class="about__text">
+        <p class="lede" data-reveal data-i18n="about.p1"></p>
         <p class="body" data-reveal data-i18n="about.p2"></p>
 
-        <h3 class="display display--sm" data-reveal data-i18n="profile.software">常用软件</h3>
-        <ul class="apps" id="apps"></ul>
+        <div class="strip">
+          <h3 class="kicker" data-reveal><span data-i18n="profile.software">常用软件</span></h3>
+          <ul class="apps" id="apps"></ul>
+        </div>
 
-        <div class="profile__cols">
+        <div class="cols">
           <div>
-            <h3 class="display display--xs" data-reveal data-i18n="profile.education">教育背景</h3>
+            <h3 class="kicker" data-reveal><span data-i18n="profile.education">教育背景</span></h3>
             <ul class="facts" id="education"></ul>
           </div>
           <div>
-            <h3 class="display display--xs" data-reveal data-i18n="profile.experience">经历</h3>
+            <h3 class="kicker" data-reveal><span data-i18n="profile.experience">经历</span></h3>
             <ul class="facts" id="experience"></ul>
           </div>
         </div>
 
-        <h3 class="display display--xs" data-reveal data-i18n="profile.language">语言能力</h3>
-        <ul class="bars" id="languages"></ul>
+        <div class="strip">
+          <h3 class="kicker" data-reveal><span data-i18n="profile.language">语言能力</span></h3>
+          <ul class="bars" id="languages"></ul>
+        </div>
       </div>
     </div>
+    <img id="hero-photo" alt="" hidden>
   </section>
 
-  <!-- ---------- 3. 作品 ---------- -->
-  <section class="screen" id="work">
-    <div class="screen__pad">
-      <header class="screen__head">
-        <h2 class="display display--lg" data-split><span data-i18n="work.recap">作品回顾</span></h2>
-        <span class="tag" data-reveal data-i18n="work.noai">全部真实上线</span>
-      </header>
-
-      <ul class="stats" id="stats">
-        <li data-reveal><b data-count="9" data-suffix="+">0</b><span data-i18n="stats.projects">上线项目</span></li>
-        <li data-reveal><b data-count="5" data-suffix="">0</b><span data-i18n="stats.industries">服务行业</span></li>
-        <li data-reveal><b data-count="0" data-suffix="+" id="stat-years">0</b><span data-i18n="stats.years">年经验</span></li>
-        <li data-reveal><b data-count="100" data-suffix="%">0</b><span data-i18n="stats.mobile">手机端适配</span></li>
-      </ul>
-
-      <div class="filters" id="filters" role="group" aria-label="Filter projects"></div>
-      <div class="grid" id="work-grid"></div>
-      <p class="empty" id="work-empty" hidden data-i18n="work.empty"></p>
-    </div>
+  <!-- ===== 服务 ===== -->
+  <section class="sheet" id="services">
+    <header class="head">
+      <p class="kicker" data-reveal><span data-i18n="services.eyebrow">服务</span></p>
+      <h2 class="serif h-lg" data-split><span data-i18n="services.title">我可以帮你做什么</span></h2>
+      <p class="lede" data-reveal data-i18n="services.sub"></p>
+    </header>
+    <div class="cards" id="cards"></div>
   </section>
 
-  <!-- ---------- 4. 服务 ---------- -->
-  <section class="screen" id="services">
-    <div class="screen__pad">
-      <header class="screen__head">
-        <h2 class="display display--lg" data-split><span data-i18n="services.title">我可以帮你做什么</span></h2>
-        <p class="body" data-reveal data-i18n="services.sub"></p>
-      </header>
-      <div class="cards" id="cards"></div>
-    </div>
+  <!-- ===== 流程 ===== -->
+  <section class="sheet" id="process">
+    <header class="head">
+      <p class="kicker" data-reveal><span data-i18n="process.eyebrow">合作流程</span></p>
+      <h2 class="serif h-lg" data-split><span data-i18n="process.title">四步，从聊天到上线</span></h2>
+    </header>
+    <ol class="steps">
+      <li data-reveal><span class="steps__n">01</span><h3 data-i18n="process.1.t"></h3><p data-i18n="process.1.d"></p></li>
+      <li data-reveal><span class="steps__n">02</span><h3 data-i18n="process.2.t"></h3><p data-i18n="process.2.d"></p></li>
+      <li data-reveal><span class="steps__n">03</span><h3 data-i18n="process.3.t"></h3><p data-i18n="process.3.d"></p></li>
+      <li data-reveal><span class="steps__n">04</span><h3 data-i18n="process.4.t"></h3><p data-i18n="process.4.d"></p></li>
+    </ol>
   </section>
 
-  <!-- ---------- 5. 流程 ---------- -->
-  <section class="screen" id="process">
-    <div class="screen__pad">
-      <header class="screen__head">
-        <h2 class="display display--lg" data-split><span data-i18n="process.title">四步，从聊天到上线</span></h2>
-      </header>
-      <ol class="steps">
-        <li data-reveal><span class="steps__n">01</span><h3 data-i18n="process.1.t"></h3><p data-i18n="process.1.d"></p></li>
-        <li data-reveal><span class="steps__n">02</span><h3 data-i18n="process.2.t"></h3><p data-i18n="process.2.d"></p></li>
-        <li data-reveal><span class="steps__n">03</span><h3 data-i18n="process.3.t"></h3><p data-i18n="process.3.d"></p></li>
-        <li data-reveal><span class="steps__n">04</span><h3 data-i18n="process.4.t"></h3><p data-i18n="process.4.d"></p></li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- ---------- 6. 联系 / THANK YOU ---------- -->
-  <section class="screen screen--end" id="contact">
-    <div class="screen__glow screen__glow--warm" data-parallax="0.2" aria-hidden="true"></div>
-    <div class="screen__pad end">
+  <!-- ===== 联系 ===== -->
+  <section class="sheet sheet--end" id="contact">
+    <div class="end">
       <div class="end__left">
-        <p class="label" data-reveal data-i18n="contact.me">联系我</p>
-        <div class="end__card" data-reveal>
-          <div class="end__avatar"><img id="contact-photo" alt="" loading="lazy"><span class="end__ring" aria-hidden="true"></span></div>
-          <p class="end__name" id="contact-name">JH</p>
-          <p class="end__role" data-i18n="role"></p>
-        </div>
+        <figure class="end__photo">
+          <img id="contact-photo" alt="" loading="lazy">
+        </figure>
+        <p class="end__name" id="contact-name">JH</p>
+        <p class="end__role" data-i18n="role"></p>
         <ul class="links" id="links"></ul>
       </div>
 
       <div class="end__right">
-        <h2 class="display display--xl" data-split><span data-i18n="contact.thankyou">谢谢观看</span></h2>
-        <span class="end__year" data-reveal>2026</span>
-        <p class="body" data-reveal data-i18n="contact.sub"></p>
+        <p class="kicker" data-reveal><span data-i18n="contact.eyebrow">联系我</span></p>
+        <h2 class="serif h-xl" data-split><span data-i18n="contact.thankyou">谢谢观看</span></h2>
+        <p class="end__year" data-reveal>2026</p>
+        <p class="lede" data-reveal data-i18n="contact.sub"></p>
         <div class="end__cta" data-reveal>
           <a class="btn btn--wa btn--lg" data-wa data-magnetic href="#">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2A10 10 0 0 0 3.5 17.2L2 22l4.94-1.44A10 10 0 1 0 12.04 2Zm0 1.9a8.1 8.1 0 1 1-4.13 15.06l-.3-.18-2.93.86.87-2.85-.19-.3A8.1 8.1 0 0 1 12.04 3.9Zm4.7 10.1c-.25-.13-1.5-.74-1.73-.83s-.4-.13-.57.13-.65.82-.8.99-.3.19-.55.06a6.6 6.6 0 0 1-1.95-1.2 7.3 7.3 0 0 1-1.34-1.68c-.14-.25 0-.38.11-.5s.25-.3.37-.44a1.7 1.7 0 0 0 .25-.42.46.46 0 0 0 0-.44c0-.12-.56-1.37-.77-1.87s-.41-.43-.56-.44h-.48a.92.92 0 0 0-.67.31 2.8 2.8 0 0 0-.87 2.08 4.86 4.86 0 0 0 1.02 2.58 11.15 11.15 0 0 0 4.27 3.78 14.4 14.4 0 0 0 1.43.53 3.43 3.43 0 0 0 1.57.1 2.57 2.57 0 0 0 1.69-1.19 2.09 2.09 0 0 0 .14-1.18c-.06-.11-.23-.18-.48-.3Z"/></svg>
             <span data-i18n="contact.wa">WhatsApp 联系我</span></a>
-          <a class="btn btn--ghost btn--lg" id="email-btn" data-magnetic href="#"><span data-i18n="contact.email">发邮件</span></a>
+          <a class="btn btn--ink btn--lg" id="email-btn" data-magnetic href="#"><span data-i18n="contact.email">发邮件</span></a>
         </div>
         <p class="end__note" data-reveal data-i18n="contact.note"></p>
       </div>
     </div>
   </section>
 
-  <footer class="foot">
-    <span>© <span id="year"></span> <span id="footer-brand">JH Studio</span>. <span data-i18n="footer.rights">版权所有</span></span>
+  <footer class="rail rail--foot">
+    <span>© <span id="year"></span> <span id="footer-brand">JH Studio</span></span>
     <span data-i18n="footer.built">本站由我自己设计与开发</span>
   </footer>
 
@@ -234,11 +236,11 @@
     <button class="modal__x" data-close aria-label="Close">&times;</button>
     <div class="modal__shot"><img id="modal-img" alt=""></div>
     <div class="modal__body">
-      <p class="label" id="modal-cat"></p>
-      <h3 class="display display--sm" id="modal-title"></h3>
+      <p class="kicker" id="modal-cat"></p>
+      <h3 class="serif h-md" id="modal-title"></h3>
       <p class="body" id="modal-blurb"></p>
       <ul class="chips" id="modal-tags"></ul>
-      <a class="btn btn--ice" id="modal-link" data-magnetic target="_blank" rel="noopener noreferrer">
+      <a class="btn btn--ink" id="modal-link" data-magnetic target="_blank" rel="noopener noreferrer">
         <span data-i18n="modal.visit">打开网站</span>
         <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>

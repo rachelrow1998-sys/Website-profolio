@@ -83,13 +83,14 @@
   function shotSrc(p) { return "assets/screenshots/" + p.slug + ".jpg"; }
   function fallbackSrc(p) { return "assets/img/placeholder/" + p.slug + ".svg"; }
 
+  // 还没放照片时的占位剪影。用纸色系，不要跟版面打架。
   var PERSON_FALLBACK =
     "data:image/svg+xml;base64," + btoa(
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">' +
-      '<rect width="400" height="500" fill="#101C2E"/>' +
-      '<circle cx="200" cy="190" r="76" fill="#1B2B42"/>' +
-      '<path d="M60 500c0-86 63-150 140-150s140 64 140 150z" fill="#1B2B42"/>' +
-      '<text x="200" y="470" text-anchor="middle" font-family="Helvetica,Arial" font-size="17" fill="#4C5A72" letter-spacing="3">ADD assets/img/me.jpg</text>' +
+      '<rect width="400" height="500" fill="#E5E1D7"/>' +
+      '<circle cx="200" cy="196" r="74" fill="#D3CDC0"/>' +
+      '<path d="M62 500c0-86 62-150 138-150s138 64 138 150z" fill="#D3CDC0"/>' +
+      '<text x="200" y="474" text-anchor="middle" font-family="Helvetica,Arial" font-size="16" fill="#8A8478" letter-spacing="2">ADD assets/img/me.jpg</text>' +
       "</svg>");
 
   function setPhoto(el) {
@@ -400,7 +401,8 @@
     var apps = $("#apps");
     if (apps) {
       apps.innerHTML = (PROFILE.software || []).map(function (s) {
-        return '<li data-label="' + esc(s.label) + '" style="color:' + esc(s.color) + '" title="' + esc(s.label) + '">' + esc(s.code) + "</li>";
+        // 颜色用自定义属性传给 CSS，由样式决定要不要用 —— 纸质版刻意保持无彩
+        return '<li data-label="' + esc(s.label) + '" style="--app-color:' + esc(s.color) + '" title="' + esc(s.label) + '">' + esc(s.code) + "</li>";
       }).join("");
     }
     var edu = $("#education");
@@ -590,6 +592,8 @@
     // 首屏元素依次入场
     setTimeout(function () {
       $$("#home [data-split], #home [data-reveal]").forEach(function (el) { el.classList.add("is-in"); });
+      var cover = $(".cover");
+      if (cover) cover.classList.add("is-inked");        // 触发标题下面那道墨迹
     }, 60);
     // 兜底：不管发生什么，4 秒后内容一定可见
     setTimeout(function () {
@@ -603,11 +607,12 @@
   function init() {
     if (SMOOTH) document.documentElement.classList.add("smooth");
 
-    var pc = $('#stats b[data-count="9"]');
+    // 用 data-stat 定位，不要靠写死的数字 —— 数字会变，选择器就失效了
+    var pc = $('#stats b[data-stat="projects"]');
     if (pc) pc.setAttribute("data-count", String(PROJECTS.length));
     var cats = {};
     PROJECTS.forEach(function (p) { cats[p.category] = 1; });
-    var ic = $('#stats b[data-count="5"]');
+    var ic = $('#stats b[data-stat="industries"]');
     if (ic) ic.setAttribute("data-count", String(Math.max(Object.keys(cats).length, 1)));
     var yEl = $("#stat-years");
     if (yEl) {

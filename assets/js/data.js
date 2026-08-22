@@ -204,3 +204,53 @@ const PROJECTS = [
     }
   }
 ];
+
+/* ----------------------------------------------------------------------------
+   个人档案 PROFILE —— PROFIL 那一屏的内容
+   ⚠️ 下面全部是示例数据，请改成你自己的真实情况。
+---------------------------------------------------------------------------- */
+
+const PROFILE = {
+  /* 你的照片：放一张到 assets/img/me.jpg 就会自动显示。
+     没放的话会显示一个占位剪影，不会破图。
+     建议：半身照、背景干净、竖构图（大概 800 x 1000）。 */
+  photo: "assets/img/me.jpg",
+
+  /* 你的名字（显示在 HELLO, I AM 下面） */
+  name: "YUDHA / JH",
+
+  /* 年龄，不想放就写 "" */
+  age: "",
+
+  /* 你常用的软件。code 是显示在图标里的缩写，最多 2-3 个字母。
+     color 是那个图标的颜色。改成你实际在用的。 */
+  software: [
+    { code: "Fg", label: "Figma",      color: "#F24E1E" },
+    { code: "Ps", label: "Photoshop",  color: "#31A8FF" },
+    { code: "Ai", label: "Illustrator",color: "#FF9A00" },
+    { code: "Wp", label: "WordPress",  color: "#21759B" },
+    { code: "</>",label: "HTML / CSS", color: "#E44D26" },
+    { code: "JS", label: "JavaScript", color: "#F7DF1E" }
+  ],
+
+  /* 教育背景（三语） */
+  education: {
+    zh: [{ years: "2019 - 2022", school: "（改成你的学校）", major: "（改成你的专业）" }],
+    en: [{ years: "2019 - 2022", school: "(your school)",   major: "(your major)" }],
+    ms: [{ years: "2019 - 2022", school: "(sekolah anda)",  major: "(jurusan anda)" }]
+  },
+
+  /* 经历 / 成绩（三语）—— 写数字最有说服力 */
+  experience: {
+    zh: ["自由接单网页设计师", "已交付 9 个上线网站", "服务过 5 个不同行业"],
+    en: ["Freelance web designer", "9 websites delivered & live", "5 industries served"],
+    ms: ["Pereka web bebas", "9 laman web telah dilancarkan", "5 industri berbeza"]
+  },
+
+  /* 语言能力。数字是百分比，会画成进度条。 */
+  languages: [
+    { name: { zh: "中文",   en: "Chinese", ms: "Cina" },    level: 100 },
+    { name: { zh: "英文",   en: "English", ms: "Inggeris" },level: 85  },
+    { name: { zh: "马来文", en: "Malay",   ms: "Melayu" },  level: 70  }
+  ]
+};

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="EXA Energy Sdn. Bhd.">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2A93B" stop-opacity=".85"/>
+      <stop offset="100%" stop-color="#B4541E" stop-opacity=".95"/>
+    </linearGradient>
+    <linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity=".45"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#131317"/>
+  <rect x="0" y="0" width="1600" height="1000" fill="url(#g)"/>
+  <rect x="0" y="0" width="1600" height="1000" fill="url(#v)"/>
+  <g opacity=".16" stroke="#fff" stroke-width="1.5">
+    <line x1="0" y1="0" x2="1600" y2="0"/><line x1="0" y1="100" x2="1600" y2="100"/><line x1="0" y1="200" x2="1600" y2="200"/><line x1="0" y1="300" x2="1600" y2="300"/><line x1="0" y1="400" x2="1600" y2="400"/><line x1="0" y1="500" x2="1600" y2="500"/><line x1="0" y1="600" x2="1600" y2="600"/><line x1="0" y1="700" x2="1600" y2="700"/><line x1="0" y1="800" x2="1600" y2="800"/><line x1="0" y1="900" x2="1600" y2="900"/><line x1="0" y1="1000" x2="1600" y2="1000"/>
+    <line x1="0" y1="0" x2="0" y2="1000"/><line x1="100" y1="0" x2="100" y2="1000"/><line x1="200" y1="0" x2="200" y2="1000"/><line x1="300" y1="0" x2="300" y2="1000"/><line x1="400" y1="0" x2="400" y2="1000"/><line x1="500" y1="0" x2="500" y2="1000"/><line x1="600" y1="0" x2="600" y2="1000"/><line x1="700" y1="0" x2="700" y2="1000"/><line x1="800" y1="0" x2="800" y2="1000"/><line x1="900" y1="0" x2="900" y2="1000"/><line x1="1000" y1="0" x2="1000" y2="1000"/><line x1="1100" y1="0" x2="1100" y2="1000"/><line x1="1200" y1="0" x2="1200" y2="1000"/><line x1="1300" y1="0" x2="1300" y2="1000"/><line x1="1400" y1="0" x2="1400" y2="1000"/><line x1="1500" y1="0" x2="1500" y2="1000"/><line x1="1600" y1="0" x2="1600" y2="1000"/>
+  </g>
+  <rect x="0" y="0" width="1600" height="76" fill="#0A0A0C" opacity=".62"/>
+  <circle cx="46" cy="38" r="9" fill="#FF5F57"/><circle cx="80" cy="38" r="9" fill="#FEBC2E"/><circle cx="114" cy="38" r="9" fill="#28C840"/>
+  <rect x="156" y="22" width="480" height="32" rx="16" fill="#fff" opacity=".14"/>
+  <text x="180" y="45" font-family="Inter,Helvetica,Arial,sans-serif" font-size="19" fill="#fff" opacity=".62">www.exaenergy.asia</text>
+  <text x="800" y="512" text-anchor="middle" font-family="'Space Grotesk',Helvetica,Arial,sans-serif" font-size="188" font-weight="700" fill="#fff" opacity=".95" letter-spacing="6">EE</text>
+  <text x="800" y="592" text-anchor="middle" font-family="Inter,Helvetica,Arial,sans-serif" font-size="36" font-weight="500" fill="#fff" opacity=".82">EXA Energy Sdn. Bhd.</text>
+  <text x="800" y="908" text-anchor="middle" font-family="Inter,Helvetica,Arial,sans-serif" font-size="22" fill="#fff" opacity=".5" letter-spacing="3">SCREENSHOT PENDING</text>
+</svg>

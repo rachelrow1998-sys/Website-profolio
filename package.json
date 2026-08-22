@@ -1,0 +1,14 @@
+{
+  "name": "jh-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Online portfolio for a freelance web designer — trilingual (zh / en / ms), WhatsApp-first.",
+  "scripts": {
+    "shots": "node tools/capture-screenshots.mjs",
+    "placeholders": "node tools/generate-placeholders.mjs",
+    "build": "node tools/build-single.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}

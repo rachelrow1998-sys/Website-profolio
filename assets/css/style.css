@@ -4,6 +4,49 @@
    换主色只需改 --ice（冷光蓝）和 --blood（红）两行。
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   字体自托管 —— 不依赖 Google Fonts。
+   原因：客户从小红书来，如果人在中国大陆，Google Fonts 是打不开的，
+   字体加载不出来整个设计就垮了。放在自己服务器上没这个问题，而且更快。
+   两款字体都是 SIL Open Font License，可以自由自托管和商用。
+   只保留 latin 子集（英文 / 马来文够用），中文用系统字体。
+   -------------------------------------------------------------------------- */
+@font-face{
+  font-family:'Big Shoulders Display';
+  font-style:normal;
+  font-weight:100 900;                 /* 可变字体，一个文件覆盖所有字重 */
+  font-display:swap;
+  src:url('../fonts/big-shoulders-display.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Chakra Petch';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url('../fonts/chakra-petch-400.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Chakra Petch';
+  font-style:normal;
+  font-weight:500;
+  font-display:swap;
+  src:url('../fonts/chakra-petch-500.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Chakra Petch';
+  font-style:normal;
+  font-weight:600;
+  font-display:swap;
+  src:url('../fonts/chakra-petch-600.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Chakra Petch';
+  font-style:normal;
+  font-weight:700;
+  font-display:swap;
+  src:url('../fonts/chakra-petch-700.woff2') format('woff2');
+}
+
 :root{
   --void:      #04060C;
   --ink:       #070C16;

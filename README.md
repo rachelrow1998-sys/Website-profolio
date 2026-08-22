@@ -252,6 +252,9 @@ python3 -m http.server 8000
 # 打开 http://localhost:8000
 ```
 
-**中文字体为什么没用 Google Fonts？**
-中文字体文件动辄几 MB，会拖慢打开速度。标题用 Big Shoulders Display、界面用 Chakra Petch（Google Fonts），中文用系统自带字体
-（苹方 / 微软雅黑）—— 显示效果一样好，但快很多。网站速度本身就是你的卖点。
+**字体为什么放在项目里，不用 Google Fonts？**
+因为你的客户从小红书来 —— **如果人在中国大陆，Google Fonts 是打不开的**，字体加载不出来，
+标题就会变成系统默认字体，整个设计垮掉。所以字体（Big Shoulders Display + Chakra Petch）
+直接放在 `assets/fonts/`，一共只有 88KB，加载还更快。两款都是 SIL Open Font License，可以自由自托管和商用。
+
+中文则用系统自带字体（苹方 / 微软雅黑）—— 中文字体文件动辄几 MB，不值得让访客下载。

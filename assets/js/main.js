@@ -135,7 +135,7 @@
      5. 滚动引擎：惯性滚动 + 视差 + 入场 + 速度倾斜
      ====================================================================== */
   var engine = (function () {
-    var current = 0, target = 0, velocity = 0;
+    var current = 0, target = 0, velocity = 0, navTick = 0;
     var reveals = [], parallax = [];
     var marquee = null, marqueeX = 0, marqueeW = 0;
 
@@ -194,6 +194,8 @@
         if (marqueeX <= -marqueeW) marqueeX += marqueeW;
         marquee.style.transform = "translate3d(" + marqueeX.toFixed(2) + "px,0,0)";
       }
+
+      if ((++navTick & 3) === 0 && window.__syncNav) window.__syncNav();
 
       requestAnimationFrame(frame);
     }
@@ -482,23 +484,29 @@
     });
   }
 
-  window.addEventListener("scroll", function () {
+  /* 当前区块高亮。必须跑在动画循环里，不能挂 scroll 事件 ——
+     惯性滚动停手后画面还在走，那时早就没有 scroll 事件了，高亮会卡住。 */
+  var lastSection = "";
+  function syncNav() {
     if (hud) hud.classList.toggle("is-stuck", (window.scrollY || 0) > 20);
-    var mid = window.innerHeight * 0.42, best = null;
+    if (!tabs) return;
+    var mid = window.innerHeight * 0.42, best = "";
     $$("section[id]").forEach(function (s) {
       var r = s.getBoundingClientRect();
       if (r.top <= mid && r.bottom >= mid) best = s.id;
     });
-    if (best) {
-      var active = null;
-      $$("a", tabs).forEach(function (a) {
-        var on = a.getAttribute("href") === "#" + best;
-        a.classList.toggle("is-active", on);
-        if (on) active = a;
-      });
-      moveGlide(active);
-    }
-  }, { passive: true });
+    if (!best || best === lastSection) return;
+    // 有些区块（比如「流程」）没有对应标签 —— 那就保持上一个高亮，不要整排熄掉
+    var active = null;
+    $$("a", tabs).forEach(function (a) {
+      if (a.getAttribute("href") === "#" + best) active = a;
+    });
+    if (!active) return;
+    lastSection = best;
+    $$("a", tabs).forEach(function (a) { a.classList.toggle("is-active", a === active); });
+    moveGlide(active);
+  }
+  window.__syncNav = syncNav;
 
   /* ======================================================================
      11. 应用语言

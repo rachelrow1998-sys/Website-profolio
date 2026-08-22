@@ -1,3 +1,7 @@
 node_modules/
 dist/
 .DS_Store
+
+# 临时脚本 / 本地测试产物
+_*.mjs
+_*.html

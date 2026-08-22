@@ -20,6 +20,10 @@ let html = read("index.html");
 /* 1. CSS 和 JS 内联 */
 html = html.replace(/<link rel="stylesheet" href="([^"]+)">/g, (_, href) => `<style>\n${read(href)}\n</style>`);
 html = html.replace(/<script src="([^"]+)"><\/script>/g, (_, src) => `<script>\n${read(src)}\n</script>`);
+/* 字体也内联，单文件才能真的自给自足 */
+html = html.replace(/url\('\.\.\/fonts\/([^']+)'\)/g, (_, f) =>
+  `url(${dataUri("assets/fonts/" + f, "font/woff2")})`);
+html = html.replace(/<link rel="preload"[^>]*>\n?/g, () => "");
 
 /* 2. 图片内联：优先真实截图，其次占位图 */
 const imgs = {};
@@ -30,10 +34,13 @@ for (const f of readdirSync(resolve(root, "assets/img/placeholder"))) {
     ? dataUri(jpg, "image/jpeg")
     : dataUri(`assets/img/placeholder/${f}`, "image/svg+xml");
 }
+/* ⚠️ 所有替换都用「函数」形式，不要用字符串。
+   字符串替换里 $$ 是转义符号，会把 main.js 里的 $$(...) 选择器
+   悄悄改成 $(...)，页面会整个挂掉，而且很难查。 */
 html = html
-  .replace(/function shotSrc\(p\) \{[^}]*\}/, 'function shotSrc(p) { return EMBEDDED[p.slug] || ""; }')
-  .replace(/function fallbackSrc\(p\) \{[^}]*\}/, 'function fallbackSrc(p) { return EMBEDDED[p.slug] || ""; }')
-  .replace(/var \$ {2}= function/, "var EMBEDDED = " + JSON.stringify(imgs) + ";\n  var $  = function");
+  .replace(/function shotSrc\(p\) \{[^}]*\}/, () => 'function shotSrc(p) { return EMBEDDED[p.slug] || ""; }')
+  .replace(/function fallbackSrc\(p\) \{[^}]*\}/, () => 'function fallbackSrc(p) { return EMBEDDED[p.slug] || ""; }')
+  .replace(/var \$ {2}= function/, () => "var EMBEDDED = " + JSON.stringify(imgs) + ";\n  var $  = function");
 
 /* 3. og 图也内联，分享时才有预览图 */
 html = html.replace('content="assets/img/og-cover.svg"', `content="${dataUri("assets/img/og-cover.svg", "image/svg+xml")}"`);

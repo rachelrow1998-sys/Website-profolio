@@ -98,7 +98,8 @@ p{ margin:0; }
 button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
 :focus-visible{ outline:2px solid var(--ice); outline-offset:3px; border-radius:3px; }
 
-.skip-link{ position:absolute; left:-9999px; top:0; z-index:400; background:var(--ice); color:#04060C; padding:10px 16px; }
+/* fixed 而不是 absolute：滚动容器是 fixed 的，absolute 会被带出屏幕 */
+.skip-link{ position:fixed; left:-9999px; top:0; z-index:400; background:var(--ice); color:#04060C; padding:10px 16px; }
 .skip-link:focus{ left:0; }
 
 /* ---------- 字体角色 ---------- */

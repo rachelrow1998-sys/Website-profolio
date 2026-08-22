@@ -218,6 +218,25 @@
     if (SMOOTH) window.scrollTo(0, y);
     else window.scrollTo({ top: y, behavior: reduced ? "auto" : "smooth" });
   }
+  /* 键盘无障碍：scroller 是 fixed 的，浏览器没办法把「Tab 到的屏幕外元素」
+     自动滚进视野（它找不到可滚动的祖先）。这里手动补上，
+     否则用键盘浏览的人会 Tab 到看不见的地方。 */
+  document.addEventListener("focusin", function (e) {
+    var el = e.target;
+    if (!el || !el.getBoundingClientRect || el.closest(".modal")) return;
+    // 必须等一帧：浏览器自己那套「把焦点元素滚进视野」会在我们之后执行，
+    // 而它算不对 fixed 容器里的位置，会把我们的滚动覆盖掉。
+    requestAnimationFrame(function () {
+      var r = el.getBoundingClientRect(), vh = window.innerHeight;
+      // 要按「滚动停下之后」的位置判断，不能按当下画面判断 ——
+      // 惯性滚动途中元素会从视野里穿过去，按当下判断会误以为它已经可见。
+      var docY = engine.pos() + r.top;                    // 元素在文档里的绝对位置
+      var rel  = docY - (window.scrollY || 0);            // 滚动停稳后它会落在哪
+      if (rel >= 90 && rel + r.height <= vh - 40) return; // 到时候看得见，不用动
+      window.scrollTo(0, Math.max(0, docY - vh / 2 + r.height / 2));
+    });
+  });
+
   document.addEventListener("click", function (e) {
     var a = e.target.closest('a[href^="#"]');
     if (!a) return;

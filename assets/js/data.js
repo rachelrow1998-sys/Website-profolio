@@ -51,6 +51,23 @@ const SITE = {
 
 const PROJECTS = [
   {
+    slug: "luma-club",
+    name: "The Luma Club",
+    url: "https://thelumaclub.com",
+    category: "lifestyle",
+    year: "2026",
+    tags: {
+      zh: ["品牌官网", "视觉设计", "会员/预约"],
+      en: ["Brand site", "Visual design", "Membership"],
+      ms: ["Laman jenama", "Reka bentuk visual", "Keahlian"]
+    },
+    blurb: {
+      zh: "\u26a0 这段是我猜写的，请改成真实情况 —— 会员制品牌的官方网站，重点在品牌调性与入会/预约路径。",
+      en: "\u26a0 Placeholder copy, please rewrite — brand site for a membership club, focused on tone of voice and the path to joining or booking.",
+      ms: "\u26a0 Teks sementara, sila tukar — laman jenama untuk kelab keahlian."
+    }
+  },
+  {
     slug: "exa-energy",
     name: "EXA Energy Sdn. Bhd.",
     url: "https://www.exaenergy.asia/",

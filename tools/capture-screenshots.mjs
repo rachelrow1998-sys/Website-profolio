@@ -37,7 +37,25 @@ try {
 const outDir = resolve(root, "assets/screenshots");
 mkdirSync(outDir, { recursive: true });
 
-const browser = await chromium.launch();
+// 允许用环境变量指定浏览器位置（某些环境里 Playwright 找不到自带的那份）
+//   CHROME_PATH=/path/to/chrome node tools/capture-screenshots.mjs
+let browser;
+try {
+  browser = await chromium.launch(
+    process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {}
+  );
+} catch (e) {
+  console.error("\n⚠️  浏览器启动失败。\n");
+  if (/Executable doesn't exist|install/i.test(e.message)) {
+    console.error("   还没下载浏览器，执行这一行就好：\n");
+    console.error("     npx playwright install chromium\n");
+  } else {
+    console.error("   " + e.message.split("\n")[0] + "\n");
+    console.error("   如果你电脑上已经有 Chrome，可以直接指过去：\n");
+    console.error("     CHROME_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' npm run shots\n");
+  }
+  process.exit(1);
+}
 const ctx = await browser.newContext({
   viewport: { width: 1600, height: 1000 },
   deviceScaleFactor: 1.5,                    // 高清屏更清楚
@@ -84,5 +102,10 @@ for (const p of list) {
 }
 
 await browser.close();
-console.log(`\n完成：成功 ${ok} 个，失败 ${fail} 个。截图在 assets/screenshots/`);
-if (fail) console.log("失败的通常是网站太慢或有防爬虫 —— 手动截图存成 assets/screenshots/<slug>.jpg 也可以。");
+console.log(`\n完成：成功 ${ok} 个，失败 ${fail} 个。截图存在 assets/screenshots/`);
+if (ok) console.log("刷新网页就能看到真实截图了（占位图会自动被盖掉）。");
+if (fail) {
+  console.log("\n失败的通常是网站太慢、或者有防爬虫。两个办法：");
+  console.log("  1. 单独重跑那几个：node tools/capture-screenshots.mjs <slug> <slug>");
+  console.log("  2. 自己手动截图，存成 assets/screenshots/<slug>.jpg（建议 1600×1000）");
+}

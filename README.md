@@ -78,11 +78,25 @@ npx playwright install chromium
 npm run shots
 ```
 
-跑完刷新网页就好了。只想重截某几个：
+跑完刷新网页就好了 —— 卡片上的彩色占位图会自动被真实截图盖掉。
+
+只想重截某几个（用 `data.js` 里的 slug）：
 
 ```bash
 node tools/capture-screenshots.mjs exa-energy furfoo-pet
 ```
+
+**如果提示找不到浏览器**，而你电脑上已经装了 Chrome，可以直接指过去：
+
+```bash
+# Mac
+CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm run shots
+# Windows (PowerShell)
+$env:CHROME_PATH="C:\Program Files\Google\Chrome\Application\chrome.exe"; npm run shots
+```
+
+脚本会自动等页面加载完、滚一下触发懒加载图片、并且关掉常见的 cookie 弹窗，
+免得弹窗挡住截图。输出是 1600×1000 的高清 JPG。
 
 ### 方法二：手动截
 

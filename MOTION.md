@@ -1,62 +1,124 @@
 # 动效编排规格 Motion Spec
 
 > 配套文件：`BRIEF.md`（整体需求）。这份只管**动效编排**。
-> 标注 `⚙️ 工程注` 的段落是开发角度的提醒，可以接受也可以否决，但请先读过再决定。
+> 本版取代之前所有 Motion Spec 版本。
 
-**贯穿全站的分配原则**：
+---
+
+## 0. 三条治理原则
+
+这三条凌驾于后面所有具体编排之上。有冲突时以这三条为准。
+
+### 0.1 每个动画都要回答一个问题
+
+> **它是在展示作品，解释层级，还是帮助导航？**
+> **三个都不是 —— 删。**
+
+这条决定了「animation 很多」不会变成「所有东西都在动」。
+
+客户实际应该感受到的是：
+> 「哇，这个作品集很会动。」
+
+而**不是**：
+> Header、文字、按钮、背景、图标全部一直在动。
+
+这是两个完全不同的高级程度。
+
+### 0.2 80/20 分配
+
 **80% 的复杂动效给作品，20% 给其他区块。**
-如果 About / Services / Footer 做得跟作品一样夸张，就会回到 BRIEF 第 3 节说的老问题 ——
+About / Services / Footer 如果做得跟作品一样夸张，就回到 `BRIEF.md` 第 3 节的老问题 ——
 页面自己开始跟作品抢戏。
 
+### 0.3 转化路径优先
+
+客户**不需要**看完 10 个 Case Study 才能按 WhatsApp。
+主滚动路径必须短。华丽的部分是**可选深入**，不是必经关卡。
+
 ---
 
-## 技术选型：这里改用 GSAP
+## 1. 技术边界：GSAP 用在哪，不用在哪
 
-`BRIEF.md` 第 7 节原本写「不引入动画库，全部手写」。
-**这份编排推翻那个决定**，理由如下：
+### 1.1 为什么值得引入（这部分是架构判断，成立）
 
-| 需要的能力 | 手写成本 | GSAP |
+- **Flip** 的设计目的就是记录元素的 First / Last 状态，处理 DOM 结构或 layout 发生巨大变化后的平滑转换。我们有三处正是这个场景。
+- **ScrollTrigger** 原生支持 `pin / scrub / snap`。Case Study 内部需要滚动绑定进度。
+
+手写这两件事的成本明显高于引入成本 —— **这是引入的唯一理由**。
+
+### 1.2 ⚠️ 关于体积：不要写成永久事实
+
+**我之前在这份文件里写过「≈40KB gzip（core 24 + ScrollTrigger 11 + Flip 7）」，那是错的写法。**
+GSAP 官方并没有把这些 gzip 数字作为固定规格公布，而且会随版本变动。
+
+**正确做法**：以我们**实际部署版本**的 build measurement / Network 面板实测为准，
+把数字记在这里并注明测量日期和 GSAP 版本：
+
+```
+测量日期：____
+GSAP 版本：____
+core + ScrollTrigger + Flip（gzip 实测）：____ KB
+```
+
+体积超出预期时，重新评估的是「这四处用法是否还划算」，不是回头找一个记错的数字。
+
+### 1.3 使用边界（锁死）
+
+**GSAP 必须有明确理由才能调用。** 允许的只有四处：
+
+| # | 场景 | 用什么 |
 |---|---|---|
-| Hero 卡片群 → Works Grid 的位置平滑迁移 | 高。要自己算 FLIP（First-Last-Invert-Play），处理 resize、中断、层级 | `Flip` 直接做 |
-| 筛选时卡片重排 | 同上 | `Flip` |
-| Case Study 钉住 + 进度绑定滚动 | 中高。要自己做 pin、scrub、进度归一化 | `ScrollTrigger` |
-| 标题按词/字 mask 入场 | 已经手写好了 | `SplitText`（可继续用手写的） |
-| 惯性滚动、视差、磁吸 | 已经手写好了 | 不需要换 |
+| 1 | Hero 卡片群 → Works Grid | `Flip` |
+| 2 | Works 筛选后重排 | `Flip` |
+| 3 | Works Grid → Case Study Focus Mode（含关闭时飞回原位） | `Flip` |
+| 4 | Case Study 内部有限的 pin / scrub（**仅桌面**） | `ScrollTrigger` |
 
-**⚙️ 工程注 — 更正我之前给的数字**：
-我早前说「GSAP 大概 70KB」，那是**未压缩**的数字，用它来做决定不公平。
-实际按 gzip 传输：core 约 24KB、ScrollTrigger 约 11KB、Flip 约 7KB，合计 **40KB 上下**。
-（具体以你打包后实测为准。）
+**其他一律不用 GSAP**，走 CSS / 原生 JS / Web Animations API：
 
-40KB 换 Flip 和 ScrollTrigger 是划算的 —— **前提是它真的用在这些空间转换上**。
-如果只是拿来做 fade in，那 40KB 就白花了，那种效果手写更省。
+开场序列 · 墨迹 SVG · 数字滚动 · 进度条 · 自定义光标 · 磁吸按钮 ·
+鼠标视差 · 跑马灯 · 普通 reveal · 惯性滚动
 
-**保留手写的部分**：惯性滚动、磁吸按钮、自定义光标、纸张颗粒。这些已经写好且没有库能做得更好。
+### 1.4 标题文字 reveal 不引入 SplitText
+
+**不为了拆字再加一个依赖。**
+在 HTML / data 渲染阶段就生成安全的 `<span>` word wrapper
+（当前 `main.js` 里已经手写好了，按词分组、词内不断行）。
+
+> **原则**：库是为了处理困难的问题，不是因为「这是动画」就全部交给库。
 
 ---
 
-## 01 — Opening Sequence（开场）
+## 2. Desktop 编排
+
+### 2.1 主路径（保持很短）
+
+```
+Opening → Hero → Works Grid → About → Services → Contact
+```
+
+Case Study **不在主路径上**。
+
+### 2.2 Opening Sequence
 
 总时长 **1.8 – 2.5 秒**。载入后不要直接看到完整 Hero。
 
-### 1.1 Loader
-先只出现：
+**Loader**
 ```
 JH
 10 SELECTED WORKS
 2023 — 2026
 ```
-然后一条细线从左向右跑满。
-接着整个 loader 用 `clip-path` 向上收掉，Hero 露出来。
+一条细线从左向右跑满 → 整个 loader 用 `clip-path` 向上收掉 → Hero 露出。
 
-### 1.2 标题
-`JH STUDIO'S` 先收紧字距：
+**标题**
+
+`JH STUDIO'S` 收紧字距：
 ```
-opacity: 0 → 1
+opacity:       0 → 1
 letterSpacing: 0.5em → 正常
 ```
 
-`Portfolio` 用 SplitText，**按 word / character mask reveal**，不是乱飞：
+`Portfolio` 按 word / character mask reveal（**不是乱飞**）：
 ```
 yPercent:  120 → 0
 rotation:  2deg → 0
@@ -68,17 +130,18 @@ ease:      expo.out
 
 字出来后，背后超大的 `DESIGN` ghost text **慢 0.2 秒**才浮出来。
 
-### 1.3 墨迹
-**墨迹不是一开始就在。** 等 `Portfolio` 完成约 70% 才开始刷。
+**墨迹**
 
+墨迹不是一开始就在。等 `Portfolio` 完成约 **70%** 才开始刷。
 真 SVG mask reveal，不是假 brush 动画：
 ```
 stroke-dashoffset: full → 0
 同时轻微 scaleX
 ```
 
-### 1.4 十张作品卡片 — 第一波 WOW
-**不要 10 张同时 fade in。** 要像从桌面下、镜头后、左右两侧一张张飞进来。
+### 2.3 Hero：10 张作品散落漂浮 —— 全站最大的第一波 WOW
+
+**不要 10 张同时 fade in。** 像从桌面下、镜头后、左右两侧一张张飞进来。
 
 | 项目 | x | y | rotation | scale |
 |---|---|---|---|---|
@@ -89,8 +152,7 @@ stroke-dashoffset: full → 0
 
 统一起点 `opacity: 0`，每张间隔 **0.06 – 0.1s**，形成 card cascade。
 
-### 1.5 鼠标视差
-卡片群跟鼠标做很轻的 3D parallax：
+**鼠标视差**（幅度一定小，不能做成游戏 UI）：
 
 | 层 | 幅度 |
 |---|---|
@@ -98,44 +160,34 @@ stroke-dashoffset: full → 0
 | 中间 | ±8px |
 | 后面 | ±3px |
 
-**幅度一定要小**，不能做成游戏 UI。
+### 2.4 Hero → Works Grid：签名式转场
 
-### 1.6 开始滚动 —— Hero 最漂亮的地方
-`Portfolio` 标题：
+开始滚动时，`Portfolio` 标题：
 ```
 scale:   1 → .92
 y:       0 → -80
 opacity: 1 → .15
 ```
 
-但 10 张卡**不跟着一起走**，而是向屏幕四周 explode：
-
+10 张卡**不跟着走**，而是向屏幕四周 explode：
 ```
-Luma   → 左上
-EXA    → 右上
-PNC    → 右
-Furfoo → 左
-YH     → 中下
-MITIC  → 右下
+Luma   → 左上      EXA    → 右上
+PNC    → 右        Furfoo → 左
+YH     → 中下      MITIC  → 右下
 ```
 各自 rotation 再加一点。
 
-然后这些 screenshot **直接飞进下一屏 Works Grid 的位置** —— 用 GSAP Flip。
-视觉上是「漂浮的作品自动整理成作品档案」，不是 section 硬切。
+然后这些 screenshot **用 Flip 直接飞进 Works Grid 的位置**。
 
----
+> 视觉上是「漂浮的作品自动整理成作品档案」，不是 section 硬切。
+> **这就是这个作品集最有识别度的 signature interaction。**
 
-## 02 — Works / 作品档案
+### 2.5 Works Grid
 
-进入时，Hero 那 10 张卡刚通过 Flip 落到各自的 grid 位置。
+**标题**：巨大的「作品」从 bottom mask reveal，黑墨迹从左快速画过。
+**数字**：`10 / 5 / 3+ / 100%` 滚到才 count up。
 
-### 2.1 标题
-巨大的「作品」从 bottom mask reveal，同时黑墨迹从左快速画过。
-
-### 2.2 数字
-`10 / 5 / 3+ / 100%` 不直接出现，滚到才 count up。
-
-### 2.3 卡片入场 — Diagonal stagger
+**卡片入场 — Diagonal stagger**
 ```
 01
    02
@@ -150,261 +202,323 @@ MITIC  → 右下
 stagger: 0.07
 ```
 
-### 2.4 Hover —— 这里是重点
-当前卡片：
+**Hover**
 ```
-y:         -12
-scale:     1.025
-rotationX: 1
-rotationY: -1
-shadow:    加深
+当前卡:  y -12 · scale 1.025 · rotationX 1 · rotationY -1 · shadow 加深
+截图:    scale 1 → 1.04
+metadata: 上移 5px
+箭头:    x 0 → 7px
 ```
-截图本身 `scale: 1 → 1.04`，metadata 上移 5px，`Open Live Site →` 箭头 `x: 0 → 7px`。
-
-**更漂亮的是其他卡片自动安静下来**：
+更重要的是**其他卡片自动安静下来**：
 ```
-当前: opacity 1
-其他: opacity .45
+当前: opacity 1        其他: opacity .45
 ```
 
-### 2.5 筛选
-不要 `display:none` 瞬切。
-
-不相关卡片：
+**筛选**（用 Flip）
 ```
-scale:   1 → .8
-opacity: 1 → 0
+不相关: scale 1 → .8, opacity 1 → 0
+相关:   平滑飞到新位置
 ```
-相关卡片用 Flip 平滑飞到新位置。
 
----
+### 2.6 Case Study —— Focus Mode，不是必经路线
 
-## 03 — Project Case Study（整站主秀）
+Works Grid 上点「查看详情」：
 
-**这一段才是真正卖设计能力的地方。Hero 只是预告，Works Grid 是目录。**
+```
+Grid card
+    ↓ Flip
+放大成 Focus Mode
+    ↓
+Challenge → What I Did → Result
+    ↓
+← Previous / Next →
+    ↓ × Close
+Flip 飞回原本 Grid 的那个位置
+```
 
-### 3.1 进入 Focus Mode
-点作品卡，**不要普通 Modal**。卡片本身用 Flip 从小卡展开到接近 `50vw`，
-不重新载入页面。右边 case study 内容再慢慢 reveal。
+**关键**：关闭时**回到原来那张卡的位置**，不是跳回页面顶部。
+所以 Flip 在这里承担两次转场：`Grid → Focus` 和 `Focus → 原位`。
+这比普通 modal fade 高级得多。
 
-### 3.2 大截图进场
+**大截图进场**
 ```
 clip-path: inset(0 100% 0 0) → inset(0 0 0 0)
 scale:     1.08 → 1
 ```
 像摄影作品 reveal。
 
-### 3.3 标题
+**标题按 line reveal，不是逐字跳。**（luxury 项目逐字动画太浮躁）
+
+**三段内容**：`Challenge` → 滚 80–120px → `What I Did` → 再滚 → `Result`，
+三条之间的竖线同时往下画。让客户真的**读**你的过程。
+
+**Pin 的边界**：只 pin **当前项目内部的一小段**内容，
+**绝对不要**把 10 个项目串成 2000vh 的强制滚动。
+
+**项目间切换**
 ```
-The
-Luma
-Club
+当前截图:   scale 1 → .8   x 0 → -350   rotation 0 → -4
+下一个从右: scale .8 → 1   x 450 → 0    rotation 4 → 0
 ```
-**按 line reveal，不是逐字跳。** 这类 luxury 项目逐字动画太浮躁。
+`01 / 10` → `02 / 10`，标题 mask out → mask in。
 
-### 3.4 三段内容随滚动依次出现
-`Challenge` → 滚 80–120px → `What I Did` → 再滚 → `Result`
-三条之间的竖线同时往下画。这样客户会真的**读**你的过程。
+### 2.7 About（刻意降速）
 
-### 3.5 Pin + Scrub
-整个 Case Study 钉住，用户滚约 **180 – 220vh**，页面不马上离开。
-左边大截图一直在，右边内容依次出现：Challenge → Solution → Result → Services。
+刚看完作品，视觉需要休息。**这一屏故意少做动效。**
 
-**⚙️ 工程注 — 这里有个真风险**：
-10 个项目 × 200vh = **约 2000vh 的强制滚动**，用户想跳过也跳不掉。
-作品集的任务是转化，不是留住人。建议改成：
-
-- **主滚动路径**只走 Works Grid（10 张卡一屏看完）
-- Case Study 做成**点进去**才有的 Focus Mode
-- 进去之后用左右方向键 / 底部缩略图在 10 个项目间切换，随时能退出
-
-这样想快速看完的客户 30 秒能看完，想细看的客户可以一个个进去。
-两种人都照顾到，而 Flip 的 WOW 效果一个都没少。
-
-### 3.6 项目之间的切换 —— 全站最大 WOW
-滚到底时：
 ```
-当前项目截图:  scale 1 → .8    x 0 → -350    rotation 0 → -4
-下一个从右进:  scale .8 → 1    x 450 → 0     rotation 4 → 0
-```
-`01 / 10` 变 `02 / 10`，标题 mask out → mask in。
-
-比「Grid → 点开 modal → 关掉 → 再点另一个」高级非常多。
-
----
-
-## 十个项目：各自的 reveal personality
-
-**这是整份 spec 最特别的地方 —— 10 个网站不要用同一种 reveal。**
-每种手法都从那个客户的真实业务长出来。
-
-| # | 项目 | 业务定位 | Reveal 手法 |
-|---|---|---|---|
-| 01 | The Luma Club | 高端 wellness / 私人会所 | 缓慢 cinematic mask reveal，沉浸感 |
-| 02 | EXA Energy | 建筑 / 维保 / 工业服务 | 横向机械面板：3 条 strip 拼装成完整网站，像 blueprint |
-| 03 | PNC Lifecare | 预防 / 健康护理 | soft blur：`blur(12px) → 0`，`scale .96 → 1` |
-| 04 | Furfoo Pet | 宠物 | 轻微 playful bounce：`rotation -3 → 1 → 0` |
-| 05 | YH Ideal Academy | 教学 / 笔记 / 课程 | paper / notes reveal：左右两张「纸」打开 |
-| 06 | MITIC Asian | 亚洲创新科技平台 | network line 连线 → screenshot reveal |
-| 07 | ÉTÀ | 护肤 / 紧致 / 光泽 | 丝滑竖向 mask：`clip-path top → bottom` + 慢速 image zoom |
-| 08 | EC DIY Hardware | 五金 / 工具 | grid snap：零件从左右下方 assemble 成页面 |
-| 09 | OEM4U2DAY | 保健品 OEM / ODM | 产线感：Formula → Manufacturing → Product → Website 四面板依次组合 |
-| 10 | Master Materials | 建材 | 大块 slab：左中右三块石板向中间合起来 |
-
-这样客户看完 10 个项目不会觉得「又是 screenshot fade in」。
-
-**⚙️ 工程注**：10 套 bespoke reveal = 10 倍维护成本。
-建议做成**可配置的 reveal 类型**（`data.js` 里每个项目写 `reveal: "slab"`），
-共用一套调度器，新客户直接挑一个现成类型，不用再写一套动画。
-
----
-
-## 04 — About（刻意降速）
-
-刚看完 Project Showcase，视觉需要休息。**这一屏故意少做动效。**
-
-照片：
-```
-clip-path: inset(0 0 100% 0) → inset(0)
-scale:     1.08 → 1
-```
-照片下的黑 brush 随滚动慢慢画出来。
-
-自我介绍按行 upward reveal：
-```
-我是 JH，
-一个独立的
-网页设计师与开发者。
+照片: clip-path inset(0 0 100% 0) → inset(0),  scale 1.08 → 1
+黑 brush: 随滚动慢慢画出
+自我介绍: 按行 upward reveal
+Tools: y 20 → 0, opacity 0 → 1, stagger .07
+时间线: 竖线从上画到下，经过年份时 dot scale 0 → 1，文字才出现
+语言条: scaleX 0 → 1, transform-origin left
 ```
 
-Tools（WordPress → WooCommerce → Figma → Ps → Ai → VS Code）：
-```
-y: 20 → 0, opacity: 0 → 1, stagger: .07
-```
+### 2.8 Services + Process
 
-Experience 时间线：竖线从上画到下，经过每个年份时 dot `scale: 0 → 1`，文字才出现。
-
-Languages：`scaleX: 0 → 1`，`transform-origin: left`。
-
----
-
-## 05 — Services + Process
-
-### 5.1 Services 入场 —— 像制图正在被画出来
-顺序很重要：
+**Services 入场 —— 像制图正在被画出来**，顺序很重要：
 1. 外框 `scaleX: 0 → 1`
 2. 竖线一条一条画
-3. 六个 service `opacity: 0 → 1`, `y: 25 → 0`
+3. 六个 service `opacity 0 → 1`, `y 25 → 0`
 
-### 5.2 Hover
+**Hover**
 ```
 编号圆圈: background transparent → ink, color ink → paper
 icon:     rotation 0 → -5 → 0
 虚线上的小 dot: 顺着 dotted path 跑过去
 ```
-**图上那些虚线不是装饰，是会动的。**
+图上那些虚线不是装饰，是会动的。
 
-### 5.3 Process —— 像一支笔正在画
-四步之间那条曲线随滚动画出来：
+**Process —— 像一支笔正在画**
 ```
 01 dot 点亮 → 线继续画 → 02 放大 → 03 → 04
 ```
 整段约 `80vh` 滚动。
 
----
-
-## 06 — Contact Finale
-
-不是普通 Footer，要有一个 Finale。
+### 2.9 Contact Finale
 
 进入最后一屏时，前面所有 noise 稍微消失，然后「开始合作」两行超大 reveal。
+背景 `2026` 很慢地 `y: 70 → -20`，形成淡淡视差。墨迹快速横刷过去。
 
-背景 `2026` 很慢地 `y: 70 → -20`，形成淡淡视差。
-墨迹快速横刷过去。
+四行联系信息：`x: -25 → 0, opacity: 0 → 1, stagger: .08`
 
-四行联系信息依次进：
-```
-x: -25 → 0, opacity: 0 → 1, stagger: .08
-```
+WhatsApp 大按钮最后出现：`scale: .96 → 1`，然后变成 Magnetic Button
+（`x ±8 / y ±6`，离开 `elastic.out` 回位，**幅度小**）。
 
-WhatsApp 大按钮最后才出现：
+**底部 10 项目 reel**：横向 marquee 很慢地走。
 ```
-scale: .96 → 1, opacity: 0 → 1
-```
-然后变成 Magnetic Button：鼠标靠近 `x ±8 / y ±6`，离开时 `elastic.out` 回位。
-**幅度小，不要整个按钮跑很远。**
-
-### 底部 10 项目 reel
-横向 marquee 从右向左很慢地走。
-```
-hover 某一个: 整条 marquee pause
-被 hover 的:  opacity .4 → 1, scale 1 → 1.05
-其他:         稍暗
+hover 某一个: 整条 pause，该项 opacity .4 → 1 · scale 1 → 1.05，其他稍暗
 点它:         Flip 回对应的 Case Study
 ```
-**用户已经滚到 footer 了，仍然可以重新进入你的作品。**
+用户已经滚到 footer 了，仍然可以重新进入作品。
 
 ---
 
-## 整站滚动体验
+## 3. Mobile 编排（独立设计，不是降级）
 
-不是这种普通结构：
+> **这是 `BRIEF.md` 的一级 requirement。**
+> 不是「Desktop 做完 → `if (mobile) disableAnimation()`」，
+> 而是 **Desktop choreography 和 Mobile choreography 两份**。
+>
+> 手机是大部分客户第一次打开这个网站的设备 —— 小红书点链接过来就是手机。
+
+**手机上完全不做**：`pin` · `scrub` · `mouse parallax` · `magnetic` · `3D tilt` · `Flip`
+
+少很多 motion **不等于廉价版**，只是 choreography 更适合触摸。
+
+### 3.1 Mobile Hero
+
+Desktop 是 10 张卡在空间中漂浮 —— **手机不做这个。**
+改成 4 张精选作品组成稍微错位的 editorial stack：
+
 ```
-Hero → Works → About → Services → Contact
+JH STUDIO'S
+
+PORTFOLIO
+────墨迹────
+
+真实上线的网站
+真实客户的作品
+
+[ Luma ]
+       [ EXA ]
+[ PNC ]
+       [ Furfoo ]
+
+Swipe / Scroll
 ```
 
-而是：
+Opening 时卡片一张张 `translateY(30px) → 0`。
+不需要 3D、不需要 mouse、不需要 Flip。
+
+继续滚就直接进入 Works Grid。
+**目标：小红书来的客户，5–10 秒内已经看到作品。**
+
+### 3.2 Mobile Works
+
+**不是把 Desktop 的 10 张缩小塞进去。** 一张一张很清楚：
+
 ```
-Opening Sequence
-  ↓
-10 张作品漂浮出现
-  ↓ scroll
-作品卡 explode + rearrange
-  ↓
-完整 Works Archive
-  ↓ 点击 / scroll
-Project Focus
-  01 The Luma Club → 02 EXA → 03 PNC → … → 10 Master Materials
-  ↓
-About（视觉休息）
-  ↓
-Services / Process
-  ↓
-Contact Finale
-  ↓
-10-project endless reel
+作品
+10 PROJECTS
+
+[ The Luma Club        ]
+[ 大 screenshot         ]
+Luxury Wellness
+查看项目 →
+
+[ EXA Energy           ]
+[ screenshot           ]
+Construction / Industrial
+查看项目 →
+
+...
+```
+
+1 column，可以让部分 featured card 更大。
+
+**筛选**：横向排列 `全部 | 企业 | 工业 | 电商 | 教育 | Lifestyle`，
+筛选后**直接 DOM 更新，不做 Flip**。
+
+### 3.3 Mobile Case Study
+
+```
+← 返回作品
+
+01 / 10
+THE LUMA CLUB
+
+[ Full width screenshot ]
+
+Challenge
+
+What I Did
+
+Result
+
+[ Visit Live Site ]
+
+← EXA       PNC →
+```
+
+允许的动效**只有**：
+```
+截图: clip-path reveal
+      image scale 1.04 → 1
 ```
 
 ---
 
-## ⚙️ 工程注：开工前必须想清楚的四件事
+## 4. Reveal 配置化（架构决定，不是优化项）
 
-### 1. 手机怎么办
-Flip、pin+scrub、鼠标视差、magnetic —— **这四样在触屏上全部无意义或有害**。
-手机必须有一套独立的简化编排：卡片顺序 fade + 上移就够了，Case Study 改成普通页面纵向排布。
-**手机是大部分客户第一次打开你网站的设备**，不能当成降级方案随便处理。
+**这个决定后面会不会变成维护地狱。**
 
-### 2. 首屏时间
+### 4.1 数据里声明类型
+
+```js
+{
+  slug: "the-luma-club",
+  title: "The Luma Club",
+  category: "lifestyle",
+  reveal: "cinematic",
+  year: 2026
+}
+
+{ slug: "exa-energy",        reveal: "strips"   }
+{ slug: "yhideal-academy",   reveal: "paper"    }
+{ slug: "ec-diy-hardware",   reveal: "assemble" }
+{ slug: "master-materials",  reveal: "slab"     }
+```
+
+### 4.2 一个调度器，不是十个函数
+
+**不要这样：**
+```js
+lumaAnimation()
+exaAnimation()
+pncAnimation()
+...
+```
+
+**要这样：**
+```js
+revealProject(project, element)
+```
+
+内部 dispatch：
+```js
+REVEALS = {
+  cinematic,
+  strips,
+  soft,
+  playful,
+  paper,
+  network,
+  silk,
+  assemble,
+  blueprint,
+  slab
+}
+```
+
+第 11 个项目直接写 `reveal: "slab"` 复用。
+**真的需要新的 personality，才加第 11 种 reveal。**
+
+### 4.3 十种 reveal 对应的项目与理由
+
+每种手法都从那个客户的**真实业务**长出来。
+
+| # | 项目 | 业务定位 | `reveal` | 手法 |
+|---|---|---|---|---|
+| 01 | The Luma Club | 高端 wellness / 私人会所 | `cinematic` | 缓慢 mask reveal，沉浸感 |
+| 02 | EXA Energy | 建筑 / 维保 / 工业服务 | `strips` | 3 条横向 strip 拼装成完整网站，blueprint 感 |
+| 03 | PNC Lifecare | 预防 / 健康护理 | `soft` | `blur(12px) → 0`，`scale .96 → 1` |
+| 04 | Furfoo Pet | 宠物 | `playful` | 轻微 bounce：`rotation -3 → 1 → 0` |
+| 05 | YH Ideal Academy | 教学 / 笔记 / 课程 | `paper` | 左右两张「纸」打开 |
+| 06 | MITIC Asian | 亚洲创新科技平台 | `network` | 连线生长 → screenshot reveal |
+| 07 | ÉTÀ | 护肤 / 紧致 / 光泽 | `silk` | 竖向 `clip-path top → bottom` + 慢速 zoom |
+| 08 | EC DIY Hardware | 五金 / 工具 | `assemble` | 零件从左右下方 assemble 成页面 |
+| 09 | OEM4U2DAY | 保健品 OEM / ODM | `blueprint` | Formula → Manufacturing → Product → Website 四面板依次组合 |
+| 10 | Master Materials | 建材 | `slab` | 左中右三块石板向中间合起来 |
+
+客户看完 10 个项目不会觉得「又是 screenshot fade in」。
+
+---
+
+## 5. 素材原则
+
+**AI mockup 只负责确定 composition / motion direction。**
+
+Production 必须把 10 个 live site 真实抓下来（`npm run shots`），
+**动画围绕真实作品做，不是让作品迁就 mockup。**
+
+否则客户点进真站发现跟卡片上不一样，会很尴尬。
+
+---
+
+## 6. 开工前必须想清楚的
+
+### 6.1 首屏时间
 Opening Sequence 1.8–2.5 秒的前提是**资源已经就绪**。
-10 张作品截图如果每张 200KB，那 loader 会变成真的在等下载，而不是在演出。
-必须：首屏只加载可见的 2–3 张，其余懒加载；截图上 WebP + 尺寸分级。
+10 张截图如果每张 200KB，loader 会变成真的在等下载，而不是在演出。
+→ 首屏只加载可见的 2–3 张，其余懒加载；WebP + 尺寸分级。
 
-### 3. SEO 与无障碍
-- 所有内容必须在 DOM 里、能被抓取，动效只管「怎么出现」，不能决定「存不存在」
-- `prefers-reduced-motion` 开启时，整套编排要能一键降级成静态版
-- pin + 自定义滚动容器会打断键盘 Tab 的滚动定位（BRIEF 第 8 节那个坑），要一起处理
+### 6.2 SEO 与无障碍
+- 所有内容必须在 DOM 里、能被抓取。**动效只管「怎么出现」，不能决定「存不存在」**
+- `prefers-reduced-motion` 开启时，整套编排一键降级成静态版
+- pin + 自定义滚动容器会打断键盘 Tab 的滚动定位（`BRIEF.md` 第 8 节那个坑），要一起处理
 
-### 4. 工期实话
-这套编排的工作量大约是现在这个版本的 **3–4 倍**，主要花在：
-Flip 的三处空间转换、10 套 bespoke reveal、手机端第二套编排、以及各种中断/resize 的边界情况。
-建议分阶段做，不要一次全上：
+### 6.3 分阶段，不要一次全上
+
+工作量约是当前版本的 **3–4 倍**。每阶段做完都是**可以上线的状态**：
 
 | 阶段 | 内容 | 拿到什么 |
 |---|---|---|
 | 1 | Opening Sequence + Hero 卡片群 + 鼠标视差 | 第一印象直接到位 |
-| 2 | Hero → Works Grid 的 Flip + 筛选 Flip | 最核心的 WOW |
-| 3 | Case Study Focus Mode（先用 1 种通用 reveal） | 结构跑通 |
-| 4 | 10 套 bespoke reveal 逐个替换 | 差异化 |
+| 2 | Hero → Works Grid 的 Flip + 筛选 Flip | **signature interaction，做完即可上线** |
+| 3 | Case Study Focus Mode（先用一种通用 reveal） | 结构跑通 |
+| 4 | 10 种 bespoke reveal 逐个替换 | 差异化 |
 | 5 | Services / Process / Contact 编排 | 收尾 |
 
-每一阶段做完都是**可以上线的状态**，不会卡在半成品。
+Mobile choreography 与每个阶段**同步进行**，不排在最后。

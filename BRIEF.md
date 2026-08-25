@@ -162,21 +162,54 @@
 > 十个项目各自的 reveal personality、逐屏时间轴，全部在那份文件里。
 > 下面只是基线要求。
 
+### 每个动画都要回答一个问题
+
+> **它是在展示作品，解释层级，还是帮助导航？**
+> **三个都不是 —— 删。**
+
+这条决定了「animation 很多」不会变成「所有东西都在动」。
+客户应该感受到「这个作品集很会动」，而不是「所有东西一直在动」。
+
 ### 关于动画库的决定（已修订）
 
 **原本的决定**：不引入任何库，全部手写。
-理由是「GSAP 大概 70KB，速度是卖点」。
 
-**修订**：`MOTION.md` 那套编排需要 Flip（Hero 卡片群 → Works Grid → Case Study
-的空间转换）和 ScrollTrigger（pin + scrub），**这两件事手写成本远高于 40KB 的价值**，
-改用 GSAP。
+**修订**：`MOTION.md` 那套编排里有三处 Flip 空间转换和一处 pin/scrub，
+手写成本明显高于引入成本，改用 GSAP —— **但只用在这四处**：
 
-**⚠️ 顺带更正**：我早前说的「70KB」是未压缩数字，拿来做决定不公平。
-按 gzip 传输实际约 40KB（core + ScrollTrigger + Flip）。
+1. Hero 卡片群 → Works Grid（`Flip`）
+2. Works 筛选重排（`Flip`）
+3. Works Grid → Case Study，以及关闭时飞回原位（`Flip`）
+4. Case Study 内部有限的 pin / scrub，仅桌面（`ScrollTrigger`）
 
-**但这个决定有条件**：GSAP 只用在那三处空间转换和滚动编排上。
-惯性滚动、磁吸按钮、自定义光标、简单 reveal —— 这些已经手写好了，不换。
-**如果最后 GSAP 只被拿来做 fade in，那 40KB 就是白花的，那就退回手写。**
+其他一律 CSS / 原生 JS / WAAPI：开场序列、墨迹、数字滚动、光标、磁吸、
+鼠标视差、跑马灯、普通 reveal、惯性滚动。
+
+**标题拆字也不引入 SplitText** —— 在渲染阶段生成 `<span>` word wrapper 即可
+（`main.js` 里已经手写好了）。
+
+> 库是为了处理困难的问题，不是因为「这是动画」就全部交给库。
+
+**⚠️ 关于体积 —— 我之前写错过一次**：
+早前我在文档里写了「≈40KB gzip」这样的具体数字。**那个写法是错的** ——
+官方没有把这些 gzip 数字作为固定规格公布，而且会随版本变动。
+**以我们实际部署版本的 build / Network 实测为准**，测完把数字和测量日期记进 `MOTION.md` 1.2 节。
+
+### Mobile 是一级需求，不是降级方案
+
+**不是**「Desktop 做完 → `if (mobile) disableAnimation()`」，
+**而是 Desktop choreography 和 Mobile choreography 两份独立设计**。
+
+手机上完全不做：`pin` · `scrub` · `mouse parallax` · `magnetic` · `3D tilt` · `Flip`
+
+手机是大部分客户第一次打开这个网站的设备（小红书点链接过来就是手机）。
+目标：**5–10 秒内已经看到作品**。具体编排见 `MOTION.md` 第 3 节。
+
+### 转化路径优先
+
+客户**不需要**看完 10 个 Case Study 才能按 WhatsApp。
+主路径保持很短：`Opening → Hero → Works Grid → About → Services → Contact`。
+Case Study 是**点进去**的 Focus Mode，不是必经关卡。
 
 ### 基线要求（不管用不用库都要满足）
 - 惯性平滑滚动（那种有重量感的滚动）
@@ -239,7 +272,8 @@
 - ❌ **不要给页面加彩色**。每加一个彩色元素，都会开始跟作品截图抢注意力。
 - ❌ **不要用 Google Fonts CDN**。中国大陆打不开。
 - ❌ **不要用假的笔刷字体**做墨迹效果，一眼假。
-- ⚠️ **动画库**：原则上不引入；但 `MOTION.md` 那套编排里的 Flip / ScrollTrigger 是例外（见第 7 节）。判断标准：**这个库有没有用在手写会明显更贵的地方**。
+- ⚠️ **动画库**：只有 `MOTION.md` 1.3 节列的四处可以用 GSAP，其余一律不用。判断标准：**手写这件事是不是明显更贵**。
+- ❌ **不要用 AI mockup 当最终素材**。mockup 只负责确定 composition / motion direction，production 必须抓真实网站截图 —— 动画围绕真实作品做，不是让作品迁就 mockup。
 - ❌ **不要写「这是一个响应式的现代化网站」这种废话文案**。客户不关心，客户只关心你能不能帮他赚钱。
 
 ---

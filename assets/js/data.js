@@ -43,6 +43,11 @@ const SITE = {
    url      : 真实网站链接
    category : 分类，必须是下面其中一个：
               corporate | industrial | ecommerce | education | lifestyle
+   reveal   : 这个项目用哪一种入场动画（见 MOTION.md 第 4 节）。
+              十种现成的：cinematic | strips | soft | playful | paper
+                          network | silk | assemble | blueprint | slab
+              新客户直接挑一个现成的复用，真的需要新的 personality 才加第 11 种。
+              ⚠️ 不要为每个项目写一套独立动画 —— 那会变成维护地狱。
    year     : 年份
    tags     : 这个项目你做了什么（三语，各 2-4 个）
    blurb    : 一句话介绍（三语）
@@ -55,6 +60,7 @@ const PROJECTS = [
     name: "The Luma Club",
     url: "https://thelumaclub.com",
     category: "lifestyle",
+    reveal: "cinematic",
     year: "2026",
     tags: {
       zh: ["品牌官网", "视觉设计", "会员/预约"],
@@ -72,6 +78,7 @@ const PROJECTS = [
     name: "EXA Energy Sdn. Bhd.",
     url: "https://www.exaenergy.asia/",
     category: "industrial",
+    reveal: "strips",
     year: "2025",
     tags: {
       zh: ["企业官网", "服务展示", "询盘表单"],
@@ -89,6 +96,7 @@ const PROJECTS = [
     name: "PNC Lifecare",
     url: "https://pnclifecare.com",
     category: "lifestyle",
+    reveal: "soft",
     year: "2025",
     tags: {
       zh: ["品牌官网", "产品介绍", "移动优先"],
@@ -106,6 +114,7 @@ const PROJECTS = [
     name: "Furfoo Pet",
     url: "https://furfoopet.com",
     category: "ecommerce",
+    reveal: "playful",
     year: "2024",
     tags: {
       zh: ["电商", "产品目录", "购物流程"],
@@ -123,6 +132,7 @@ const PROJECTS = [
     name: "YH Ideal Academy",
     url: "https://yhidealacademy.com",
     category: "education",
+    reveal: "paper",
     year: "2024",
     tags: {
       zh: ["课程展示", "报名表单", "多语内容"],
@@ -140,6 +150,7 @@ const PROJECTS = [
     name: "MITIC Asian",
     url: "https://miticasian.org/",
     category: "corporate",
+    reveal: "network",
     year: "2024",
     tags: {
       zh: ["组织官网", "活动资讯", "会员入口"],
@@ -157,6 +168,7 @@ const PROJECTS = [
     name: "ETAETA",
     url: "https://etaeta.co",
     category: "lifestyle",
+    reveal: "silk",
     year: "2024",
     tags: {
       zh: ["品牌落地页", "视觉设计", "转化优化"],
@@ -174,6 +186,7 @@ const PROJECTS = [
     name: "EC DIY Hardware",
     url: "https://ecdiyhardware.com.my",
     category: "ecommerce",
+    reveal: "assemble",
     year: "2023",
     tags: {
       zh: ["产品目录", "五金 / DIY", "分类检索"],
@@ -191,6 +204,7 @@ const PROJECTS = [
     name: "OEM4U2DAY",
     url: "https://oem4u2day.com",
     category: "corporate",
+    reveal: "blueprint",
     year: "2023",
     tags: {
       zh: ["OEM 服务", "询价流程", "B2B"],
@@ -208,6 +222,7 @@ const PROJECTS = [
     name: "Master Materials",
     url: "https://www.mastermaterials.com.my",
     category: "industrial",
+    reveal: "slab",
     year: "2023",
     tags: {
       zh: ["建材展示", "产品规格", "询盘"],

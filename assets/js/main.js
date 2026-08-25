@@ -80,7 +80,14 @@
   /* ======================================================================
      3. 图片路径（截图优先，没有就用占位图）
      ====================================================================== */
-  function shotSrc(p) { return "assets/screenshots/" + p.slug + ".jpg"; }
+  /* 有真实截图就用截图，没有就直接给占位图 —— 不要先去请求一个不存在的文件。
+     SHOTS 由 tools/sync-static.mjs 在构建时生成（npm run sync）。 */
+  var HAS_SHOT = (typeof SHOTS !== "undefined" && SHOTS) || [];
+  function shotSrc(p) {
+    return HAS_SHOT.indexOf(p.slug) > -1
+      ? "assets/screenshots/" + p.slug + ".jpg"
+      : "assets/img/placeholder/" + p.slug + ".svg";
+  }
   function fallbackSrc(p) { return "assets/img/placeholder/" + p.slug + ".svg"; }
 
   // 还没放照片时的占位剪影。用纸色系，不要跟版面打架。
@@ -95,8 +102,11 @@
 
   function setPhoto(el) {
     if (!el) return;
+    /* 照片文件在不在，构建时就知道了（tools/sync-static.mjs 写进 shots.js）。
+       不要先请求一个不存在的文件再回退 —— 那是一个白费的 404。 */
+    var ready = (typeof HAS_PHOTO !== "undefined") ? HAS_PHOTO : true;
     el.addEventListener("error", function h() { el.removeEventListener("error", h); el.src = PERSON_FALLBACK; });
-    el.src = PROFILE.photo || PERSON_FALLBACK;
+    el.src = (ready && PROFILE.photo) ? PROFILE.photo : PERSON_FALLBACK;
     el.alt = PROFILE.name || "";
   }
 
@@ -107,17 +117,30 @@
     if (el.dataset.splitDone) return;
     var host = el.querySelector("span[data-i18n]") || el;
     var text = host.textContent.trim();
-    // 按「词」分组：词内部不允许换行，避免 PORTFOLI / O 这种断词
-    var out = "", n = 0;
-    text.split(/(\s+)/).forEach(function (word) {
-      if (!word) return;
-      if (/^\s+$/.test(word)) { out += '<span class="ch ch--sp"></span>'; return; }
+    /* 拆字规则：
+         · 拉丁字母 / 数字 → 按「词」分组，词内不换行（避免 PORTFOLI / O）
+         · 中日韩文字和全角标点 → 每个字单独成组，本来就该逐字换行
+       两者混在一起时不能一视同仁 —— 中文没有空格，
+       整句当成一个词会导致永远不换行，窄屏直接撑爆版面。 */
+    var CJK = /[\u2E80-\u303F\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF]/;
+    var out = "", n = 0, buf = "";
+
+    function ch(c) { return '<span class="ch"><i style="transition-delay:' + (n++ * 24) + 'ms">' + esc(c) + "</i></span>"; }
+    function flush() {
+      if (!buf) return;
       out += '<span class="wd">';
-      for (var i = 0; i < word.length; i++) {
-        out += '<span class="ch"><i style="transition-delay:' + (n++ * 24) + 'ms">' + esc(word[i]) + "</i></span>";
-      }
+      for (var k = 0; k < buf.length; k++) out += ch(buf[k]);
       out += "</span>";
-    });
+      buf = "";
+    }
+
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (/\s/.test(c)) { flush(); out += '<span class="ch ch--sp"></span>'; }
+      else if (CJK.test(c)) { flush(); out += '<span class="wd">' + ch(c) + "</span>"; }
+      else { buf += c; }
+    }
+    flush();
     host.innerHTML = out;
     el.classList.add("split");
     el.dataset.splitDone = "1";
@@ -332,40 +355,48 @@
           o.classList.toggle("is-active", a);
           o.setAttribute("aria-pressed", a ? "true" : "false");
         });
-        renderProjects();
+        if (window.JHStage && window.JHStage.filter) window.JHStage.filter(applyFilter);
+        else applyFilter();
       });
       box.appendChild(b);
     });
   }
 
-  function renderProjects() {
-    var grid = $("#work-grid"), empty = $("#work-empty");
-    if (!grid) return;
-    grid.innerHTML = "";
-    var list = PROJECTS.filter(function (p) { return state.filter === "all" || p.category === state.filter; });
-    if (empty) { empty.hidden = list.length > 0; empty.textContent = t("work.empty"); }
+  /* 作品卡片只建一次。筛选和语言切换都是「原地更新」，绝不重建 DOM ——
+     Flip 必须拿到同一批元素，节点一换就没得动画了。 */
+  var CARDS = [];                       // { el, p, refs } —— 建好后就不再变
 
-    list.forEach(function (p, i) {
-      var tags = pick(p.tags) || [];
+  function buildProjects() {
+    var grid = $("#work-grid");
+    if (!grid || CARDS.length) return;
+    grid.innerHTML = "";
+
+    PROJECTS.forEach(function (p, i) {
       var el = document.createElement("article");
       el.className = "proj";
-      el.style.animationDelay = (i * 55) + "ms";
+      el.dataset.slug = p.slug;
+      el.dataset.cat = p.category;
+      el.dataset.reveal = p.reveal || "";
+      el.style.setProperty("--i", i);
       el.tabIndex = 0;
       el.setAttribute("role", "button");
-      el.setAttribute("aria-label", p.name);
+      /* 用 aria-labelledby 指向可见的项目名，而不是写一个 aria-label。
+         写死 aria-label 会和卡片上的可见文字不一致，
+         用语音控制的人念屏幕上看到的名字反而点不到。 */
+      el.setAttribute("aria-labelledby", "pn-" + p.slug);
       el.innerHTML =
         '<div class="proj__shot">' +
-          '<span class="proj__badge">' + esc(t("work.filter." + p.category)) + "</span>" +
+          '<span class="proj__badge"></span>' +
           '<span class="proj__year">' + esc(p.year || "") + "</span>" +
           '<img loading="lazy" alt="' + esc(p.name) + '" src="' + esc(shotSrc(p)) + '">' +
         "</div>" +
         '<div class="proj__body">' +
-          '<h3 class="proj__title">' + esc(p.name) +
+          '<h3 class="proj__title"><span class="proj__name" id="pn-' + esc(p.slug) + '">' + esc(p.name) + "</span>" +
             '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
           "</h3>" +
-          '<p class="proj__blurb">' + esc(pick(p.blurb) || "") + "</p>" +
-          '<ul class="chips">' + tags.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" +
-          '<span class="proj__link">' + t("work.detail") +
+          '<p class="proj__blurb"></p>' +
+          '<ul class="chips"></ul>' +
+          '<span class="proj__link"><span class="proj__linktext"></span>' +
             '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
           "</span>" +
         "</div>";
@@ -377,10 +408,48 @@
       el.addEventListener("keydown", function (e) {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(p); }
       });
-      bindTilt(el);
+
+      CARDS.push({
+        el: el, p: p,
+        badge: $(".proj__badge", el),
+        blurb: $(".proj__blurb", el),
+        chips: $(".chips", el),
+        link:  $(".proj__linktext", el)
+      });
       grid.appendChild(el);
     });
+
+    document.dispatchEvent(new CustomEvent("jh:cards-ready", { detail: { cards: CARDS } }));
   }
+
+  /* 语言切换：只改文字，不动节点 */
+  function localizeProjects() {
+    CARDS.forEach(function (c) {
+      c.badge.textContent = t("work.filter." + c.p.category);
+      c.blurb.textContent = pick(c.p.blurb) || "";
+      c.link.textContent  = t("work.detail");
+      c.chips.innerHTML   = (pick(c.p.tags) || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
+    });
+    var empty = $("#work-empty");
+    if (empty) empty.textContent = t("work.empty");
+  }
+
+  /* 筛选：只切 class。真正的重排动画由 stage.js 用 Flip 接管；
+     stage.js 不在（手机 / 减少动效 / JS 失败）时，CSS 过渡兜底。 */
+  function applyFilter() {
+    var shown = 0;
+    CARDS.forEach(function (c) {
+      var on = state.filter === "all" || c.p.category === state.filter;
+      c.el.classList.toggle("is-out", !on);
+      c.el.setAttribute("aria-hidden", on ? "false" : "true");
+      if (!on) c.el.setAttribute("tabindex", "-1"); else c.el.setAttribute("tabindex", "0");
+      if (on) shown++;
+    });
+    var empty = $("#work-empty");
+    if (empty) empty.hidden = shown > 0;
+  }
+
+  function renderProjects() { buildProjects(); localizeProjects(); applyFilter(); }
 
   function renderServices() {
     var box = $("#cards"); if (!box) return;
@@ -436,8 +505,10 @@
   function renderLinks() {
     var box = $("#links"); if (!box) return;
     function row(icon, label, href, wa) {
-      return '<a href="' + esc(href) + '"' + (wa ? " data-wa" : ' target="_blank" rel="noopener"') + '>' +
-             '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + ICONS[icon] + "</svg>" + esc(label) + "</a>";
+      /* 必须包在 <li> 里 —— <ul> 的直接子元素只能是 <li>，
+         直接塞 <a> 会破坏列表语义（Lighthouse 的 list 审计判 0）。 */
+      return "<li><a href=\"" + esc(href) + "\"" + (wa ? " data-wa" : ' target="_blank" rel="noopener"') + ">" +
+             '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + ICONS[icon] + "</svg>" + esc(label) + "</a></li>";
     }
     var out = row("wa", "WhatsApp", "#", true);
     if (SITE.email) out += row("mail", SITE.email, "mailto:" + SITE.email);
@@ -566,29 +637,39 @@
   /* ======================================================================
      12. 开机动画
      ====================================================================== */
+  /* 开场序列（MOTION.md 2.2）：JH / N SELECTED WORKS / 年份
+     → 细线从左跑满 → 整块 clip-path 向上收掉。总时长约 1.8–2.3s。 */
   function boot() {
-    var box = $("#boot"), fill = $("#boot-fill"), pct = $("#boot-pct");
+    var box = $("#boot"), fill = $("#boot-fill"), cnt = $("#boot-count");
+    if (cnt) cnt.textContent = PROJECTS.length;
     if (!box) return start();
+
     document.body.classList.add("boot-on");
     if (reduced) { box.classList.add("is-done"); document.body.classList.remove("boot-on"); return start(); }
 
-    var v = 0, t0 = null;
-    (function run(ts) {
+    var DUR = 1250, t0 = null;
+    requestAnimationFrame(function run(ts) {
       if (!t0) t0 = ts;
-      v = Math.min(((ts - t0) / 1100) * 100, 100);
-      fill.style.width = v + "%";
-      pct.textContent = Math.round(v);
-      if (v < 100) return requestAnimationFrame(run);
+      var p = Math.min((ts - t0) / DUR, 1);
+      if (fill) fill.style.width = (p * 100).toFixed(1) + "%";
+      if (p < 1) return requestAnimationFrame(run);
       setTimeout(function () {
         box.classList.add("is-done");
         document.body.classList.remove("boot-on");
         start();
-      }, 220);
-    })(performance.now());
+      }, 260);
+    });
   }
 
   function start() {
     engine.start();
+
+    /* 带锚点直接进来（例如别人分享 /#work）：自定义滚动容器是 fixed 的，
+       浏览器自己那套锚点定位不生效，得手动滚过去。 */
+    if (location.hash && location.hash.length > 1) {
+      var target = document.getElementById(location.hash.slice(1));
+      if (target) requestAnimationFrame(function () { goTo(location.hash); });
+    }
     // 首屏元素依次入场
     setTimeout(function () {
       $$("#home [data-split], #home [data-reveal]").forEach(function (el) { el.classList.add("is-in"); });

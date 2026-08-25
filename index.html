@@ -18,19 +18,104 @@
 <link rel="preload" href="assets/fonts/instrument-serif-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 
-<script>document.documentElement.className += " js";</script>
+<script>
+/* 首屏前就把版式决定下来。如果等 stage.js 启动才加类，
+   封面会从「居中全宽」跳成「左对齐 46%」—— 整块重排，CLS 直接爆掉。 */
+(function(){
+  var d = document.documentElement, c = " js";
+  try {
+    if (matchMedia("(min-width:961px)").matches &&
+        matchMedia("(hover:hover) and (pointer:fine)").matches &&
+        !matchMedia("(prefers-reduced-motion:reduce)").matches) c += " hero-ready";
+  } catch (e) {}
+  d.className += c;
+})();
+</script>
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
 <a class="skip-link" href="#work">Skip to work</a>
 
+<!-- 关掉 JS 时的兜底。内容由 tools/sync-noscript.mjs 从 data.js 生成，不要手改。
+     动效只管「怎么出现」，不能决定「存不存在」。 -->
+<noscript>
+  <div class="noscript">
+    <h2>JH Studio — Selected Works</h2>
+    <!-- NOSCRIPT:START -->
+    <ol class="noscript__list">
+      <li>
+        <b>01</b>
+        <a href="https://thelumaclub.com" rel="noopener">The Luma Club</a>
+        <span>2026</span>
+        <p>⚠ 这段是我猜写的，请改成真实情况 —— 会员制品牌的官方网站，重点在品牌调性与入会/预约路径。</p>
+      </li>
+      <li>
+        <b>02</b>
+        <a href="https://www.exaenergy.asia/" rel="noopener">EXA Energy Sdn. Bhd.</a>
+        <span>2025</span>
+        <p>马来西亚建筑、维修保养、人力供应与工业服务公司的企业官网。重点是把复杂的服务线整理清楚，让工程发包方一眼看懂能力范围。</p>
+      </li>
+      <li>
+        <b>03</b>
+        <a href="https://pnclifecare.com" rel="noopener">PNC Lifecare</a>
+        <span>2025</span>
+        <p>健康与护理品牌的官方网站，用干净、可信的视觉语言呈现产品线与品牌理念。</p>
+      </li>
+      <li>
+        <b>04</b>
+        <a href="https://furfoopet.com" rel="noopener">Furfoo Pet</a>
+        <span>2024</span>
+        <p>宠物品牌的线上商店，产品分类与购买路径都为手机端优化，减少客户流失。</p>
+      </li>
+      <li>
+        <b>05</b>
+        <a href="https://yhidealacademy.com" rel="noopener">YH Ideal Academy</a>
+        <span>2024</span>
+        <p>教育机构官网，把课程体系、师资与报名流程整合在一起，家长可以直接在线咨询。</p>
+      </li>
+      <li>
+        <b>06</b>
+        <a href="https://miticasian.org/" rel="noopener">MITIC Asian</a>
+        <span>2024</span>
+        <p>组织机构的官方网站，负责对外形象、活动资讯发布与会员信息的呈现。</p>
+      </li>
+      <li>
+        <b>07</b>
+        <a href="https://etaeta.co" rel="noopener">ETAETA</a>
+        <span>2024</span>
+        <p>品牌落地页，用强视觉与清晰的行动指引，把广告流量转成实际咨询。</p>
+      </li>
+      <li>
+        <b>08</b>
+        <a href="https://ecdiyhardware.com.my" rel="noopener">EC DIY Hardware</a>
+        <span>2023</span>
+        <p>五金与 DIY 用品的线上目录，重点解决「品类多、找货难」的问题。</p>
+      </li>
+      <li>
+        <b>09</b>
+        <a href="https://oem4u2day.com" rel="noopener">OEM4U2DAY</a>
+        <span>2023</span>
+        <p>OEM 代工服务的 B2B 网站，把生产能力、流程与最小起订量讲清楚，缩短询价来回。</p>
+      </li>
+      <li>
+        <b>10</b>
+        <a href="https://www.mastermaterials.com.my" rel="noopener">Master Materials</a>
+        <span>2023</span>
+        <p>建材供应商官网，产品规格与应用场景并列呈现，方便承包商快速判断是否适用。</p>
+      </li>
+    </ol>
+    <!-- NOSCRIPT:END -->
+  </div>
+</noscript>
+
 <!-- ===== 载入 ===== -->
 <div class="boot" id="boot" aria-hidden="true">
   <div class="boot__inner">
-    <span class="boot__mark">JH</span>
+    <span class="boot__mark" id="boot-mark">JH</span>
+    <span class="boot__meta"><span id="boot-count">10</span>&nbsp;SELECTED WORKS</span>
+    <span class="boot__meta boot__meta--dim">2023 &mdash; 2026</span>
     <div class="boot__bar"><i id="boot-fill"></i></div>
-    <span class="boot__pct"><span id="boot-pct">0</span>%</span>
   </div>
 </div>
 
@@ -40,7 +125,9 @@
 
 <!-- ===== 顶栏 ===== -->
 <header class="rail rail--top" id="hud">
-  <a class="rail__brand" href="#home" data-magnetic aria-label="Home"><b id="logo-mark">JH</b>&nbsp;<span data-i18n="role.short">网页设计</span></a>
+  <!-- 不要写 aria-label="Home"：它和可见文字「JH 网页设计」不一致，
+       用语音控制的人念可见文字反而点不到。可见文字本身就是好名字。 -->
+  <a class="rail__brand" href="#home" data-magnetic><b id="logo-mark">JH</b>&nbsp;<span data-i18n="role.short">网页设计</span></a>
 
   <nav class="tabs" id="tabs" aria-label="Main">
     <span class="tabs__glide" id="tabs-glide" aria-hidden="true"></span>
@@ -56,7 +143,9 @@
       <button type="button" data-lang-btn="en">EN</button>
       <button type="button" data-lang-btn="ms">BM</button>
     </div>
-    <a class="btn btn--wa rail__cta" data-wa data-magnetic href="#contact">
+    <!-- aria-label 必须有：窄屏时 span 被 display:none，只剩图标，
+         链接就没有可访问名称了（Lighthouse link-name 会直接判 0）。 -->
+    <a class="btn btn--wa rail__cta" data-wa data-magnetic href="#contact" aria-label="WhatsApp">
       <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2A10 10 0 0 0 3.5 17.2L2 22l4.94-1.44A10 10 0 1 0 12.04 2Zm0 1.9a8.1 8.1 0 1 1-4.13 15.06l-.3-.18-2.93.86.87-2.85-.19-.3A8.1 8.1 0 0 1 12.04 3.9Zm4.7 10.1c-.25-.13-1.5-.74-1.73-.83s-.4-.13-.57.13-.65.82-.8.99-.3.19-.55.06a6.6 6.6 0 0 1-1.95-1.2 7.3 7.3 0 0 1-1.34-1.68c-.14-.25 0-.38.11-.5s.25-.3.37-.44a1.7 1.7 0 0 0 .25-.42.46.46 0 0 0 0-.44c0-.12-.56-1.37-.77-1.87s-.41-.43-.56-.44h-.48a.92.92 0 0 0-.67.31 2.8 2.8 0 0 0-.87 2.08 4.86 4.86 0 0 0 1.02 2.58 11.15 11.15 0 0 0 4.27 3.78 14.4 14.4 0 0 0 1.43.53 3.43 3.43 0 0 0 1.57.1 2.57 2.57 0 0 0 1.69-1.19 2.09 2.09 0 0 0 .14-1.18c-.06-.11-.23-.18-.48-.3Z"/></svg>
       <span>WhatsApp</span>
     </a>
@@ -99,7 +188,40 @@
         <li data-reveal><a href="#services" data-magnetic><em>03</em><span data-i18n="menu.services">服务</span></a></li>
         <li data-reveal><a href="#contact"  data-magnetic><em>04</em><span data-i18n="menu.contact">联系</span></a></li>
       </ul>
+
+      <!-- 手机版 Hero：3–4 个精选作品的错位 stack。桌面不显示。
+           这是装饰性预览，真正的作品列表在 #work，所以对读屏软件隐藏。 -->
+      <div class="hero-mob" id="hero-mob" aria-hidden="true">
+        <!-- HEROMOB:START -->
+        <figure class="hero-mob__card" style="--i:0">
+          <img loading="eager" alt="" width="800" height="500"
+               src="assets/img/placeholder/luma-club.svg">
+          <figcaption>The Luma Club</figcaption>
+        </figure>
+        <figure class="hero-mob__card" style="--i:1">
+          <img loading="eager" alt="" width="800" height="500"
+               src="assets/img/placeholder/exa-energy.svg">
+          <figcaption>EXA Energy Sdn. Bhd.</figcaption>
+        </figure>
+        <figure class="hero-mob__card" style="--i:2">
+          <img loading="lazy" alt="" width="800" height="500"
+               src="assets/img/placeholder/pnc-lifecare.svg">
+          <figcaption>PNC Lifecare</figcaption>
+        </figure>
+        <figure class="hero-mob__card" style="--i:3">
+          <img loading="lazy" alt="" width="800" height="500"
+               src="assets/img/placeholder/furfoo-pet.svg">
+          <figcaption>Furfoo Pet</figcaption>
+        </figure>
+        <!-- HEROMOB:END -->
+      </div>
+
+      <p class="cover__cue" data-reveal><span data-i18n="cue.scroll">向下滚动</span><i aria-hidden="true"></i></p>
     </div>
+
+    <!-- 桌面版 Hero 舞台：10 张真实作品卡飞进来的地方。
+         卡片本体住在 #work-grid（语义位置），JS 只是把它们暂时搬过来。 -->
+    <div class="hero-stage" id="hero-stage" aria-hidden="true"></div>
 
     <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee"></div></div>
   </section>
@@ -249,7 +371,49 @@
 </div>
 
 <script src="assets/js/data.js"></script>
+<script src="assets/js/shots.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/main.js"></script>
+
+<!-- GSAP 自托管，只有 core + Flip（没有 ScrollTrigger，Phase 1–2 用不到）。
+     ⚠️ 按条件加载：手机 / 触屏 / 开了「减少动效」的设备，Flip 一次都不会被调用
+     （舞台不启用、筛选也走普通过渡），所以那 96KB 干脆不下载。
+     stage.js 始终加载 —— 它负责手机版 Hero 的入场，而且自己会检测库在不在。 -->
+<script>
+(function () {
+  var need = false;
+  try {
+    /* 判断逻辑：宽屏默认给完整体验，只在「确认是纯触屏设备」时才排除。
+       不要拿 (any-hover:hover) 当唯一开关 —— headless 浏览器、
+       某些远程桌面和虚拟环境都会报 any-hover:none，
+       那样真实桌面用户会莫名拿不到 Hero 舞台。
+       反过来，纯触屏设备（有 touch 事件且没有任何 hover 能力）
+       才是我们真正要排除的对象。带触屏的笔记本有触控板，会报 hover，照样保留。
+       ⚠️ 这条规则必须和 stage.js 的 canStage() 完全一致。 */
+    var touchOnly = ("ontouchstart" in window) && !matchMedia("(any-hover:hover)").matches;
+    need = matchMedia("(min-width:961px)").matches &&
+           !touchOnly &&
+           !matchMedia("(prefers-reduced-motion:reduce)").matches;
+  } catch (e) {}
+  if (!need) return;
+  /* 告诉 stage.js「库正在路上」，让它等一下再判断。
+     不然 defer 的 stage.js 可能比动态注入的脚本先执行，
+     一看 window.gsap 是 undefined 就直接降级了。 */
+  window.__jhGsapPending = true;
+  var left = 2;
+  ["assets/vendor/gsap.min.js", "assets/vendor/Flip.min.js"].forEach(function (src) {
+    var t = document.createElement("script");
+    t.src = src; t.defer = true;
+    t.onload = t.onerror = function () {
+      if (--left === 0) {
+        window.__jhGsapPending = false;
+        document.dispatchEvent(new CustomEvent("jh:gsap-ready"));
+      }
+    };
+    document.head.appendChild(t);
+  });
+})();
+</script>
+<script defer src="assets/js/stage.js"></script>
 </body>
 </html>

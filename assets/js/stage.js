@@ -387,9 +387,14 @@
   /* =====================================================================
      启动
      ===================================================================== */
+  var booted = false;
   function boot(list) {
+    /* 必须幂等：jh:cards-ready 事件和文件末尾的兜底都可能调到这里，
+       调两次就会多出一整套 ghost（20 个），视差和 Flip 全乱。 */
+    if (booted) return;
     cards = list.map(function (c) { return c.el; });
     if (!cards.length) return;
+    booted = true;
 
     buildMobileHero();
 

@@ -101,6 +101,22 @@
   /* =====================================================================
      Hero clone
      ===================================================================== */
+  /* 把 scatter 坐标写成 CSS 自定义属性。
+     单独抽出来是因为 Flip 结束后要用 clearProps 清掉 GSAP 的 inline 变换，
+     那会连这些定位变量一起清掉 —— 必须重新套上，否则 ghost 会散架
+     （实测：不补回来会变成 614px 宽、飞到屏幕外）。 */
+  function placeGhost(g, i) {
+    var s = SCATTER[i];
+    if (!s) return;
+    g.style.setProperty("--hx", s.x + "%");
+    g.style.setProperty("--hy", s.y + "%");
+    g.style.setProperty("--hr", s.r + "deg");
+    g.style.setProperty("--hs", s.s);
+    g.style.setProperty("--hw", s.w + "%");
+    g.style.setProperty("--hz", s.z);
+    g.style.setProperty("--dep", depth(s.z));
+  }
+
   function makeGhosts() {
     if (ghosts.length) return;
     cards.forEach(function (card, i) {
@@ -136,14 +152,7 @@
       cap.innerHTML = '<b>' + String(i + 1).padStart(2, "0") + "</b>" +
                       "<span>" + (name ? name.textContent : "") + "</span>";
       g.appendChild(cap);
-      g.dataset.flipId = card.dataset.slug;   /* ghost 持有 id，真卡此时不持有 */
-      g.style.setProperty("--hx", s.x + "%");
-      g.style.setProperty("--hy", s.y + "%");
-      g.style.setProperty("--hr", s.r + "deg");
-      g.style.setProperty("--hs", s.s);
-      g.style.setProperty("--hw", s.w + "%");
-      g.style.setProperty("--hz", s.z);
-      g.style.setProperty("--dep", depth(s.z));
+      placeGhost(g, i);
       stage.appendChild(g);
       ghosts.push(g);
     });
@@ -243,40 +252,56 @@
     want = null;
 
     var Flip = window.Flip, gsap = window.gsap;
-    gsap.killTweensOf(cards.concat(ghosts));
+    gsap.killTweensOf(ghosts);
     clearParallax();
 
-    var st, opts;
+    /* 做法说明：
+       动画对象始终是 ghost，真卡一次都不动，也不接受 inline 样式。
+         1. Flip.getState(ghosts)  记录「要去的地方」或「现在在哪」
+         2. Flip.fit(ghost, card)  瞬间把 ghost 摆到对应真卡的位置
+         3. Flip.from(state)       从记录的状态飞到当前状态
+       一开始试过「移除 ghost + 靠 data-flip-id 跨元素配对」，
+       Flip 返回的时间轴 duration 是 0 —— 配对没生效，什么都不会动。
+       这个写法不依赖任何隐式配对，目标自始至终是同一批元素。 */
 
     if (target === "grid") {
-      st = Flip.getState(ghosts, { props: "opacity" });   /* 起点：Hero 上的 clone */
-      dropGhosts();
-      ownIds("cards");                                     /* id 交给真卡 */
-      ghostGrid(false);
-      opts = { stagger: { each: .022, from: "start" } };
-    } else {
-      ownIds("cards");
-      st = Flip.getState(cards, { props: "opacity" });      /* 起点：grid 里的真卡 */
-      ownIds("none");                                      /* 交出 id，让 ghost 接手 */
-      makeGhosts();
-      ghostGrid(true);
-      opts = { stagger: { each: .018, from: "end" } };
-    }
+      if (!ghosts.length) { busy = false; return; }
+      var st = Flip.getState(ghosts);                    /* 起点：Hero 散落 */
+      ghosts.forEach(function (g, i) {                   /* 瞬间摆到真卡位置 */
+        if (cards[i]) Flip.fit(g, cards[i], { scale: true });
+      });
+      Flip.from(st, {
+        duration: .95, ease: "expo.out", scale: true,
+        stagger: { each: .022, from: "start" },
+        onComplete: function () {
+          dropGhosts();                                  /* 落位后再撤掉 ghost 和舞台 */
+          ghostGrid(false);                              /* 真卡显形，视觉上无缝接手 */
+          mode = "grid"; busy = false;
+          if (want && want !== mode) { var w = want; want = null; flipTo(w); }
+        }
+      });
 
-    /* 刻意不用 absolute:true —— 两个方向的终点布局本来就是对的，
-       纯 transform 就能飞完，完全不碰布局。加了 absolute 反而会把元素
-       抽出文档流，grid 当场塌掉，页面高度和滚动范围都会跳。 */
-    Flip.from(st, {
-      duration: .95,
-      ease: "expo.out",
-      scale: true,
-      stagger: opts.stagger,
-      onComplete: function () {
-        mode = target;
-        busy = false;
-        if (want && want !== mode) { var w = want; want = null; flipTo(w); }
-      }
-    });
+    } else {
+      makeGhosts();                                      /* ghost 建在 scatter 位置 */
+      if (!ghosts.length) { busy = false; return; }
+      var st2 = Flip.getState(ghosts);                   /* 记录终点：Hero 散落 */
+      ghosts.forEach(function (g, i) {                   /* 先瞬间摆到真卡位置 */
+        if (cards[i]) Flip.fit(g, cards[i], { scale: true });
+      });
+      ghostGrid(true);                                   /* 真卡隐去，ghost 接手 */
+      Flip.from(st2, {
+        duration: .95, ease: "expo.out", scale: true,
+        stagger: { each: .018, from: "end" },
+        onComplete: function () {
+          /* 清掉 GSAP 的 inline 变换，把控制权交还给 CSS 的百分比定位，
+             这样 resize 时 scatter 会自己跟着视口走。 */
+          gsap.set(ghosts, { clearProps: "all" });
+          ghosts.forEach(placeGhost);        /* clearProps 会连 --hx 一起清掉，补回来 */
+          mode = "hero"; busy = false;
+          if (want && want !== mode) { var w = want; want = null; flipTo(w); }
+        }
+      });
+    }
   }
 
   /* =====================================================================
@@ -379,9 +404,15 @@
     var y = window.scrollY || window.pageYOffset || 0;
     if (y === lastY) return;
     lastY = y;
+
+    /* 触发点按「作品网格离视口还有多远」算，不用固定的 vh 比例。
+       固定比例会让卡片飞到折叠线以下才落位 —— 用户只看见它们往下俯冲，
+       看不到「排进档案」那一下，signature interaction 等于没发生。
+       用网格位置当基准，任何视口高度和内容长度都能自适应。 */
     var vh = window.innerHeight;
-    if (mode !== "grid" && y > vh * .34) flipTo("grid");
-    else if (mode !== "hero" && y < vh * .12) flipTo("hero");
+    var gridTop = grid.getBoundingClientRect().top;
+    if (mode !== "grid" && gridTop < vh * 1.0 && y > 40) flipTo("grid");
+    else if (mode !== "hero" && gridTop > vh * 1.45) flipTo("hero");
   }
 
   /* =====================================================================

@@ -376,7 +376,11 @@
       el.className = "proj";
       el.dataset.slug = p.slug;
       el.dataset.cat = p.category;
-      el.dataset.reveal = p.reveal || "";
+      /* ⚠️ 不能叫 data-reveal —— 站点的滚动入场系统已经占用了 [data-reveal]
+         这个选择器（.js [data-reveal]{opacity:0}）。用它会让 10 张作品卡
+         全部变成「等待入场」状态，在拿到 .is-in 之前一直透明，
+         Flip 跑的就是 10 个看不见的元素。改成带命名空间的属性名。 */
+      el.dataset.revealKind = p.reveal || "";
       el.style.setProperty("--i", i);
       el.tabIndex = 0;
       el.setAttribute("role", "button");

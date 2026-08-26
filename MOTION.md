@@ -55,22 +55,32 @@ GSAP 官方并没有把这些 gzip 数字作为固定规格公布，而且会随
 把数字记在这里并注明测量日期和 GSAP 版本：
 
 ```
-测量日期：2026-08-25
+测量日期：2026-08-26（Phase 3 完成后重测）
 GSAP 版本：3.15.0
 实际加载：gsap core + Flip（ScrollTrigger 未加载）
+方法：Chromium 实际请求，响应体本地 gzip -9
 
-              原始      gzip
-gsap.min.js   71.2 KB   27.6 KB
-Flip.min.js   24.9 KB    9.5 KB
-────────────────────────────────
-合计          96.1 KB   37.1 KB
+                    原始      gzip
+gsap.min.js        71.2 KB   27.6 KB
+Flip.min.js        24.9 KB    9.5 KB
+──────────────────────────────────────
+合计               96.1 KB   37.1 KB
+
+整页（首屏全部资源）  桌面      手机
+请求数               23        17
+JS                   87.1 KB   47.9 KB   ← 差值 39.2 KB 就是 GSAP
+CSS                  14.4 KB   14.4 KB
+字体                 64.2 KB   64.2 KB   （woff2 已压缩，gzip 不再变小）
+HTML                  9.4 KB    9.4 KB
+图片                  7.6 KB    4.5 KB   ⚠️ 现在全是占位 SVG，
+                                            换上真实截图后这一行会大幅上升
+──────────────────────────────────────
+合计                180.6 KB  140.4 KB
 ```
 
 **而且这 96KB 只有桌面会下载。** `index.html` 里的内联判断会先看设备：
 纯触屏设备（有 touch 事件且任何输入方式都不能悬停）、窄屏、开了减少动效的，
-Flip 一次都不会被调用，所以脚本干脆不注入。
-
-手机端实测：JS 传输 80KB（全是自己的代码），完全没有 GSAP。
+Flip 一次都不会被调用，所以脚本干脆不注入。手机端实测确认：0 个 GSAP 请求。
 
 体积超出预期时，重新评估的是「这四处用法是否还划算」，不是回头找一个记错的数字。
 
@@ -273,6 +283,37 @@ scale:     1.08 → 1
 下一个从右: scale .8 → 1   x 450 → 0    rotation 4 → 0
 ```
 `01 / 10` → `02 / 10`，标题 mask out → mask in。
+
+---
+
+#### 实作记录（2026-08-26 完成）
+
+文件：`assets/js/study.js` + `style.css` 里的 Focus Mode 段 + `index.html` 的 `#focus` 结构。
+
+**Flip 的两次调用**（白名单第 3 条，就这两处）
+- 打开：卡片 `.proj__shot` → `#fx-screen`
+- 关闭：`#fx-screen` → 回到卡片
+
+飞的是一个 `position:fixed` 的 clone，真卡片和真大图都不动 —— 
+Phase 1–2 的教训：让 Flip 搬真实节点，网格会当场塌掉。
+两端宽高比都是 16/10，所以用 `scale:true`，是纯等比放大，中途不重新裁切。
+
+**3D 倾斜必须在 Flip 之后**。倾斜状态下 `getBoundingClientRect()` 给的是旋转后的
+外接矩形，拿它当起点/终点位置一定偏。所以顺序锁死为：
+打开 = 平着飞过来 → 落位 → 再倾斜；关闭 = 先摊平 → 再飞回去。
+位移（左右切换）和倾斜写在两层元素上（`.focus__slide` / `.focus__device`），
+同一个元素上后写的 `transform` 会把前一个整条覆盖掉。
+
+**关闭飞回「现在正在看的那一个」，不是「最初点进来的那一个」。**
+从底部翻过几个项目之后，屏幕上是 07 却飞回 01 的格子，那是错的位置。
+当前那张卡被筛掉了才退回原始来源，再不行就直接淡出（不飞到一个 0×0 的地方）。
+
+**没有用 ScrollTrigger。** 白名单第 4 条允许「Case Study 内部有限的 pin / scrub」，
+但那是允许，不是要求 —— 这一页做成了单屏版式，自然滚动就够，
+没有一段内容需要被钉住。所以 ScrollTrigger 至今仍然一个字节都没加载。
+
+**项目间左右切换、印章旋转、进度条、自动播放全部是 CSS / 原生 JS**（1.3 的要求）。
+自动播放默认关闭，鼠标停在面板上时不翻页，开了减少动效时整个功能不启动。
 
 ### 2.7 About（刻意降速）
 
@@ -525,12 +566,12 @@ Opening Sequence 1.8–2.5 秒的前提是**资源已经就绪**。
 
 工作量约是当前版本的 **3–4 倍**。每阶段做完都是**可以上线的状态**：
 
-| 阶段 | 内容 | 拿到什么 |
-|---|---|---|
-| 1 | Opening Sequence + Hero 卡片群 + 鼠标视差 | 第一印象直接到位 |
-| 2 | Hero → Works Grid 的 Flip + 筛选 Flip | **signature interaction，做完即可上线** |
-| 3 | Case Study Focus Mode（先用一种通用 reveal） | 结构跑通 |
-| 4 | 10 种 bespoke reveal 逐个替换 | 差异化 |
-| 5 | Services / Process / Contact 编排 | 收尾 |
+| 阶段 | 内容 | 拿到什么 | 状态 |
+|---|---|---|---|
+| 1 | Opening Sequence + Hero 卡片群 + 鼠标视差 | 第一印象直接到位 | ✅ 完成 |
+| 2 | Hero → Works Grid 的 Flip + 筛选 Flip | **signature interaction，做完即可上线** | ✅ 完成 |
+| 3 | Case Study Focus Mode（先用一种通用 reveal） | 结构跑通 | ✅ 完成 |
+| 4 | 10 种 bespoke reveal 逐个替换 | 差异化 | 待做 |
+| 5 | Services / Process / Contact 编排 | 收尾 | 待做 |
 
 Mobile choreography 与每个阶段**同步进行**，不排在最后。

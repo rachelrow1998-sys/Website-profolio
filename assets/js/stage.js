@@ -396,21 +396,36 @@
   }
 
   /* =====================================================================
-     滚动触发（带回差，避免临界点抖动）
+     触发点（带回差，避免临界点抖动）
+     ---------------------------------------------------------------------
+     ⚠️ 这里必须跑在动画循环里，不能挂 scroll 事件。
+     页面是惯性滚动：scroll 事件只在「滚动位置变了」的那一刻发一次，
+     而画面还要再滑 0.5 秒才停。判断依据是「作品网格画到哪了」——
+     所以点导航栏的「作品」（一次 window.scrollTo，只发一个 scroll 事件）时，
+     那一刻网格还在一千多像素以外，判断不成立；之后再也没有事件，
+     舞台就永远停在 hero 模式 —— 用户滚到作品区，看到的是一片空白，
+     卡片全是 opacity:0 / pointer-events:none，一张都点不开。
+     main.js 里的区块高亮早就踩过同一个坑，这里当时漏了。
      ===================================================================== */
-  var lastY = -1;
-  function onScroll() {
-    if (!live) return;
-    var y = window.scrollY || window.pageYOffset || 0;
-    if (y === lastY) return;
-    lastY = y;
+  var lastKey = "";
+  function tick() {
+    requestAnimationFrame(tick);
+    if (!live || busy) return;
 
+    var y = window.scrollY || window.pageYOffset || 0;
     /* 触发点按「作品网格离视口还有多远」算，不用固定的 vh 比例。
        固定比例会让卡片飞到折叠线以下才落位 —— 用户只看见它们往下俯冲，
        看不到「排进档案」那一下，signature interaction 等于没发生。
        用网格位置当基准，任何视口高度和内容长度都能自适应。 */
     var vh = window.innerHeight;
     var gridTop = grid.getBoundingClientRect().top;
+
+    /* 位置没变就什么都不做 —— 每帧读一次 rect 已经够便宜，
+       但没必要在静止时反复走下面的判断。 */
+    var key = (y | 0) + ":" + (gridTop | 0);
+    if (key === lastKey) return;
+    lastKey = key;
+
     if (mode !== "grid" && gridTop < vh * 1.0 && y > 40) flipTo("grid");
     else if (mode !== "hero" && gridTop > vh * 1.45) flipTo("hero");
   }
@@ -441,7 +456,7 @@
       tryActivate();
     }
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    requestAnimationFrame(tick);
 
     var rt;
     function onResize() {

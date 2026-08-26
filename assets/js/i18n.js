@@ -111,11 +111,23 @@ const I18N = {
     "footer.rights": "版权所有",
     "footer.built": "本站由我自己设计与开发",
 
-    "modal.visit": "打开网站",
-    "modal.close": "关闭",
-    "modal.year": "年份",
-    "modal.industry": "行业",
-    "modal.scope": "工作内容"
+    "study.label": "案例详解",
+    "study.index": "作品索引",
+    "study.scroll": "滚动查看",
+    "study.eyebrow": "精选项目",
+    "study.challenge": "挑战",
+    "study.work": "我的工作",
+    "study.result": "成果",
+    "study.services": "服务范围",
+    "study.visit": "打开网站",
+    "study.close": "关闭",
+    "study.back": "返回作品",
+    "study.prev": "上一个作品",
+    "study.next": "下一个作品",
+    "study.autoplay": "自动播放",
+    "study.autostop": "停止播放",
+    "study.more": "其他作品",
+    "study.now": "第 {n} 个，共 {total} 个"
   },
 
   en: {
@@ -225,11 +237,23 @@ const I18N = {
     "footer.rights": "All rights reserved",
     "footer.built": "Designed and built by me",
 
-    "modal.visit": "Open website",
-    "modal.close": "Close",
-    "modal.year": "Year",
-    "modal.industry": "Industry",
-    "modal.scope": "Scope"
+    "study.label": "CASE STUDY",
+    "study.index": "PROJECT INDEX",
+    "study.scroll": "SCROLL TO EXPLORE",
+    "study.eyebrow": "FEATURED PROJECT",
+    "study.challenge": "Challenge",
+    "study.work": "What I Did",
+    "study.result": "Result",
+    "study.services": "Services",
+    "study.visit": "Open website",
+    "study.close": "Close",
+    "study.back": "Back to work",
+    "study.prev": "Previous project",
+    "study.next": "Next project",
+    "study.autoplay": "Autoplay",
+    "study.autostop": "Stop autoplay",
+    "study.more": "More work",
+    "study.now": "Project {n} of {total}"
   },
 
   ms: {
@@ -339,11 +363,23 @@ const I18N = {
     "footer.rights": "Hak cipta terpelihara",
     "footer.built": "Direka dan dibina sendiri",
 
-    "modal.visit": "Buka laman web",
-    "modal.close": "Tutup",
-    "modal.year": "Tahun",
-    "modal.industry": "Industri",
-    "modal.scope": "Skop"
+    "study.label": "KAJIAN KES",
+    "study.index": "INDEKS PROJEK",
+    "study.scroll": "SKROL UNTUK TEROKA",
+    "study.eyebrow": "PROJEK PILIHAN",
+    "study.challenge": "Cabaran",
+    "study.work": "Apa Saya Buat",
+    "study.result": "Keputusan",
+    "study.services": "Skop Perkhidmatan",
+    "study.visit": "Buka laman web",
+    "study.close": "Tutup",
+    "study.back": "Kembali ke kerja",
+    "study.prev": "Projek sebelumnya",
+    "study.next": "Projek seterusnya",
+    "study.autoplay": "Main auto",
+    "study.autostop": "Henti main auto",
+    "study.more": "Lagi kerja",
+    "study.now": "Projek {n} daripada {total}"
   }
 };
 

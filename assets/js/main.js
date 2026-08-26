@@ -245,9 +245,31 @@
   /* 键盘无障碍：scroller 是 fixed 的，浏览器没办法把「Tab 到的屏幕外元素」
      自动滚进视野（它找不到可滚动的祖先）。这里手动补上，
      否则用键盘浏览的人会 Tab 到看不见的地方。 */
+
+  /* 只有「住在滚动容器里、而且中间没有 fixed 祖先」的元素才需要我们代劳。
+     ⚠️ 这个判断是必须的，不是保险起见：
+     顶栏是 fixed，点一下导航栏的「作品」会先 focus 那个链接，
+     链接的 rect.top 永远是三十几像素，于是这里算出「它在屏幕外」，
+     反手把整页滚回文档顶部 —— goTo() 刚滚过去的位置当场被覆盖掉，
+     用户点「作品」结果停在封面，一动没动。
+     .scroller 本身就是 fixed，所以不能简单地「有 fixed 祖先就跳过」，
+     必须是「在走到 .scroller 之前遇到 fixed」才跳过。 */
+  function needsFocusScroll(el) {
+    var n = el;
+    while (n && n !== document.body) {
+      if (n === scroller) return true;
+      if (getComputedStyle(n).position === "fixed") return false;
+      n = n.parentElement;
+    }
+    return false;                       // 顶栏 / 悬浮按钮 / 作品详情页，都不在滚动容器里
+  }
+
   document.addEventListener("focusin", function (e) {
+    /* 不是自定义滚动的时候（手机 / 减少动效）浏览器自己会处理，
+       我们再插一脚只会变成滚两次。 */
+    if (!SMOOTH) return;
     var el = e.target;
-    if (!el || !el.getBoundingClientRect || el.closest(".modal")) return;
+    if (!el || !el.getBoundingClientRect || !needsFocusScroll(el)) return;
     // 必须等一帧：浏览器自己那套「把焦点元素滚进视野」会在我们之后执行，
     // 而它算不对 fixed 容器里的位置，会把我们的滚动覆盖掉。
     requestAnimationFrame(function () {
@@ -408,9 +430,9 @@
       var img = $("img", el);
       img.addEventListener("error", function h() { img.removeEventListener("error", h); img.src = fallbackSrc(p); });
 
-      el.addEventListener("click", function () { openModal(p); });
+      el.addEventListener("click", function () { openStudy(p, el); });
       el.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(p); }
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openStudy(p, el); }
       });
 
       CARDS.push({
@@ -528,34 +550,14 @@
   }
 
   /* ======================================================================
-     9. 弹窗
+     9. 作品详情 —— 转接给 study.js
      ====================================================================== */
-  var modal = $("#modal"), lastFocus = null;
-  function openModal(p) {
-    if (!modal) return;
-    lastFocus = document.activeElement;
-    var img = $("#modal-img");
-    img.onerror = function () { img.onerror = null; img.src = fallbackSrc(p); };
-    img.src = shotSrc(p);
-    img.alt = p.name;
-    $("#modal-cat").textContent   = t("work.filter." + p.category) + " · " + (p.year || "");
-    $("#modal-title").textContent = p.name;
-    $("#modal-blurb").textContent = pick(p.blurb) || "";
-    $("#modal-tags").innerHTML    = (pick(p.tags) || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
-    $("#modal-link").href = p.url;
-    modal.hidden = false;
-    document.body.classList.add("is-locked");
-    $(".modal__x", modal).focus();
-  }
-  function closeModal() {
-    if (!modal || modal.hidden) return;
-    modal.hidden = true;
-    document.body.classList.remove("is-locked");
-    if (lastFocus) lastFocus.focus();
-  }
-  if (modal) {
-    $$("[data-close]", modal).forEach(function (b) { b.addEventListener("click", closeModal); });
-    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModal(); });
+  /* 详情页本体在 study.js 里。这里只负责「点了卡片之后交给谁」，
+     并且在 study.js 因为任何原因没加载时留一条退路：直接开客户的网站。
+     看作品是这个网站存在的理由，不能因为一个动效文件挂了就点不动。 */
+  function openStudy(p, cardEl) {
+    if (window.JHStudy && window.JHStudy.open) return window.JHStudy.open(p, cardEl);
+    window.open(p.url, "_blank", "noopener");
   }
 
   /* ======================================================================
@@ -633,6 +635,9 @@
     resplit();
     $$("[data-magnetic]").forEach(bindMagnetic);
     engine.refresh();
+    /* Focus Mode 是独立文件，自己听这个事件重写文字。
+       不在这里直接调 —— main.js 不该知道 study.js 内部长什么样。 */
+    document.dispatchEvent(new CustomEvent("jh:lang", { detail: { lang: lang } }));
   }
   $$("[data-lang-btn]").forEach(function (b) {
     b.addEventListener("click", function () { applyLang(b.getAttribute("data-lang-btn")); });
@@ -718,6 +723,24 @@
     applyLang(detectLang());
     boot();
   }
+
+  /* 给 study.js 用的最小接口。刻意不暴露 engine / state —— 
+     详情页不该有能力改主页面的滚动和筛选。 */
+  window.JHApi = {
+    t: t,
+    pick: pick,
+    esc: esc,
+    lang: function () { return state.lang; },
+    shotSrc: shotSrc,
+    fallbackSrc: fallbackSrc,
+    cardEl: function (slug) {
+      for (var i = 0; i < CARDS.length; i++) if (CARDS[i].p.slug === slug) return CARDS[i].el;
+      return null;
+    },
+    magnetic: bindMagnetic,
+    reduced: reduced,
+    coarse: coarse
+  };
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();

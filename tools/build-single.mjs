@@ -19,7 +19,7 @@ let html = read("index.html");
 
 /* 1. CSS 和 JS 内联 */
 html = html.replace(/<link rel="stylesheet" href="([^"]+)">/g, (_, href) => `<style>\n${read(href)}\n</style>`);
-html = html.replace(/<script src="([^"]+)"><\/script>/g, (_, src) => `<script>\n${read(src)}\n</script>`);
+html = html.replace(/<script(?![^>]*\btype=)[^>]*\ssrc="([^"]+)"[^>]*><\/script>/g, (_, src) => `<script>\n${read(src)}\n</script>`);
 /* 字体也内联，单文件才能真的自给自足 */
 html = html.replace(/url\('\.\.\/fonts\/([^']+)'\)/g, (_, f) =>
   `url(${dataUri("assets/fonts/" + f, "font/woff2")})`);
@@ -41,6 +41,22 @@ html = html
   .replace(/function shotSrc\(p\) \{[^}]*\}/, () => 'function shotSrc(p) { return EMBEDDED[p.slug] || ""; }')
   .replace(/function fallbackSrc\(p\) \{[^}]*\}/, () => 'function fallbackSrc(p) { return EMBEDDED[p.slug] || ""; }')
   .replace(/var \$ {2}= function/, () => "var EMBEDDED = " + JSON.stringify(imgs) + ";\n  var $  = function");
+
+/* 2b. 手机版 Hero 那几张 <img src="assets/img/placeholder/..."> 是静态写在 HTML 里的，
+       上面那段只改了 JS 里的路径，这里要单独换成 data URI。 */
+html = html.replace(/src="assets\/img\/placeholder\/([^"]+)\.svg"/g,
+  (_, slug) => `src="${imgs[slug] || ""}"`);
+
+/* 2c. GSAP 是运行时按条件注入的，单文件里那两个相对路径同样取不到。
+       直接把库内联在加载器之前，然后把加载器整段拿掉。
+       ⚠️ 代价：单文件版本手机也会带上 GSAP。可以接受 ——
+       这个版本的用途是「发给客户、离线演示」，不是线上部署；
+       而且 stage.js 的 canStage() 仍然会挡住手机，行为不变，只是多了体积。 */
+const loader = /<script>\s*\(function \(\) \{\s*var need = false;[\s\S]*?\}\)\(\);\s*<\/script>/;
+if (!loader.test(html)) throw new Error("找不到 GSAP 条件加载器，index.html 改过了？");
+html = html.replace(loader, () =>
+  `<script>\n${read("assets/vendor/gsap.min.js")}\n</script>\n` +
+  `<script>\n${read("assets/vendor/Flip.min.js")}\n</script>`);
 
 /* 3. og 图也内联，分享时才有预览图 */
 html = html.replace('content="assets/img/og-cover.svg"', `content="${dataUri("assets/img/og-cover.svg", "image/svg+xml")}"`);

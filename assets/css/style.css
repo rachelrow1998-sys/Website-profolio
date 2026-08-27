@@ -622,8 +622,7 @@ html:not(.stage-used) .grid .proj{
 .focus__rail{
   opacity:0; transition:opacity .55s var(--ease2); transition-delay:var(--d,0ms);
   position:absolute; left:13px; top:50%; transform:translateY(-50%);
-  margin:0; display:flex; align-items:center; gap:14px;
-  writing-mode:vertical-rl;
+  margin:0; display:flex; flex-direction:column; align-items:center; gap:14px;
   font-size:.58rem; font-weight:600; letter-spacing:.3em; text-transform:uppercase; color:var(--pencil);
   pointer-events:none;
 }
@@ -636,6 +635,21 @@ html:not(.stage-used) .grid .proj{
   border-radius:50%; background:var(--ink);
   animation:railrun 2.6s var(--ease) infinite;
 }
+/* 竖排文字分两种走法，故意不共用一套。
+   拉丁文：整串 writing-mode 竖过来，字母侧躺，这是正常排法。
+   中文：每字一行往下排 —— 不用 writing-mode。
+   ⚠️ 原因：竖排要靠字体的 vertical metrics（vmtx/vhea）算前进量，
+   而中文用的是访客设备上的系统字体，我们控制不了它有没有这张表。
+   碰上没有的（某些 Linux / 老 Android 回退字体），四个字的前进量全是 0，
+   会原地叠成一团看不懂的黑块。width:1em + break-all 是纯水平排版，
+   一个字占一行自然往下走，视觉一模一样，但不依赖任何字体特性。 */
+.focus__rail span{ writing-mode:vertical-rl; white-space:nowrap; }
+html[data-lang="zh"] .focus__rail span{
+  writing-mode:horizontal-tb;
+  width:1em; word-break:break-all; white-space:normal;
+  letter-spacing:0; line-height:1.5; text-align:center;
+}
+
 @keyframes railrun{ 0%{ transform:translateY(0); opacity:0; } 18%{ opacity:1; } 82%{ opacity:1; } 100%{ transform:translateY(60px); opacity:0; } }
 
 /* ---------- 主体 ---------- */

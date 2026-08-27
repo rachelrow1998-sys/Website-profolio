@@ -323,84 +323,84 @@ const PROJECTS = [
   },
   {
     slug: "etaeta",
-    name: "ETAETA",
+    name: "ÉTÀ",
     url: "https://etaeta.co",
-    category: "lifestyle",
+    category: "ecommerce",
     reveal: "silk",
     year: "2024",
     tags: {
-      zh: ["品牌落地页", "视觉设计", "转化优化"],
-      en: ["Landing page", "Visual design", "Conversion"],
-      ms: ["Landing page", "Reka bentuk visual", "Penukaran"]
+      zh: ["品牌电商", "会员与结账", "认证展示"],
+      en: ["Brand e-commerce", "Accounts & checkout", "Certification"],
+      ms: ["E-dagang jenama", "Akaun & pembayaran", "Pensijilan"]
     },
     blurb: {
-      zh: "品牌落地页，用强视觉与清晰的行动指引，把广告流量转成实际咨询。",
-      en: "Brand landing page using strong visuals and a single clear call to action to turn ad traffic into real enquiries.",
-      ms: "Landing page jenama dengan visual kuat dan satu ajakan bertindak yang jelas."
+      zh: "多语言品牌电商站。首屏整屏一张航拍海滩，只压一个纤细的 ÉTÀ 字标；下面接的是完整的商城 —— 商品、会员账户、购物车结账，还有独立一页放产品认证。",
+      en: "Multilingual brand e-commerce site. The first screen is one aerial photograph of a beach with nothing on it but a thin ÉTÀ wordmark; underneath sits a full store — products, member accounts, cart and checkout, plus a page of its own for product certification.",
+      ms: "Laman e-dagang jenama berbilang bahasa. Skrin pertama hanya satu foto udara pantai dengan tanda kata ÉTÀ; di bawahnya kedai penuh — produk, akaun ahli, troli dan pembayaran, serta halaman pensijilan tersendiri."
     },
     study: {
       subtitle: {
-        zh: "品牌落地页 · 广告流量转化",
-        en: "Brand landing page for paid traffic",
-        ms: "Landing page jenama untuk trafik iklan"
+        zh: "多语言品牌电商站",
+        en: "Multilingual brand e-commerce store",
+        ms: "Kedai e-dagang jenama berbilang bahasa"
       },
       challenge: {
-        zh: "落地页只有一个任务：把点广告进来的人变成咨询。多一个出口就多一个走掉的理由，所以要做的不是加内容，是拿掉内容。",
-        en: "A landing page has exactly one job: turn ad clicks into enquiries. Every extra exit is another reason to leave — so the work here was removing things, not adding them.",
-        ms: "Landing page ada satu tugas sahaja: menukar klik iklan kepada pertanyaan. Setiap pintu keluar tambahan adalah sebab untuk pergi."
+        zh: "这类品牌的两难：调性要够高，才卖得起价；但电商需要的东西（购物车、注册登录、运费规则、认证文件）每一样都在往下拉调性。堆上去像杂货店，藏起来客人不敢下单 —— 尤其是入口的产品，没看到认证就不会掏钱。",
+        en: "The bind with a brand like this: the tone has to sit high enough to justify the price, yet everything e-commerce needs — cart, login, shipping rules, certification documents — pulls that tone straight back down. Pile it on and it reads as a general store; hide it and nobody buys, least of all for a product that goes in your body, where an unseen certificate means an abandoned cart.",
+        ms: "Dilemanya: nada jenama perlu tinggi untuk menyokong harga, tetapi setiap keperluan e-dagang — troli, log masuk, kos penghantaran, sijil — menariknya ke bawah. Terlalu banyak nampak seperti kedai runcit; disembunyikan pula tiada siapa berani membeli."
       },
       work: {
-        zh: "整页只留一个行动按钮，重复出现但始终是同一个。首屏就把「这是什么、为什么值得」讲完，下面全部是支撑证据。删掉导航栏，因为落地页不需要让人逛。",
-        en: "Kept one call to action for the entire page — repeated, but always the same one. The first screen answers what this is and why it's worth it; everything below is supporting evidence. Removed the nav bar entirely, because a landing page isn't for browsing.",
-        ms: "Satu ajakan bertindak untuk seluruh halaman, skrin pertama menjawab apa dan mengapa, dan bar navigasi dibuang sepenuhnya."
+        zh: "把调性和功能分层：首屏什么都不放，一张航拍海滩加一个纤细字标，先让人认这个牌子；商城的那一整套压在下面，需要的时候才出现。「CERTIFICATION」提到主导航当独立一项 —— 这类产品认证是下单前的硬门槛，藏在页脚或 FAQ 里等于没有。满额免运费（西马 RM200 / 东马 RM300）做成顶部可关闭的横条，是拉高客单价最省事的一招，看完能关掉，不占版面。多语言 + 会员账户 + 购物车全站打通，右下角留 WhatsApp，愿意直接问人的不用注册。",
+        en: "Separated tone from function. The first screen carries nothing but an aerial beach photograph and a thin wordmark — recognise the brand first; the whole store sits below, surfacing only when wanted. Promoted CERTIFICATION to its own top-level nav item, because for this kind of product a certificate is a hard gate before purchase and burying it in the footer or an FAQ is the same as not having it. Put the free-shipping threshold (RM200 West Malaysia, RM300 East) in a dismissible top bar — the cheapest lever there is on average order value, and it closes once read. Multilingual, member accounts and cart wired through the whole site, with a WhatsApp float in the corner so anyone who would rather just ask a person doesn't have to register.",
+        ms: "Memisahkan nada daripada fungsi: skrin pertama hanya foto pantai dan tanda kata, kedai penuh di bawahnya. Menaikkan CERTIFICATION ke navigasi utama kerana sijil ialah penghalang sebelum pembelian, dan meletakkan ambang penghantaran percuma di bar atas yang boleh ditutup."
       },
       result: {
-        zh: "⚠ 请填真实成果。落地页最该有数字：广告点击到咨询的转化率、每个咨询的成本。跑过广告就一定拿得到，请去后台看。",
-        en: "⚠ Fill in a real outcome. Landing pages are where numbers matter most: click-to-enquiry conversion rate, cost per enquiry. If ads ran, this data exists — go and read it.",
-        ms: "⚠ Sila isi keputusan sebenar. Landing page paling memerlukan angka: kadar penukaran dan kos setiap pertanyaan."
+        zh: "⚠ 请填真实成果。这个站有购物车和会员系统，后台一定有数字：转化率、客单价（尤其是免运费门槛设了之后有没有拉起来）、注册会员数、回头客比例。这是十个项目里最容易拿到硬数据的一个，请翻后台再写。",
+        en: "⚠ Fill in a real outcome. This site has a cart and a member system, so the numbers are there: conversion rate, average order value (particularly whether the free-shipping threshold lifted it), registrations, repeat-purchase share. Of these ten projects this is the easiest one to get hard data for — check the dashboard before writing.",
+        ms: "⚠ Sila isi keputusan sebenar. Laman ini ada troli dan sistem ahli, jadi angkanya wujud: kadar penukaran, nilai pesanan purata, pendaftaran ahli, kadar pembelian berulang."
       },
-      services: ["BRANDING", "UI DESIGN", "DEVELOPMENT", "MOBILE"]
+      services: ["BRANDING", "E-COMMERCE", "DEVELOPMENT", "MULTILINGUAL", "UI DESIGN"]
     }
   },
   {
     slug: "ec-diy-hardware",
     name: "EC DIY Hardware",
     url: "https://ecdiyhardware.com.my",
-    category: "ecommerce",
+    category: "industrial",
     reveal: "assemble",
     year: "2023",
     tags: {
-      zh: ["产品目录", "五金 / DIY", "分类检索"],
-      en: ["Product catalogue", "Hardware / DIY", "Category search"],
-      ms: ["Katalog produk", "Perkakasan / DIY", "Carian kategori"]
+      zh: ["单页官网", "实体店门面", "WhatsApp 询问"],
+      en: ["One-page site", "Shopfront online", "WhatsApp enquiry"],
+      ms: ["Laman satu halaman", "Kedai dalam talian", "Pertanyaan WhatsApp"]
     },
     blurb: {
-      zh: "五金与 DIY 用品的线上目录，重点解决「品类多、找货难」的问题。",
-      en: "Online catalogue for a hardware & DIY supplier, built around the real problem: a large SKU range that customers struggle to navigate.",
-      ms: "Katalog dalam talian untuk pembekal perkakasan & DIY dengan navigasi produk yang mudah."
+      zh: "Taman Keramat Permai 一间五金店的单页官网。做电工与金属五金，开了五年，客人从 DIY 玩家到承包商都有。整站一页看完，问价直接走 WhatsApp。",
+      en: "One-page site for a hardware store in Taman Keramat Permai — electrical and metal hardware, five years in business, serving everyone from weekend DIYers to working contractors. The whole thing reads in one page, and questions go straight to WhatsApp.",
+      ms: "Laman satu halaman untuk kedai perkakasan di Taman Keramat Permai — perkakasan elektrik dan logam, lima tahun beroperasi, melayani peminat DIY sehingga kontraktor."
     },
     study: {
       subtitle: {
-        zh: "五金 DIY 产品目录网站",
-        en: "Hardware & DIY product catalogue",
-        ms: "Katalog produk perkakasan & DIY"
+        zh: "五金店单页官网",
+        en: "Hardware store one-page site",
+        ms: "Laman satu halaman kedai perkakasan"
       },
       challenge: {
-        zh: "五金行的真实问题不是网站好不好看，是品类太多。客人要的是一颗特定规格的螺丝，如果三层点下去还找不到，他就打电话了 —— 网站等于白做。",
-        en: "The real problem in a hardware business isn't how the site looks, it's the sheer number of SKUs. A customer wants one specific screw size; if three clicks in they still haven't found it, they pick up the phone and the site might as well not exist.",
-        ms: "Masalah sebenar kedai perkakasan bukan rupa laman, tetapi jumlah produk. Jika pelanggan tidak jumpa dalam tiga klik, mereka akan telefon."
+        zh: "街边五金店真正需要的不是一个商城 —— 客人本来就打算到店里拿货，或者一句 WhatsApp 问「有没有」。真正的问题是「网上根本查不到这家店」，以及同名店太多，客人不确定找的是不是同一家。所以这个站要解决的是「被找到」和「认对人」，不是「在线卖货」。",
+        en: "What a neighbourhood hardware shop actually needs is not a storefront — customers were always going to walk in, or send one WhatsApp asking whether something is in stock. The real problems are that the shop is invisible online, and that similarly named shops leave customers unsure they have found the right one. So this site had to solve being found and being identified, not selling online.",
+        ms: "Yang diperlukan kedai perkakasan kejiranan bukan kedai dalam talian — pelanggan tetap akan datang atau bertanya melalui WhatsApp. Masalah sebenarnya ialah kedai itu tidak dijumpai dalam talian, dan nama yang serupa membuat pelanggan tidak pasti."
       },
       work: {
-        zh: "把分类树压到两层以内，每一层的名字用客人会说的词（不是供应商目录上的编号）。产品页固定放规格表，因为五金客人第一眼看的就是尺寸和材质。",
-        en: "Flattened the category tree to two levels at most and named every level the way a customer would say it, not the way the supplier catalogue codes it. Every product page leads with a spec table, because size and material are the first things a hardware buyer looks for.",
-        ms: "Memendekkan pokok kategori kepada dua peringkat dengan nama yang digunakan pelanggan, dan setiap halaman produk bermula dengan jadual spesifikasi."
+        zh: "做成单页 —— 导航只留一个「Home」。这家店没有那么多内容要分页，硬撑出五个页面只会让每一页都很空。首屏标题正上方压一枚「THE ONLY BRANCH」的胶囊标，这是客户自己最在意的一句：只此一家，别认错。地点（Taman Keramat Permai）、开店年数、服务对象（DIY 玩家与承包商）全部写进首屏那一段，因为这三样正是客人打电话之前想确认的。问价不做表单，直接一个 WhatsApp 浮标 —— 五金店本来就是这样做生意的，逼客人填表单只会少一个客人。",
+        en: "Built it as a single page — the nav has one item, Home. This shop does not have five pages of content, and forcing five would only leave each of them empty. Put a THE ONLY BRANCH pill directly above the headline, because that is the line the client cares about most: one shop, don't confuse us with anyone else. Wrote the location, the years in business and who it serves — DIYers and contractors both — into the opening paragraph, since those are exactly the three things someone checks before calling. No enquiry form; a WhatsApp float instead, because that is already how a hardware shop does business, and a form would only cost it customers.",
+        ms: "Dibina sebagai satu halaman sahaja. Meletakkan lencana THE ONLY BRANCH tepat di atas tajuk, menulis lokasi, tahun beroperasi dan pelanggan sasaran dalam perenggan pembuka, dan menggunakan WhatsApp terapung dan bukannya borang pertanyaan."
       },
       result: {
-        zh: "⚠ 请填真实成果。可写：客人打电话问「有没有这个」的次数减少、店里可以直接发产品页链接给客人。",
-        en: "⚠ Fill in a real outcome. e.g. fewer \"do you carry this?\" phone calls, or the shop can now just send a product page link instead of describing items over the phone.",
-        ms: "⚠ Sila isi keputusan sebenar. Contoh: panggilan \"ada tak barang ini?\" berkurangan."
+        zh: "⚠ 请填真实成果。这类店可写：Google 上搜店名能找到了、新客人说是网上看到才来的、WhatsApp 询问量变化。没有数字就写客户原话 —— 街边店最真实的成果往往就是一句「现在有人是看了网站才找来的」。",
+        en: "⚠ Fill in a real outcome. For a shop like this: the name now comes up in a Google search, new customers say they found it online, or a change in WhatsApp enquiries. No numbers? Quote the owner — for a neighbourhood shop the truest result is often just \"people come in now because they saw the website\".",
+        ms: "⚠ Sila isi keputusan sebenar. Contoh: nama kedai kini muncul dalam carian Google, atau pelanggan baharu berkata mereka menjumpainya dalam talian."
       },
-      services: ["E-COMMERCE", "WEB DESIGN", "DEVELOPMENT", "SEO"]
+      services: ["WEB DESIGN", "DEVELOPMENT", "CONTENT", "SEO"]
     }
   },
   {
@@ -411,30 +411,30 @@ const PROJECTS = [
     reveal: "blueprint",
     year: "2023",
     tags: {
-      zh: ["OEM 服务", "询价流程", "B2B"],
-      en: ["OEM services", "Quotation flow", "B2B"],
-      ms: ["Perkhidmatan OEM", "Proses sebut harga", "B2B"]
+      zh: ["保健品代工", "合作方背书", "FAQ 前置"],
+      en: ["Supplement OEM", "Partner proof", "FAQ up front"],
+      ms: ["OEM suplemen", "Bukti rakan kongsi", "FAQ di hadapan"]
     },
     blurb: {
-      zh: "OEM 代工服务的 B2B 网站，把生产能力、流程与最小起订量讲清楚，缩短询价来回。",
-      en: "B2B site for an OEM manufacturing service — capability, process and MOQ laid out clearly to shorten the back-and-forth before a quote.",
-      ms: "Laman B2B untuk perkhidmatan pembuatan OEM dengan proses dan MOQ yang jelas."
+      zh: "保健品 OEM 代工的 B2B 网站。首屏一句「What You Imagine, We Can Make It Happen」压在生产线实拍上，把「你有想法，我有产线」这件事一句话讲完。",
+      en: "B2B site for a health supplement OEM manufacturer. One line over a real production-line photograph — \"What You Imagine, We Can Make It Happen\" — says the whole proposition: you bring the idea, they own the line.",
+      ms: "Laman B2B untuk pengeluar OEM suplemen kesihatan, dengan satu baris di atas foto barisan pengeluaran sebenar."
     },
     study: {
       subtitle: {
-        zh: "OEM 代工 B2B 询价网站",
-        en: "OEM manufacturing B2B site",
-        ms: "Laman B2B pembuatan OEM"
+        zh: "保健品 OEM 代工 B2B 网站",
+        en: "Health supplement OEM B2B site",
+        ms: "Laman B2B OEM suplemen kesihatan"
       },
       challenge: {
-        zh: "B2B 询价最耗时间的不是报价，是来回确认那几件事：能不能做、最小起订量多少、要多久。这些不写在网站上，每一个询盘都要重新解释一轮。",
-        en: "The slow part of a B2B enquiry isn't the quote, it's the back-and-forth confirming the same few things: can you make it, what's the MOQ, how long does it take. If the site doesn't say, every single enquiry re-runs that conversation.",
-        ms: "Bahagian paling lambat dalam pertanyaan B2B bukan sebut harga, tetapi mengulang soalan sama: boleh buat atau tidak, MOQ, dan tempoh masa."
+        zh: "找代工厂的人是要把自己的品牌交到你手上 —— 保健品还要吃进消费者肚子里，出事是他背。所以他真正在问的不是价格，是「你靠不靠得住」。同时那几个老问题（能不能做、起订量多少、要多久）不写清楚，每一个询盘都要重新解释一轮，业务一天答十遍。",
+        en: "Someone shopping for a contract manufacturer is handing over their own brand — and with supplements it ends up inside a consumer, with the liability landing on them. So what they are really asking is not the price, it is whether you can be trusted. Meanwhile the same few questions — can you make it, what is the MOQ, how long does it take — get re-explained on every single enquiry if the site does not answer them.",
+        ms: "Orang yang mencari pengeluar kontrak menyerahkan jenama mereka sendiri, dan untuk suplemen tanggungjawabnya jatuh kepada mereka. Soalan sebenar bukan harga, tetapi sama ada anda boleh dipercayai."
       },
       work: {
-        zh: "把生产能力、最小起订量、生产周期直接写在页面上，不藏在「联系我们了解详情」后面。流程做成一条清楚的步骤线，客户看完就知道自己在第几步、下一步要准备什么。",
-        en: "Put capability, MOQ and lead time directly on the page instead of hiding them behind \"contact us for details\". Laid the process out as one clear step line, so a client can see which step they're at and what to prepare next.",
-        ms: "Meletakkan keupayaan, MOQ dan tempoh masa terus di halaman, dengan proses sebagai satu barisan langkah yang jelas."
+        zh: "把「信任」和「效率」拆成两个主导航一级项：Collaboration Partners 放合作过的品牌 —— B2B 里最有力的从来不是自夸，是「还有谁把品牌交给过你」；FAQ 单独一页，把能不能做、起订量、周期这些一天问十遍的问题一次答完，业务不用再重复。首屏两个按钮地位相同：Products 给已经知道要什么的，Contact Us 给还想先聊的。背景用生产线实拍不用素材图 —— 代工厂卖的就是产线本身，用图库照片等于自己承认没有。",
+        en: "Split trust and efficiency into two top-level nav items. Collaboration Partners carries the brands already worked with, because in B2B the strongest thing is never self-description, it is who else has handed you their brand. FAQ gets a page of its own, answering can-you-make-it, MOQ and lead time once so sales stops answering them ten times a day. The hero runs two buttons of equal weight: Products for someone who already knows what they want, Contact Us for someone who wants to talk first. The background is a real production line rather than stock imagery — a contract manufacturer is selling the line itself, and a stock photo quietly admits you don't have one.",
+        ms: "Memisahkan kepercayaan dan kecekapan kepada dua item navigasi utama: Collaboration Partners untuk jenama yang pernah bekerjasama, dan FAQ tersendiri untuk soalan berulang. Latar hero menggunakan foto barisan pengeluaran sebenar, bukan imej stok."
       },
       result: {
         zh: "⚠ 请填真实成果。B2B 最有说服力的是省下的来回次数：例如「以前平均 5 轮邮件才报得出价，现在 2 轮」。问一下客户就知道。",
@@ -452,37 +452,37 @@ const PROJECTS = [
     reveal: "slab",
     year: "2023",
     tags: {
-      zh: ["建材展示", "产品规格", "询盘"],
-      en: ["Building materials", "Spec sheets", "Enquiry"],
-      ms: ["Bahan binaan", "Spesifikasi", "Pertanyaan"]
+      zh: ["系统而非单品", "工程案例", "导流 Shopee/Lazada"],
+      en: ["Systems, not SKUs", "Project reference", "Marketplace handoff"],
+      ms: ["Sistem bukan produk tunggal", "Rujukan projek", "Pautan ke marketplace"]
     },
     blurb: {
-      zh: "建材供应商官网，产品规格与应用场景并列呈现，方便承包商快速判断是否适用。",
-      en: "Website for a building-materials supplier, pairing specifications with application scenarios so contractors can judge fit quickly.",
-      ms: "Laman web pembekal bahan binaan yang memaparkan spesifikasi bersama contoh penggunaan."
+      zh: "1979 年开到今天的饰面建材供应商官网。主张一句「Master the Art of Finishing」，导航按承包商的买法组织：System（系统做法）、Product（单品）、Projects（工程案例）、Location。零售交给 Shopee 和 Lazada，站内不做购物车。",
+      en: "Site for a finishing-materials supplier trading since 1979. One claim — Master the Art of Finishing — and a navigation organised the way contractors actually buy: System, Product, Projects, Location. Retail is handed to Shopee and Lazada; there is no cart on the site itself.",
+      ms: "Laman pembekal bahan kemasan yang beroperasi sejak 1979, dengan navigasi mengikut cara kontraktor membeli: Sistem, Produk, Projek, Lokasi. Runcit diserahkan kepada Shopee dan Lazada."
     },
     study: {
       subtitle: {
-        zh: "建材供应商产品展示网站",
-        en: "Building materials supplier site",
-        ms: "Laman pembekal bahan binaan"
+        zh: "饰面建材供应商官网",
+        en: "Finishing materials supplier site",
+        ms: "Laman pembekal bahan kemasan"
       },
       challenge: {
-        zh: "承包商挑建材看两件事：规格对不对，和别人用在什么工程上。大部分建材网站只放规格表，看起来专业但帮不到判断 —— 因为规格看得懂，不代表知道适不适合自己这个项目。",
-        en: "A contractor picking materials checks two things: do the specs match, and where has this actually been used. Most materials sites publish only the spec table — it looks professional but doesn't help the decision, because reading a spec isn't the same as knowing it fits your project.",
-        ms: "Kontraktor menilai dua perkara: spesifikasi dan di mana bahan itu pernah digunakan. Banyak laman hanya menunjukkan jadual spesifikasi."
+        zh: "饰面建材不是按单品卖的，是按「系统」卖的 —— 基层、底涂、面涂一整套配起来才成立，承包商在图纸上指定的也是一整套做法。可是绝大多数建材网站只按产品列 SKU，等于逼承包商自己去拼，拼错了是他赔。另一头，同一批产品又要卖给自己动手的散客，两种买法完全不同。",
+        en: "Finishing materials are not sold as single products, they are sold as systems — substrate, primer and topcoat only work as a specified build-up, and a system is what a contractor writes into a drawing. Yet most materials sites list SKUs only, leaving the contractor to assemble the specification themselves and carry the cost when it is wrong. At the other end, the same range also sells to walk-in customers doing their own work, and those two ways of buying have nothing in common.",
+        ms: "Bahan kemasan dijual sebagai sistem, bukan produk tunggal — lapisan asas, primer dan lapisan akhir hanya berfungsi sebagai satu sistem. Kebanyakan laman hanya menyenaraikan SKU."
       },
       work: {
-        zh: "规格表和应用场景并排放，同一屏看得完。每个产品配真实使用照片，不用素材图。询盘按钮跟着产品走，看到合适的当场就能问。",
-        en: "Put the spec table and the application scenarios side by side, readable in one screen. Paired every product with real installation photography rather than stock imagery, and attached the enquiry button to the product itself so a contractor can ask the moment they find a fit.",
-        ms: "Meletakkan jadual spesifikasi bersebelahan senario penggunaan, dengan foto pemasangan sebenar dan butang pertanyaan pada setiap produk."
+        zh: "把 System 和 Product 拆成导航上两个并列的入口，承包商走 System（一整套做法），散客走 Product（单品）—— 一个站同时服务两种买法，不用互相迁就。Projects 单独一页放真实工程，饰面这行「用在哪栋楼上」比任何规格表都有说服力。Location 也提到主导航，因为建材要看实物、要算运费。「Since 1979」直接做进站标里，每一页都跟着出现 —— 这一行开了四十多年本身就是最硬的背书，不该只写在关于我们里。零售不自己做：顶栏直接挂 Shopee 和 Lazada 的入口，付款、物流、售后交给平台，官网专心做规格与信任。",
+        en: "Split System and Product into two parallel entry points in the nav: contractors take System, the specified build-up; walk-in customers take Product, the single item. One site serving two ways of buying without either compromising the other. Projects gets its own page of real jobs, because in finishing, which building it went on outsells any spec table. Location sits in the main nav too, since materials get inspected in person and delivery has to be costed. Built \"Since 1979\" into the site mark so it appears on every page — four and a half decades in this trade is the hardest proof available and does not belong buried in About Us. Retail is deliberately not built: Shopee and Lazada entry points sit in the header, leaving payment, logistics and returns to the marketplaces so the site can concentrate on specification and credibility.",
+        ms: "Memisahkan System dan Product kepada dua pintu masuk selari, memberikan Projects halaman tersendiri, meletakkan Location dalam navigasi utama, membina \"Since 1979\" ke dalam tanda laman, dan menyerahkan runcit kepada Shopee dan Lazada."
       },
       result: {
-        zh: "⚠ 请填真实成果。建材类可写：承包商询盘时已经知道要哪个规格、业务不用再重复寄规格表 PDF。",
-        en: "⚠ Fill in a real outcome. For materials: contractors now name the spec they want when they enquire, and sales stops emailing the same spec-sheet PDF over and over.",
-        ms: "⚠ Sila isi keputusan sebenar. Contoh: kontraktor sudah tahu spesifikasi yang dikehendaki semasa bertanya."
+        zh: "⚠ 请填真实成果。建材类可写：承包商询盘时已经指名要哪一套系统、业务不用再重复寄规格表 PDF、从官网点去 Shopee/Lazada 的成交量。最后这一项平台后台看得到，值得去翻。",
+        en: "⚠ Fill in a real outcome. For materials: contractors now name the system they want when they enquire, sales stops emailing the same spec-sheet PDF, or sales on Shopee and Lazada that arrived from the site. That last one is visible in the marketplace dashboards and is worth digging out.",
+        ms: "⚠ Sila isi keputusan sebenar. Contoh: kontraktor sudah menamakan sistem yang dikehendaki, atau jualan Shopee/Lazada yang datang dari laman ini."
       },
-      services: ["WEB DESIGN", "DEVELOPMENT", "CONTENT", "MOBILE"]
+      services: ["WEB DESIGN", "DEVELOPMENT", "CONTENT", "MOBILE", "SEO"]
     }
   }
 ];

@@ -68,6 +68,8 @@
     result:    $("#fx-result"),
     services:  $("#fx-services"),
     visit:     $("#fx-visit"),
+    visitText: $("#fx-visit span"),
+    eyebrow:   $(".focus__eyebrow span"),
     deck:      $("#fx-deck"),
     ticks:     $("#fx-ticks"),
     auto:      $("#fx-auto"),
@@ -116,7 +118,21 @@
       return "<li>" + esc(x) + "</li>";
     }).join("");
 
-    el.visit.href = p.url;
+    /* 站还在才给链接。已下线 / 没有公开地址的，按钮变成不可点的说明 ——
+       把客户送去一个域名停放页，比这一格空着难看得多。 */
+    var linkable = p.live !== false && !!p.url;
+    el.visit.classList.toggle("is-dead", !linkable);
+    if (linkable) {
+      el.visit.href = p.url;
+      el.visit.removeAttribute("aria-disabled");
+      el.visitText.textContent = t("study.visit");
+    } else {
+      el.visit.removeAttribute("href");          // 没有 href 就不可点、也不进 Tab 顺序
+      el.visit.setAttribute("aria-disabled", "true");
+      el.visitText.textContent = t("study.offline");
+    }
+    /* 自有品牌就照实说，不要冒充客户委托 */
+    el.eyebrow.textContent = p.mine ? t("study.own") : t("study.eyebrow");
     setImg(p);
 
     var prev = PROJECTS[(i - 1 + N) % N], next = PROJECTS[(i + 1) % N];

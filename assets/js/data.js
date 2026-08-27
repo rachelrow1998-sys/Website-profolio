@@ -72,6 +72,16 @@ const SITE = {
    三种都比编造的百分比强。
 
    ⚠️ 其余 study 文案是我按行业先写的草稿。你最清楚项目细节，请逐个核对。
+
+   ── 两个可选字段（不写就是默认值）──
+   live : false = 这个站已经下线了。卡片上会标「已下线」，
+          详情页底部的「打开网站」也会自动变成不可点的说明，不会把客户
+          送去一个域名停放页。死链比少一个作品更伤。
+   mine : true  = 这是你自己的品牌 / 产品，不是客户委托的。
+          卡片和详情页都会标出来。⚠️ 一定要标 —— 把自己的品牌
+          混在客户作品里，被人发现一次，前面九个的可信度一起赔进去。
+          而且老实标出来其实更强：「从 branding 到官网我一个人做完」
+          是比多一个客户 logo 更完整的故事。
 ---------------------------------------------------------------------------- */
 
 const PROJECTS = [
@@ -203,6 +213,7 @@ const PROJECTS = [
     name: "Furfoo Pet",
     url: "https://furfoopet.com",
     category: "ecommerce",
+    mine: true,                       /* 自有品牌，不是客户委托 */
     reveal: "playful",
     year: "2024",
     tags: {
@@ -232,9 +243,9 @@ const PROJECTS = [
         ms: "Menetapkan nada dahulu: latar krim hangat dengan satu warna merah, tipografi bulat, dan gelembung dialog di atas foto kucing dan anjing. Dua butang seimbang di hero: kenali kisahnya dahulu, kemudian lihat produknya."
       },
       result: {
-        zh: "⚠ 请填真实成果。可写：上线后询问订购的私信数量、回头客比例、或者客户终于有一个链接可以发而不用一张张发产品照。有后台数字最好。",
-        en: "⚠ Fill in a real outcome. e.g. order enquiries after launch, repeat-customer share, or simply that the client now has one link to send instead of photographing products one at a time. Dashboard numbers are better if they exist.",
-        ms: "⚠ Sila isi keputusan sebenar. Contoh: pertanyaan tempahan selepas pelancaran, atau pelanggan kini ada satu pautan untuk dikongsi."
+        zh: "⚠ 请填真实成果。这是你自己的品牌，后台数字你手上就有，不用等谁给 —— 上线后的订单量、回头客比例、私信转订单的比例，挑一个真实的写。这一条应该是十个里最容易填的。",
+        en: "⚠ Fill in a real outcome. This is your own brand, so the numbers are already in your hands rather than a client's — orders since launch, repeat-customer share, how many DMs turn into orders. Pick one that is true. This should be the easiest of the ten to fill in.",
+        ms: "⚠ Sila isi keputusan sebenar. Ini jenama anda sendiri, jadi angkanya ada pada anda — pesanan sejak pelancaran, kadar pelanggan berulang, atau kadar mesej yang menjadi pesanan."
       },
       services: ["E-COMMERCE", "WEB DESIGN", "DEVELOPMENT", "MOBILE"]
     }
@@ -283,40 +294,41 @@ const PROJECTS = [
   {
     slug: "mitic-asian",
     name: "MITIC Asian",
-    url: "https://miticasian.org/",
+    url: "https://miticasian.org/",  /* 域名已过期，url 留着备查，靠 live:false 断掉链接 */
+    live: false,
     category: "corporate",
     reveal: "network",
     year: "2024",
     tags: {
-      zh: ["组织官网", "活动资讯", "会员入口"],
-      en: ["Organisation site", "Events", "Member area"],
-      ms: ["Laman organisasi", "Acara", "Ruang ahli"]
+      zh: ["商会官网", "中文受众", "公信力呈现"],
+      en: ["Chamber website", "Chinese-speaking audience", "Institutional credibility"],
+      ms: ["Laman dewan perniagaan", "Audiens berbahasa Cina", "Kredibiliti institusi"]
     },
     blurb: {
-      zh: "组织机构的官方网站，负责对外形象、活动资讯发布与会员信息的呈现。",
-      en: "Official website for an organisation, handling public presence, event announcements and member-facing information.",
-      ms: "Laman web rasmi organisasi untuk imej awam, pengumuman acara dan maklumat ahli."
+      zh: "马来西亚国际贸易投资商会（MITIC）的中文官网。商会 2014 年成立，做中马双边经贸对接，帮中国企业进马来西亚市场 —— 注册合规、市场准入、投融资对接、法税顾问。",
+      en: "Chinese-language site for MITIC, the Malaysia International Trade and Investment Chamber. Founded in 2014, the chamber works on China–Malaysia trade and helps Chinese companies enter the Malaysian market: registration and compliance, market entry, investment matching, legal and tax advisory.",
+      ms: "Laman web berbahasa Cina untuk MITIC, Dewan Perniagaan Perdagangan dan Pelaburan Antarabangsa Malaysia, yang membantu syarikat China memasuki pasaran Malaysia."
     },
     study: {
       subtitle: {
-        zh: "组织机构官方网站",
-        en: "Organisation official website",
-        ms: "Laman web rasmi organisasi"
+        zh: "中马贸易商会中文官网",
+        en: "China–Malaysia trade chamber site",
+        ms: "Laman dewan perniagaan perdagangan China–Malaysia"
       },
       challenge: {
-        zh: "一个网站要同时服务两种人：不认识这个组织的外人（要看公信力），和已经是会员的人（要看活动和通知）。这两种需求塞在同一个首页上，很容易互相干扰。",
-        en: "One site serving two audiences at once: outsiders who don't know the organisation yet and are judging its credibility, and existing members who just want events and notices. Put both on one homepage and they get in each other's way.",
-        ms: "Satu laman melayani dua kumpulan: orang luar yang menilai kredibiliti, dan ahli yang mencari acara dan notis."
+        zh: "读者是准备把钱和公司搬进另一个国家的中国企业主 —— 决定金额大、风险高、而且人在国外，只能靠这个网站判断这家商会到底靠不靠谱。所以整站要解决的是公信力：一个看起来随便做的网站，会让人怀疑背后的机构也是随便的。同时它还要同时服务两种人：还在观望的外人，和已经入会、只想看活动通知的会员。",
+        en: "The reader is a Chinese business owner about to move money and a company into another country — a large decision, taken at a distance, with this website as one of the few things available to judge whether the chamber is real. So the whole job is credibility: a site that looks thrown together makes people wonder whether the institution behind it is too. It also has to serve two audiences at once — outsiders still deciding, and members who only want the event notices.",
+        ms: "Pembacanya ialah pemilik perniagaan China yang bakal memindahkan modal dan syarikat ke negara lain. Tugas utamanya ialah kredibiliti, sambil melayani dua kumpulan: orang luar yang masih menimbang dan ahli yang mahukan notis acara."
       },
       work: {
-        zh: "首页上半部分给外人（组织是谁、做什么、公信力），下半部分给会员（最新活动、通知入口）。活动资讯做成可以自己更新的结构，不用每次找我改。",
-        en: "Gave the top of the homepage to outsiders — who the organisation is, what it does, why it's credible — and the lower half to members, with latest events and notice entry points. Events were built as a structure the team can update themselves rather than coming back to me each time.",
-        ms: "Bahagian atas laman utama untuk orang luar, bahagian bawah untuk ahli, dengan acara dibina supaya pasukan boleh mengemas kini sendiri."
+        zh: "⚠ 这一段请你自己补 —— 这个站已经下线，我没办法看到你当时做的版面，不想凭空替你写。可以写的方向：首页怎么分给「外人」和「会员」两种读者、公信力靠什么呈现（理事名单、合作单位、活动照片）、活动资讯有没有做成客户能自己更新的结构、全站中文是怎么定下来的。",
+        en: "⚠ Please fill this in yourself — the site is offline and I cannot see the layout you actually built, so I am not going to invent it. Directions worth covering: how the homepage was divided between outsiders and members, what carried the credibility (council listing, partner organisations, event photography), whether events were built so the chamber could update them without you, and how the decision to run the site in Chinese was reached.",
+        ms: "⚠ Sila isi bahagian ini sendiri — laman ini sudah tidak dalam talian dan saya tidak dapat melihat reka bentuk sebenar anda."
       },
       result: {
-        zh: "⚠ 请填真实成果。组织类可写：活动报名变成线上、通知不用再靠群发、或者对外介绍时终于有一个正式链接可以发。",
-        en: "⚠ Fill in a real outcome. For organisations: event sign-ups moved online, notices no longer depend on group broadcasts, or simply that there is finally one official link to send when introducing the organisation.",
-        ms: "⚠ Sila isi keputusan sebenar. Contoh: pendaftaran acara kini dalam talian atau ada satu pautan rasmi untuk dikongsi."
+        zh: "⚠ 请填真实成果。组织类可写：活动报名变成线上、通知不用再靠群发、或者对外介绍时终于有一个正式链接可以发。\n           ⚠️ 另外：这个站现在是下线状态，卡片上已经标了「已下线」。如果它其实只是换了域名，把新地址给我，我改回可点的。",
+        en: "⚠ Fill in a real outcome. For organisations: sign-ups moved online, notices no longer sent by group broadcast, or simply having one official link to send. ⚠️ Note: this site is currently offline and the card says so. If it only moved to a new domain, send me the address and I will make it clickable again.",
+        ms: "⚠ Sila isi keputusan sebenar. ⚠️ Nota: laman ini kini tidak aktif dan kad menunjukkannya. Jika ia hanya bertukar domain, beri saya alamat baharu."
       },
       services: ["WEB DESIGN", "DEVELOPMENT", "CONTENT", "MAINTENANCE"]
     }

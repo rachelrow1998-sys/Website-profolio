@@ -420,6 +420,7 @@
           '<h3 class="proj__title"><span class="proj__name" id="pn-' + esc(p.slug) + '">' + esc(p.name) + "</span>" +
             '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
           "</h3>" +
+          '<p class="proj__flags"></p>' +
           '<p class="proj__blurb"></p>' +
           '<ul class="chips"></ul>' +
           '<span class="proj__link"><span class="proj__linktext"></span>' +
@@ -437,6 +438,7 @@
 
       CARDS.push({
         el: el, p: p,
+        flags: $(".proj__flags", el),
         badge: $(".proj__badge", el),
         blurb: $(".proj__blurb", el),
         chips: $(".chips", el),
@@ -452,6 +454,11 @@
   function localizeProjects() {
     CARDS.forEach(function (c) {
       c.badge.textContent = t("work.filter." + c.p.category);
+      /* 自有品牌 / 已下线 的标记。两个都可能同时出现。 */
+      var flags = [];
+      if (c.p.mine) flags.push('<span class="proj__flag proj__flag--mine">' + esc(t("work.mine")) + "</span>");
+      if (c.p.live === false) flags.push('<span class="proj__flag">' + esc(t("work.offline")) + "</span>");
+      c.flags.innerHTML = flags.join("");
       c.blurb.textContent = pick(c.p.blurb) || "";
       c.link.textContent  = t("work.detail");
       c.chips.innerHTML   = (pick(c.p.tags) || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");

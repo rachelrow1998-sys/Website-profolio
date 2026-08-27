@@ -359,6 +359,19 @@ html:not(.stage-used) .grid .proj{
    Tab 到时 stage.js 会立刻整理成 Grid。 */
 .proj.is-ghosted{ opacity:0; pointer-events:none; }
 
+
+/* 卡片上的标记：自有品牌 / 已下线。
+   刻意做得很小很安静 —— 它的作用是说清楚，不是喊。 */
+.proj__flags{ display:flex; flex-wrap:wrap; gap:5px; margin:0; }
+.proj__flags:empty{ display:none; }
+.proj__flag{
+  padding:3px 7px; border:1px solid var(--rule);
+  font-size:.55rem; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--pencil); white-space:nowrap;
+}
+/* 自有品牌值得比「已下线」显眼一点点 —— 它是加分项，不是免责声明 */
+.proj__flag--mine{ border-color:var(--ink); color:var(--ink); }
+
 .proj__shot{
   position:relative; aspect-ratio:16/10; overflow:hidden;
   padding:9px; background:var(--mat);
@@ -783,6 +796,18 @@ html[data-lang="zh"] .focus__rail span{
 .focus__cta:hover{ color:var(--paper); }
 .focus__cta:hover::after{ transform:none; }
 .focus__cta:hover i svg{ transform:translateX(4px); }
+
+
+/* 没有可用链接时的「打开网站」：不是按钮了，是一句说明。
+   保留同样的框和位置，但拿掉悬停填充和箭头，让它一眼看出点不了。 */
+.focus__cta.is-dead{
+  cursor:default; color:var(--pencil); border-color:var(--rule);
+  border-style:dashed;
+}
+.focus__cta.is-dead:hover{ color:var(--pencil); }
+.focus__cta.is-dead:hover::after{ transform:translateY(101%); }
+.focus__cta.is-dead i{ display:none; }
+.focus__cta.is-dead > span{ font-weight:600; letter-spacing:.1em; }
 
 /* 转圈的印章。纯装饰，但它是全站唯一一处「一直在动」的东西，
    放在 CTA 旁边，视线扫到 CTA 时会被带住。 */

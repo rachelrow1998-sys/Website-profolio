@@ -55,7 +55,7 @@ const I18N = {
 
     "work.eyebrow": "作品集",
     "work.title": "已经上线、正在跑的网站",
-    "work.sub": "每一个都点得进去，是真站，不是效果图。",
+    "work.sub": "每一个都真的做出来、上线跑过 —— 是真站，不是效果图。",
     "work.filter.all": "全部",
     "work.filter.corporate": "企业官网",
     "work.filter.industrial": "工业 · 建材",
@@ -65,6 +65,10 @@ const I18N = {
     "work.visit": "访问网站",
     "work.detail": "查看详情",
     "work.empty": "这个分类下暂时没有作品。",
+    "work.offline": "已下线",
+    "work.mine": "自有品牌",
+    "study.offline": "网站已下线",
+    "study.own": "自有项目",
 
     "services.eyebrow": "服务",
     "services.title": "我可以帮你做什么",
@@ -181,7 +185,7 @@ const I18N = {
 
     "work.eyebrow": "Selected work",
     "work.title": "Live sites, running right now",
-    "work.sub": "Every one of these is clickable. Real sites, not mockups.",
+    "work.sub": "Every one of these was actually built and shipped. Real sites, not mockups.",
     "work.filter.all": "All",
     "work.filter.corporate": "Corporate",
     "work.filter.industrial": "Industrial",
@@ -191,6 +195,10 @@ const I18N = {
     "work.visit": "Visit site",
     "work.detail": "View details",
     "work.empty": "No projects in this category yet.",
+    "work.offline": "Offline",
+    "work.mine": "Own brand",
+    "study.offline": "Site no longer online",
+    "study.own": "OWN PROJECT",
 
     "services.eyebrow": "Services",
     "services.title": "What I can build for you",
@@ -307,7 +315,7 @@ const I18N = {
 
     "work.eyebrow": "Portfolio",
     "work.title": "Laman web yang sedang beroperasi",
-    "work.sub": "Semuanya boleh diklik. Laman sebenar, bukan mockup.",
+    "work.sub": "Setiap satu benar-benar dibina dan dilancarkan. Laman sebenar, bukan mockup.",
     "work.filter.all": "Semua",
     "work.filter.corporate": "Korporat",
     "work.filter.industrial": "Industri",
@@ -317,6 +325,10 @@ const I18N = {
     "work.visit": "Lawat laman",
     "work.detail": "Lihat butiran",
     "work.empty": "Tiada projek dalam kategori ini.",
+    "work.offline": "Tidak aktif",
+    "work.mine": "Jenama sendiri",
+    "study.offline": "Laman tidak lagi dalam talian",
+    "study.own": "PROJEK SENDIRI",
 
     "services.eyebrow": "Perkhidmatan",
     "services.title": "Apa yang saya boleh bina",

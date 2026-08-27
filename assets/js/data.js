@@ -159,41 +159,41 @@ const PROJECTS = [
   },
   {
     slug: "pnc-lifecare",
-    name: "PNC Lifecare",
+    name: "Pure & Cure LifeCareLab",
     url: "https://pnclifecare.com",
     category: "lifestyle",
     reveal: "soft",
     year: "2025",
     tags: {
-      zh: ["品牌官网", "产品介绍", "移动优先"],
-      en: ["Brand site", "Product pages", "Mobile-first"],
-      ms: ["Laman jenama", "Halaman produk", "Mobile-first"]
+      zh: ["疗程服务", "信任建立", "预防定位"],
+      en: ["Therapy services", "Building trust", "Prevention positioning"],
+      ms: ["Perkhidmatan terapi", "Membina kepercayaan", "Kedudukan pencegahan"]
     },
     blurb: {
-      zh: "健康与护理品牌的官方网站，用干净、可信的视觉语言呈现产品线与品牌理念。",
-      en: "Official site for a health & lifecare brand, presenting the product range and brand story in a clean, trustworthy visual language.",
-      ms: "Laman rasmi untuk jenama kesihatan dan penjagaan, memaparkan produk dan kisah jenama dengan visual yang bersih."
+      zh: "非侵入式健康预防疗程的官方网站。整站站在「预防重于治疗」这一个立场上，用柔和的粉调和衬线标题把「医疗」讲得不吓人。",
+      en: "Site for a non-invasive health prevention practice. The whole thing stands on one position — prevention over cure — and uses a soft blush palette with serif headlines so that \"medical\" never reads as intimidating.",
+      ms: "Laman untuk amalan pencegahan kesihatan tanpa pembedahan, berdiri di atas satu pendirian: pencegahan lebih baik daripada rawatan."
     },
     study: {
       subtitle: {
-        zh: "健康护理品牌官网",
-        en: "Health & lifecare brand site",
-        ms: "Laman jenama kesihatan & penjagaan"
+        zh: "健康预防疗程服务官网",
+        en: "Health prevention therapy site",
+        ms: "Laman perkhidmatan terapi pencegahan"
       },
       challenge: {
-        zh: "健康护理类产品，客户第一个反应是「这可信吗」。视觉一花就像卖保健品的广告页，太素又显得没人打理。要在「专业」和「亲切」之间找到不出错的位置。",
-        en: "With health and care products the first reaction is always \"can I trust this?\" Too much decoration and it reads like a supplement ad; too plain and it looks abandoned. The job was finding the safe point between clinical and warm.",
-        ms: "Untuk produk kesihatan, reaksi pertama sentiasa \"bolehkah dipercayai?\" Terlalu banyak hiasan nampak seperti iklan; terlalu ringkas nampak terbiar."
+        zh: "卖「预防」比卖「治疗」难：人没病的时候不觉得需要你。而且健康类网站一花就像卖保健品的广告页，一素又像没人打理。要在「专业到可信」和「柔和到愿意点进来」之间，找到不出错的那个位置。",
+        en: "Selling prevention is harder than selling treatment — nobody feels they need you while they are still well. And health sites tip easily: too decorated and it reads as a supplement ad, too plain and it looks abandoned. The work was finding the point that is clinical enough to trust and soft enough to approach.",
+        ms: "Menjual pencegahan lebih sukar daripada menjual rawatan — orang tidak rasa memerlukan anda ketika masih sihat. Cabarannya ialah mencari titik yang cukup profesional untuk dipercayai dan cukup lembut untuk didekati."
       },
       work: {
-        zh: "用干净的排版和克制的配色建立可信感，产品页统一成同一个结构（用途 → 成分/规格 → 使用方式），手机优先排版，因为这类产品几乎全部在手机上被看到。",
-        en: "Built trust through clean typography and a restrained palette, standardised every product page on one structure — what it's for, what's in it, how to use it — and designed mobile-first, because this category is browsed almost entirely on phones.",
-        ms: "Membina kepercayaan melalui tipografi bersih dan palet terkawal, menyeragamkan struktur halaman produk, dan mereka bentuk mobile-first."
+        zh: "把整站的立场收成一句话放在首屏正中：Prevent, Protect, Thrive。配色走柔和粉调，标题用衬线体加一段暗红斜体强调，让医疗感降下来但不失专业。技术来源（日本与德国）写进首屏正文，那是这类服务最快建立信任的一句。首屏下面排一列不同年龄、不同族裔的人像，说明「这是给所有人的」——不用文字讲，看图就懂。",
+        en: "Compressed the whole position into one line and put it dead centre of the first screen: Prevent, Protect, Thrive. Chose a soft blush palette with serif headlines and one dark-red italic for emphasis, so the medical edge comes down without losing authority. Put the technology origin — Japan and Germany — in the opening paragraph, because for this kind of service that is the fastest sentence to trust. Ran a row of portraits across ages and ethnicities under the fold: this is for everyone, shown rather than stated.",
+        ms: "Memadatkan keseluruhan pendirian ke dalam satu baris di tengah skrin pertama, memilih palet merah jambu lembut dengan tajuk serif, meletakkan asal teknologi (Jepun dan Jerman) dalam perenggan pembuka, dan memaparkan potret pelbagai usia dan bangsa di bawahnya."
       },
       result: {
-        zh: "⚠ 请填真实成果。例如：客户不用再逐个用 WhatsApp 解释产品规格 / 手机端跳出率下降。没有数据就写客户原话。",
-        en: "⚠ Fill in a real outcome. e.g. the client stopped re-explaining product specs one by one over WhatsApp, or mobile bounce rate dropped. No data? Quote the client.",
-        ms: "⚠ Sila isi keputusan sebenar. Contoh: pelanggan tidak perlu lagi menerangkan spesifikasi produk satu demi satu."
+        zh: "⚠ 请填真实成果。这类服务可写：咨询的人一来就知道自己要哪个疗程、客户不用再从头解释「什么是非侵入式预防」。没有后台数据就引用客户原话。",
+        en: "⚠ Fill in a real outcome. For this kind of practice: people now arrive already knowing which therapy they want, or the client stopped explaining \"what non-invasive prevention means\" from scratch every time. No analytics? Quote the client.",
+        ms: "⚠ Sila isi keputusan sebenar. Contoh: pelanggan datang sudah tahu terapi yang dikehendaki. Tiada data? Petik kata pelanggan."
       },
       services: ["WEB DESIGN", "DEVELOPMENT", "MOBILE", "CONTENT"]
     }
@@ -206,35 +206,35 @@ const PROJECTS = [
     reveal: "playful",
     year: "2024",
     tags: {
-      zh: ["电商", "产品目录", "购物流程"],
-      en: ["E-commerce", "Catalogue", "Checkout flow"],
-      ms: ["E-dagang", "Katalog", "Proses beli"]
+      zh: ["品牌塑造", "手作产品", "俏皮语气"],
+      en: ["Brand building", "Handmade range", "Playful voice"],
+      ms: ["Pembinaan jenama", "Produk buatan tangan", "Nada ceria"]
     },
     blurb: {
-      zh: "宠物品牌的线上商店，产品分类与购买路径都为手机端优化，减少客户流失。",
-      en: "Online store for a pet brand — categories and the path to purchase optimised for mobile to reduce drop-off.",
-      ms: "Kedai dalam talian untuk jenama haiwan peliharaan, dioptimumkan untuk telefon bimbit."
+      zh: "手作宠物用品品牌的官网。草本护理和新鲜手作零食，主打「宠物是家人」这一层感情，先讲故事再讲产品。",
+      en: "Site for a handmade pet-care brand — herbal care and fresh handmade treats — built on the idea that pets are family, so the story comes before the product.",
+      ms: "Laman untuk jenama penjagaan haiwan buatan tangan — penjagaan herba dan snek segar — dibina atas idea bahawa haiwan peliharaan ialah keluarga."
     },
     study: {
       subtitle: {
-        zh: "宠物用品线上商店",
-        en: "Pet supplies online store",
-        ms: "Kedai dalam talian bekalan haiwan"
+        zh: "手作宠物用品品牌官网",
+        en: "Handmade pet-care brand site",
+        ms: "Laman jenama penjagaan haiwan buatan tangan"
       },
       challenge: {
-        zh: "宠物用品是冲动型消费，但买之前又会反复比较（体型、年龄、口味）。分类做不好，客人找不到适合自己宠物的那一款，就直接关掉了。",
-        en: "Pet supplies are an impulse buy that people still compare carefully — size, age, flavour. Get the categories wrong and a customer who can't find the version that fits their own pet simply closes the tab.",
-        ms: "Bekalan haiwan adalah pembelian spontan yang masih dibandingkan mengikut saiz, umur dan rasa. Kategori yang lemah menyebabkan pelanggan terus keluar."
+        zh: "手作宠物用品最大的对手不是别家品牌，是货架上便宜一半的量产货。光比价永远输，所以网站要先让人相信「这是有人一份一份做出来的」，感情建立起来了，价格才不再是唯一的标准。",
+        en: "A handmade pet brand's real competitor is not another brand, it is the mass-produced product at half the price on the shelf. On price alone you lose every time, so the site has to first make someone believe a person made this batch by hand — once the feeling lands, price stops being the only measure.",
+        ms: "Pesaing sebenar jenama buatan tangan bukan jenama lain, tetapi produk pukal yang separuh harga. Laman ini perlu meyakinkan orang bahawa produk ini dibuat sebiji demi sebiji."
       },
       work: {
-        zh: "按「宠物是谁」而不是「产品是什么」重做分类，把加入购物车到结账压到最少步骤，全程按手机屏幕设计，按钮大小和拇指范围都对齐。",
-        en: "Rebuilt the categories around who the pet is rather than what the product is, cut the add-to-cart-to-checkout path to the fewest possible steps, and designed the whole thing at phone size with tap targets sized for thumbs.",
-        ms: "Membina semula kategori berdasarkan haiwan, memendekkan proses beli, dan mereka bentuk untuk saiz telefon dengan sasaran sentuh yang sesuai."
+        zh: "先定语气：整站用暖奶油底配一个红，标题走圆润的字形，猫狗照片上加对话气泡（「…MEOW.（翻译：hi.）」「WOOF~（翻译：Hello, hooman.）」）—— 这一处玩心是刻意的，宠物品牌最忌讳板着脸。首屏两个按钮并排、地位相同：「Discover Our Story」和「Explore Our Creations」，先认人再看货。产品统一叫 Creations 不叫 Products，是因为它们真的是手作的。",
+        en: "Set the voice first: warm cream ground with a single red, rounded display type, and speech bubbles over the cat-and-dog photograph (\"...MEOW. (Translation: hi.)\" / \"WOOF~ (Translation: Hello, hooman.)\"). That bit of play is deliberate — a straight face is the one thing a pet brand cannot afford. Gave the hero two buttons of equal weight, Discover Our Story beside Explore Our Creations: meet the maker, then see the goods. Called them Creations rather than Products throughout, because they genuinely are handmade.",
+        ms: "Menetapkan nada dahulu: latar krim hangat dengan satu warna merah, tipografi bulat, dan gelembung dialog di atas foto kucing dan anjing. Dua butang seimbang di hero: kenali kisahnya dahulu, kemudian lihat produknya."
       },
       result: {
-        zh: "⚠ 请填真实成果。电商是最容易拿到真数字的类型 —— 后台直接看得到：转化率、加购率、手机端订单占比。请翻一下后台再写。",
-        en: "⚠ Fill in a real outcome. E-commerce is the easiest place to get real numbers — conversion rate, add-to-cart rate, share of mobile orders are all in the dashboard. Check it before writing this.",
-        ms: "⚠ Sila isi keputusan sebenar. E-dagang paling mudah mendapat angka sebenar dari papan pemuka."
+        zh: "⚠ 请填真实成果。可写：上线后询问订购的私信数量、回头客比例、或者客户终于有一个链接可以发而不用一张张发产品照。有后台数字最好。",
+        en: "⚠ Fill in a real outcome. e.g. order enquiries after launch, repeat-customer share, or simply that the client now has one link to send instead of photographing products one at a time. Dashboard numbers are better if they exist.",
+        ms: "⚠ Sila isi keputusan sebenar. Contoh: pertanyaan tempahan selepas pelancaran, atau pelanggan kini ada satu pautan untuk dikongsi."
       },
       services: ["E-COMMERCE", "WEB DESIGN", "DEVELOPMENT", "MOBILE"]
     }
@@ -247,37 +247,37 @@ const PROJECTS = [
     reveal: "paper",
     year: "2024",
     tags: {
-      zh: ["课程展示", "报名表单", "多语内容"],
-      en: ["Course pages", "Sign-up form", "Multilingual"],
-      ms: ["Halaman kursus", "Borang daftar", "Pelbagai bahasa"]
+      zh: ["个人教学品牌", "线上课平台", "购课与账户"],
+      en: ["Personal teaching brand", "Online course platform", "Accounts & checkout"],
+      ms: ["Jenama pengajaran peribadi", "Platform kursus dalam talian", "Akaun & pembayaran"]
     },
     blurb: {
-      zh: "教育机构官网，把课程体系、师资与报名流程整合在一起，家长可以直接在线咨询。",
-      en: "Website for an education academy bringing courses, teachers and enrolment into one flow so parents can enquire directly online.",
-      ms: "Laman web akademi pendidikan yang menyatukan kursus, tenaga pengajar dan pendaftaran dalam satu aliran."
+      zh: "「赵老师历史讲堂」的线上课平台 —— 专攻 SPM 历史（SEJARAH）的华文补习品牌，学生可以直接注册账户、选课、下单，不用再私信问价。",
+      en: "Online course platform for 赵老师历史讲堂 (Teacher Zhao's History Classroom), a Chinese-medium tutoring brand focused on SPM SEJARAH. Students register an account, pick a course and check out, instead of asking the price by private message.",
+      ms: "Platform kursus dalam talian untuk jenama tuisyen SPM Sejarah dalam bahasa Cina — pelajar mendaftar akaun, memilih kursus dan membayar terus."
     },
     study: {
       subtitle: {
-        zh: "教育机构课程与报名网站",
-        en: "Academy course & enrolment site",
-        ms: "Laman kursus & pendaftaran akademi"
+        zh: "SPM 历史线上课平台",
+        en: "SPM history online course platform",
+        ms: "Platform kursus Sejarah SPM dalam talian"
       },
       challenge: {
-        zh: "做决定的是家长，上课的是孩子。家长要知道：教什么、谁教、多少钱、怎么报名。这四个问题以前散在传单、微信和电话里，家长每次都要重新问一遍。",
-        en: "The parent decides, the child attends. Parents need four things: what's taught, who teaches it, what it costs, how to sign up. Those four answers used to be scattered across flyers, WeChat and phone calls, so every parent asked from scratch.",
-        ms: "Ibu bapa membuat keputusan, anak yang hadir. Empat soalan — apa diajar, siapa mengajar, harga, cara mendaftar — sebelum ini bertaburan di pamflet dan panggilan."
+        zh: "补习老师的招生几乎全靠私信：多少钱、教什么、怎么上课，同样的问题一天答十遍，还常常在这一来一回里流失掉。而且卖的是一个人的教学能力，网站得同时做到两件互相拉扯的事 —— 显得够专业，又不能把「老师本人」做没了。",
+        en: "A tutor's enrolment runs almost entirely through private messages: what it costs, what is covered, how classes work — the same questions answered ten times a day, with students lost in the back-and-forth. And what is being sold is one person's teaching, so the site has to do two things that pull against each other: look professional enough to pay for, without designing the teacher out of it.",
+        ms: "Pendaftaran tuisyen hampir semuanya melalui mesej peribadi — soalan yang sama dijawab sepuluh kali sehari. Lamannya perlu kelihatan profesional tanpa menghilangkan guru itu sendiri."
       },
       work: {
-        zh: "每个课程一页，四个问题按同一顺序回答完。师资单独一块建立信任。报名表单直接接到咨询，家长不用再另外打电话。三语内容，因为家长群本身就是多语的。",
-        en: "One page per course, answering those four questions in the same order every time. A separate teachers block to build trust. The sign-up form feeds enquiries directly, so no follow-up phone call is needed — and all of it trilingual, because the parent base is.",
-        ms: "Satu halaman untuk setiap kursus, menjawab empat soalan itu dalam susunan sama, blok tenaga pengajar berasingan, dan borang pendaftaran terus kepada pertanyaan."
+        zh: "把老师本人做成品牌：卡通头像加「赵老师历史讲堂」直接当站标，一眼就知道跟谁上课。首屏标题用三段式打卖点 ——「系统教学｜独家笔记｜核心考点」，再一句「三步搞懂 SEJARAH，轻松拿下高分!」，说的是学生真正在意的结果，不是课程大纲。接上购物车、账户和通知，让选课下单在站内走完，把私信问价那一段砍掉；同时右下角保留 WhatsApp 浮标，还想问人的随时能问。全站中文，因为这个补习市场本来就是华文的 —— 硬做三语只会稀释语气。",
+        en: "Made the teacher the brand: a cartoon avatar beside 赵老师历史讲堂 as the site mark, so you know immediately whose class this is. Built the headline as three claims — systematic teaching, exclusive notes, core exam points — then one line promising what students actually care about: understand SEJARAH in three steps and score well. Not a syllabus. Added cart, accounts and notifications so choosing and paying for a course finishes on the site, cutting out the price-by-DM stage, while keeping a WhatsApp float in the corner for anyone who still wants a human. Chinese throughout, because this tutoring market is Chinese-medium — forcing three languages would only dilute the voice.",
+        ms: "Menjadikan guru itu sendiri sebagai jenama, membina tajuk sebagai tiga tuntutan dan satu janji keputusan, serta menambah troli, akaun dan notifikasi supaya pendaftaran selesai di dalam laman — dengan butang WhatsApp kekal di sudut."
       },
       result: {
-        zh: "⚠ 请填真实成果。教育类可写：家长在线咨询数量、招生季省下的重复解释时间、或者「家长现在自己看完才来问价钱」。",
-        en: "⚠ Fill in a real outcome. For education: number of online enquiries, time saved re-explaining during enrolment season, or simply that parents now read everything first and only call about price.",
-        ms: "⚠ Sila isi keputusan sebenar. Contoh: bilangan pertanyaan dalam talian atau masa yang dijimatkan semasa musim pendaftaran."
+        zh: "⚠ 请填真实成果。这个站有账户和购物车，后台一定拿得到数字：注册人数、线上完成购课的比例、招生季省下的重复回复时间。请翻后台再写，这一类最容易拿到真数据。",
+        en: "⚠ Fill in a real outcome. This site has accounts and a cart, so the numbers exist: registrations, share of course purchases completed online, hours saved not re-answering the same questions during enrolment season. Check the dashboard — this is one of the easier ones to get real data for.",
+        ms: "⚠ Sila isi keputusan sebenar. Laman ini ada akaun dan troli, jadi angkanya wujud: pendaftaran, kadar pembelian dalam talian, masa yang dijimatkan."
       },
-      services: ["WEB DESIGN", "DEVELOPMENT", "CONTENT", "SEO"]
+      services: ["BRANDING", "WEB DESIGN", "DEVELOPMENT", "E-COMMERCE", "CONTENT"]
     }
   },
   {

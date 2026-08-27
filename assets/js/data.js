@@ -59,7 +59,8 @@ const SITE = {
               result    = 成果 ⚠️ 必改，见下面
               services  = 服务范围标签，显示成小方块。英文大写，不用翻译。
                           可选：BRANDING / WEB DESIGN / DEVELOPMENT / MOBILE / SEO /
-                                E-COMMERCE / CONTENT / UI DESIGN / MAINTENANCE
+                                E-COMMERCE / CONTENT / UI DESIGN / MAINTENANCE /
+                                MULTILINGUAL
 
    ⚠️ 关于 study.result（成果）——
    我不会帮你编造「预约量提升 182%」这种数字。放在作品集上就是对客户的承诺，
@@ -123,37 +124,37 @@ const PROJECTS = [
     reveal: "strips",
     year: "2025",
     tags: {
-      zh: ["企业官网", "服务展示", "询盘表单"],
-      en: ["Corporate site", "Service pages", "Enquiry form"],
-      ms: ["Laman korporat", "Halaman servis", "Borang pertanyaan"]
+      zh: ["三语官网", "询价路径", "项目案例"],
+      en: ["Trilingual site", "Quotation flow", "Project reference"],
+      ms: ["Laman tiga bahasa", "Aliran sebut harga", "Rujukan projek"]
     },
     blurb: {
-      zh: "马来西亚建筑、维修保养、人力供应与工业服务公司的企业官网。重点是把复杂的服务线整理清楚，让工程发包方一眼看懂能力范围。",
-      en: "Corporate website for a Malaysian construction, maintenance, manpower supply and industrial services company — structured so contractors can grasp the full scope of capability at a glance.",
-      ms: "Laman web korporat untuk syarikat pembinaan, penyelenggaraan, bekalan tenaga kerja dan perkhidmatan industri di Malaysia."
+      zh: "马来西亚工业与工程服务公司的三语官网 —— 工程支援、土木工程、工业清洁、人力供应四条服务线，全站围绕一个「索取报价」的动作来组织。",
+      en: "Trilingual site for a Malaysian industrial and engineering services company — engineering support, civil works, industrial cleaning and manpower supply, with the whole site organised around one action: request a quotation.",
+      ms: "Laman tiga bahasa untuk syarikat perkhidmatan industri dan kejuruteraan di Malaysia — sokongan kejuruteraan, kerja awam, pencucian industri dan bekalan tenaga kerja."
     },
     study: {
       subtitle: {
-        zh: "工业与工程服务企业官网",
-        en: "Industrial & engineering services site",
-        ms: "Laman perkhidmatan industri & kejuruteraan"
+        zh: "三语工业与工程服务企业官网",
+        en: "Trilingual industrial & engineering services site",
+        ms: "Laman perkhidmatan industri & kejuruteraan (tiga bahasa)"
       },
       challenge: {
-        zh: "一家公司同时做建筑、维修保养、人力供应和工业服务。服务线越多，网站越容易变成一堆看不完的清单，发包方点进来三十秒内判断不出「你到底能不能接我这个工程」。",
-        en: "One company doing construction, maintenance, manpower supply and industrial services at once. The more service lines, the easier the site turns into an unreadable list — and a contractor can't tell in thirty seconds whether you can actually take on their job.",
-        ms: "Satu syarikat menjalankan pembinaan, penyelenggaraan, bekalan tenaga kerja dan perkhidmatan industri serentak. Semakin banyak servis, semakin sukar kontraktor menilai keupayaan anda."
+        zh: "一家公司同时做工程支援、土木工程、工业清洁、人力供应四条线，客户群还横跨英文、中文、马来文。服务线越多，网站越容易变成一堆看不完的清单 —— 发包方点进来三十秒内判断不出「你到底能不能接我这个工程」，就直接走了。",
+        en: "One company running four service lines at once — engineering support, civil works, industrial cleaning, manpower supply — for a client base reading English, Chinese and Malay. The more service lines, the easier the site turns into an unreadable list, and a contractor who can't tell within thirty seconds whether you can take on their job simply leaves.",
+        ms: "Satu syarikat menjalankan empat barisan servis serentak — sokongan kejuruteraan, kerja awam, pencucian industri, bekalan tenaga kerja — untuk pelanggan yang membaca dalam tiga bahasa. Kontraktor yang tidak dapat menilai keupayaan anda dalam tiga puluh saat akan terus keluar."
       },
       work: {
-        zh: "把服务重新归类成发包方脑子里的分类（不是公司内部部门），每一类给一页，能力范围写在最上面。询盘表单直接放在每个服务页底部，不用回首页找联系方式。",
-        en: "Regrouped the services the way a contractor thinks about them — not by internal department — gave each group its own page with scope stated up top, and put the enquiry form at the foot of every service page so nobody has to hunt for contact details.",
-        ms: "Mengumpulkan semula perkhidmatan mengikut cara kontraktor berfikir, satu halaman untuk setiap kumpulan, dan borang pertanyaan di bawah setiap halaman servis."
+        zh: "全站做成 EN / 中文 / BM 三语。「索取报价」定成全站唯一的主动作，顶栏和首屏各放一次，其余按钮一律降成次要。首屏正下方压一条数据带（年资 / 项目数 / 工业客户 / 技术人员），把可信度放在人还没往下滚之前。案例另开一页 Project Reference，让发包方自己去看做过什么，不用业务再解释一遍。",
+        en: "Built the whole site in three languages (EN / 中文 / BM). Made \"Request a Quotation\" the single primary action — once in the header, once in the hero — and demoted every other button to secondary. Put a credibility strip directly under the hero (years, projects, industrial clients, skilled staff) so the proof lands before anyone scrolls. Gave the case work its own Project Reference page, so a contractor can check the track record without sales walking them through it.",
+        ms: "Membina keseluruhan laman dalam tiga bahasa (EN / 中文 / BM), menjadikan \"Request a Quotation\" satu-satunya tindakan utama, meletakkan jalur kredibiliti tepat di bawah hero, dan memberikan rujukan projek halaman tersendiri."
       },
       result: {
-        zh: "⚠ 请填真实成果。工业类客户常见的可写：询盘品质变好（对方一来就说清要哪一类服务）、业务不用再重复解释服务范围。有数字最好，没有就写这个。",
-        en: "⚠ Fill in a real outcome. For industrial clients, a common honest one: enquiry quality improved — people now state which service line they need up front, so sales stops re-explaining scope. Numbers are better if you have them.",
-        ms: "⚠ Sila isi keputusan sebenar. Contoh biasa: kualiti pertanyaan meningkat kerana pelanggan sudah tahu servis yang diperlukan."
+        zh: "⚠ 请填真实成果。工业类可写：询盘品质变好（对方一来就说清要哪一类服务）、业务不用再重复解释服务范围。 ⚠️ 注意：首屏那四个数字（10+ 年 / 30+ 项目 / 15+ 客户 / 80+ 技术人员）是 EXA 自己的资历，是网站上的内容，不是你做网站带来的结果，别搬到这一栏。",
+        en: "⚠ Fill in a real outcome. For industrial work: enquiry quality improved — people now name the service line they need up front, so sales stops re-explaining scope. ⚠️ Note: the four figures in the hero (10+ years, 30+ projects, 15+ clients, 80+ staff) are EXA's own credentials — content on the site, not results your work produced. Don't move them into this field.",
+        ms: "⚠ Sila isi keputusan sebenar. Contoh: kualiti pertanyaan meningkat kerana pelanggan sudah tahu servis yang diperlukan. ⚠️ Nota: empat angka di hero itu ialah kredensial EXA sendiri, bukan hasil kerja anda."
       },
-      services: ["WEB DESIGN", "DEVELOPMENT", "CONTENT", "SEO"]
+      services: ["WEB DESIGN", "DEVELOPMENT", "MULTILINGUAL", "CONTENT", "SEO"]
     }
   },
   {

@@ -11,6 +11,7 @@
    只想重截某几个：  node tools/capture-screenshots.mjs exa-energy furfoo-pet
    ============================================================================ */
 import { readFileSync, mkdirSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -103,7 +104,20 @@ for (const p of list) {
 
 await browser.close();
 console.log(`\n完成：成功 ${ok} 个，失败 ${fail} 个。截图存在 assets/screenshots/`);
-if (ok) console.log("刷新网页就能看到真实截图了（占位图会自动被盖掉）。");
+
+/* 抓完必须重新生成清单，否则网页根本不知道截图来了。
+   网页不会盲目去请求一个可能不存在的 .jpg（那是 10 次白白的 404），
+   而是读 assets/js/shots.js 里那份「哪些已经有截图」的名单 —— 那份名单由 sync 生成。
+   以前这里只说「刷新就能看到」，但没有帮你重跑 sync，等于说了一句做不到的话。 */
+if (ok) {
+  try {
+    execFileSync(process.execPath, [resolve(root, "tools/sync-static.mjs")], { stdio: "inherit" });
+    console.log("\n刷新网页就能看到真实截图了。");
+    console.log("如果你是用单文件版本发给客户，再跑一次：npm run build");
+  } catch {
+    console.log("\n⚠️  截图抓好了，但清单没更新成功。手动跑一次：npm run sync");
+  }
+}
 if (fail) {
   console.log("\n失败的通常是网站太慢、或者有防爬虫。两个办法：");
   console.log("  1. 单独重跑那几个：node tools/capture-screenshots.mjs <slug> <slug>");

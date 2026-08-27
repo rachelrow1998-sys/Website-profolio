@@ -83,35 +83,35 @@ const PROJECTS = [
     reveal: "cinematic",
     year: "2026",
     tags: {
-      zh: ["品牌官网", "视觉设计", "会员/预约"],
-      en: ["Brand site", "Visual design", "Membership"],
-      ms: ["Laman jenama", "Reka bentuk visual", "Keahlian"]
+      zh: ["会员制俱乐部", "视觉与调性", "叙事式导航"],
+      en: ["Members' club", "Tone of voice", "Narrative navigation"],
+      ms: ["Kelab keahlian", "Nada jenama", "Navigasi naratif"]
     },
     blurb: {
-      zh: "⚠ 这段是我猜写的，请改成真实情况 —— 会员制品牌的官方网站，重点在品牌调性与入会/预约路径。",
-      en: "⚠ Placeholder copy, please rewrite — brand site for a membership club, focused on tone of voice and the path to joining or booking.",
-      ms: "⚠ Teks sementara, sila tukar — laman jenama untuk kelab keahlian."
+      zh: "会员制俱乐部的官方网站。首屏不压标题、不放按钮，整屏交给建筑本身；导航从 Philosophy 开始，先讲理念再讲事实，入会是其中一项，不是一个追着你跑的按钮。",
+      en: "Site for a members' club. The homepage gives its entire first screen to the building — no headline over it, no button — and the navigation opens with Philosophy before About, with joining as one item in it rather than a button chasing you down the page.",
+      ms: "Laman untuk kelab keahlian. Skrin pertama diserahkan sepenuhnya kepada bangunan itu sendiri, dan navigasi bermula dengan Philosophy sebelum About."
     },
     study: {
       subtitle: {
-        zh: "高端生活方式品牌官网",
-        en: "Lifestyle membership brand site",
-        ms: "Laman jenama gaya hidup premium"
+        zh: "会员制生活方式俱乐部官网",
+        en: "Membership lifestyle club site",
+        ms: "Laman kelab gaya hidup keahlian"
       },
       challenge: {
-        zh: "会员制品牌卖的是感觉，不是功能列表。难点在于：第一屏就要让人相信这是个够格的地方，同时不能让「怎么入会 / 怎么预约」被气氛淹没。",
-        en: "A membership brand sells a feeling, not a feature list. The hard part: the first screen has to earn trust instantly, without the atmosphere burying the one thing that matters — how to join or book.",
-        ms: "Jenama keahlian menjual rasa, bukan senarai fungsi. Cabarannya: skrin pertama perlu meyakinkan serta-merta, tanpa suasana menenggelamkan cara untuk menyertai atau menempah."
+        zh: "会员制俱乐部卖的是归属感，不是功能列表。首屏压一个「立即加入」的大按钮，会当场把调性拉低 —— 可是「怎么才能成为会员」又必须找得到。整个设计的分寸就在这两者中间。",
+        en: "A members' club sells belonging, not a feature list. A Join Now button stamped across the hero cheapens it on sight — yet how a person actually becomes a member still has to be findable. The whole design sits in the gap between those two.",
+        ms: "Kelab keahlian menjual rasa kekitaan, bukan senarai fungsi. Butang \"Sertai Sekarang\" di atas hero akan merendahkan nadanya serta-merta, tetapi cara menjadi ahli tetap perlu mudah dijumpai."
       },
       work: {
-        zh: "定下整套视觉语言（留白、字体层级、图片调性），把预约入口固定在每一屏都碰得到的位置，手机端单独排版而不是缩小桌面版。",
-        en: "Set the full visual language — whitespace, type hierarchy, image treatment — pinned the booking entry point within reach on every screen, and laid out mobile as its own design instead of a shrunken desktop.",
-        ms: "Menetapkan bahasa visual penuh, meletakkan pintu tempahan dalam jangkauan pada setiap skrin, dan mereka bentuk versi telefon secara tersendiri."
+        zh: "首屏整屏交给一张建筑照片，不压标题、不压按钮 —— 这一类项目里，空间本身就是最强的提案，加字只会削弱它。导航顺序当叙事顺序排：Philosophy 放在 About 前面，先给理念再给事实。入会不做成悬浮按钮，而是导航里的 Membership 一项，和 Community 并排，让「加入」读起来像归属，不像结账。手机端单独排版，不是缩小桌面版。",
+        en: "Gave the entire first screen to one photograph of the building — no headline, no button over it. In this category the space is the strongest pitch there is, and type laid on top only weakens it. Ordered the navigation as a narrative: Philosophy before About, ethos before facts. Kept joining out of a floating button and made it Membership in the nav, sitting beside Community, so joining reads as belonging rather than checkout. Mobile laid out as its own design, not a shrunken desktop.",
+        ms: "Menyerahkan seluruh skrin pertama kepada satu gambar bangunan — tanpa tajuk, tanpa butang. Menyusun navigasi sebagai naratif (Philosophy sebelum About), dan menjadikan keahlian satu item dalam navigasi di sebelah Community, bukan butang terapung."
       },
       result: {
-        zh: "⚠ 请填真实成果。例如：上线后预约从每月 X 个变成 Y 个。没有后台数字就引用客户原话，或写你交付了什么（上线时间、语言数、手机版）。编造的百分比一被追问就会当场露馅。",
-        en: "⚠ Fill in a real outcome. e.g. bookings went from X to Y a month. No analytics? Quote what the client actually said, or state what you delivered (launch time, languages, mobile). An invented percentage collapses the moment someone asks about it.",
-        ms: "⚠ Sila isi keputusan sebenar. Contoh: tempahan meningkat dari X ke Y sebulan. Tiada angka? Petik kata pelanggan atau nyatakan apa yang anda hantar."
+        zh: "⚠ 请填真实成果。会员制可写：上线后咨询入会的人数、或者客户终于不用再一个个私信解释「这是什么地方」。没有后台数字就引用客户原话，或写你交付了什么（上线时间、页数、手机版）。编造的百分比一被追问就会当场露馅。",
+        en: "⚠ Fill in a real outcome. For a members' club: enquiries about joining after launch, or simply that the client stopped explaining \"what this place is\" one DM at a time. No analytics? Quote what the client actually said, or state what you delivered (launch time, pages, mobile). An invented percentage collapses the moment someone asks about it.",
+        ms: "⚠ Sila isi keputusan sebenar. Contoh: pertanyaan keahlian selepas pelancaran, atau pelanggan tidak perlu lagi menerangkan \"tempat ini apa\" satu demi satu."
       },
       services: ["BRANDING", "WEB DESIGN", "DEVELOPMENT", "MOBILE", "SEO"]
     }

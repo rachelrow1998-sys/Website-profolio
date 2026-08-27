@@ -211,9 +211,9 @@ const PROJECTS = [
       ms: ["Pembinaan jenama", "Produk buatan tangan", "Nada ceria"]
     },
     blurb: {
-      zh: "手作宠物用品品牌的官网。草本护理和新鲜手作零食，主打「宠物是家人」这一层感情，先讲故事再讲产品。",
-      en: "Site for a handmade pet-care brand — herbal care and fresh handmade treats — built on the idea that pets are family, so the story comes before the product.",
-      ms: "Laman untuk jenama penjagaan haiwan buatan tangan — penjagaan herba dan snek segar — dibina atas idea bahawa haiwan peliharaan ialah keluarga."
+      zh: "马来西亚手作宠物护理品牌的官网。小批量烘的零食、草本浴包、植物性洗毛精、喷雾和耳部护理，猫狗都做。主打「宠物是家人」这一层感情，先讲故事再讲产品。",
+      en: "Site for a Malaysian handmade pet-care brand — small-batch baked treats, herbal bath sachets, botanical shampoos, sprays and ear care, for dogs and cats. Built on the idea that pets are family, so the story comes before the product.",
+      ms: "Laman untuk jenama penjagaan haiwan buatan tangan dari Malaysia — snek panggang kelompok kecil, sachet mandian herba, syampu botani, semburan dan penjagaan telinga untuk anjing dan kucing."
     },
     study: {
       subtitle: {
@@ -222,9 +222,9 @@ const PROJECTS = [
         ms: "Laman jenama penjagaan haiwan buatan tangan"
       },
       challenge: {
-        zh: "手作宠物用品最大的对手不是别家品牌，是货架上便宜一半的量产货。光比价永远输，所以网站要先让人相信「这是有人一份一份做出来的」，感情建立起来了，价格才不再是唯一的标准。",
-        en: "A handmade pet brand's real competitor is not another brand, it is the mass-produced product at half the price on the shelf. On price alone you lose every time, so the site has to first make someone believe a person made this batch by hand — once the feeling lands, price stops being the only measure.",
-        ms: "Pesaing sebenar jenama buatan tangan bukan jenama lain, tetapi produk pukal yang separuh harga. Laman ini perlu meyakinkan orang bahawa produk ini dibuat sebiji demi sebiji."
+        zh: "手作宠物用品最大的对手不是别家品牌，是货架上便宜一半的量产货。光比价永远输 —— 而且这类产品是要吃进肚子、抹在皮肤上的，客人不放心就不会买。所以网站要先解决「这是谁做的、用什么做的」，感情和安全感都建立起来了，价格才不再是唯一的标准。",
+        en: "A handmade pet brand's real competitor is not another brand, it is the mass-produced product at half the price on the shelf. On price alone you lose every time — and this is food going into an animal and lotion going onto its skin, so an owner who isn't reassured simply doesn't buy. The site has to answer who made this and what is in it first; once both the feeling and the safety land, price stops being the only measure.",
+        ms: "Pesaing sebenar jenama buatan tangan ialah produk pukal separuh harga. Ini juga produk yang dimakan dan disapu pada haiwan, jadi laman ini perlu menjawab siapa yang membuatnya dan apa kandungannya terlebih dahulu."
       },
       work: {
         zh: "先定语气：整站用暖奶油底配一个红，标题走圆润的字形，猫狗照片上加对话气泡（「…MEOW.（翻译：hi.）」「WOOF~（翻译：Hello, hooman.）」）—— 这一处玩心是刻意的，宠物品牌最忌讳板着脸。首屏两个按钮并排、地位相同：「Discover Our Story」和「Explore Our Creations」，先认人再看货。产品统一叫 Creations 不叫 Products，是因为它们真的是手作的。",

@@ -26,7 +26,7 @@
 
   var LANGS = ["zh", "en", "ms"];
   var HTML_LANG = { zh: "zh-CN", en: "en", ms: "ms" };
-  var CATS = ["all", "corporate", "industrial", "ecommerce", "education", "lifestyle"];
+  var CATS = ["all", "corporate", "industrial", "ecommerce", "education", "lifestyle", "system"];
 
   var state = { lang: "zh", filter: "all" };
 
@@ -458,6 +458,7 @@
       var flags = [];
       if (c.p.mine) flags.push('<span class="proj__flag proj__flag--mine">' + esc(t("work.mine")) + "</span>");
       if (c.p.live === false) flags.push('<span class="proj__flag">' + esc(t("work.offline")) + "</span>");
+      else if (!c.p.url) flags.push('<span class="proj__flag">' + esc(t("work.private")) + "</span>");
       c.flags.innerHTML = flags.join("");
       c.blurb.textContent = pick(c.p.blurb) || "";
       c.link.textContent  = t("work.detail");

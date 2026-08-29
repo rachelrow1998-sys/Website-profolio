@@ -42,7 +42,8 @@ const SITE = {
    name     : 客户 / 项目名称
    url      : 真实网站链接
    category : 分类，必须是下面其中一个：
-              corporate | industrial | ecommerce | education | lifestyle
+              corporate | industrial | ecommerce | education | lifestyle | system
+              （system = 系统 / 工具，不是网站的那一类）
    reveal   : 这个项目用哪一种入场动画（见 MOTION.md 第 4 节）。
               十种现成的：cinematic | strips | soft | playful | paper
                           network | silk | assemble | blueprint | slab
@@ -60,7 +61,8 @@ const SITE = {
               services  = 服务范围标签，显示成小方块。英文大写，不用翻译。
                           可选：BRANDING / WEB DESIGN / DEVELOPMENT / MOBILE / SEO /
                                 E-COMMERCE / CONTENT / UI DESIGN / MAINTENANCE /
-                                MULTILINGUAL
+                                MULTILINGUAL / PRODUCT DESIGN / INVENTORY /
+                                MULTI-CURRENCY
 
    ⚠️ 关于 study.result（成果）——
    我不会帮你编造「预约量提升 182%」这种数字。放在作品集上就是对客户的承诺，
@@ -495,6 +497,50 @@ const PROJECTS = [
         ms: "⚠ Sila isi keputusan sebenar. Contoh: kontraktor sudah menamakan sistem yang dikehendaki, atau jualan Shopee/Lazada yang datang dari laman ini."
       },
       services: ["WEB DESIGN", "DEVELOPMENT", "CONTENT", "MOBILE", "SEO"]
+    }
+  },
+  {
+    slug: "furfoo-pos",
+    name: "Furfoo POS",
+    url: "",                          /* 登录墙后面，没有公开地址。留空 = 卡片标「内部系统」，
+                                         详情页不给按钮。这和 MITIC 的 live:false 是两回事：
+                                         一个是站没了，一个是本来就不对外。 */
+    category: "system",
+    mine: true,                       /* 自有产品 */
+    reveal: "blueprint",
+    year: "2026",
+    tags: {
+      zh: ["零售 POS", "七渠道对账", "双币种不混算"],
+      en: ["Retail POS", "Seven sales channels", "Two currencies, never blended"],
+      ms: ["POS runcit", "Tujuh saluran", "Dua mata wang, tidak dicampur"]
+    },
+    blurb: {
+      zh: "自建的零售后台。七个销售渠道、两种币种、一套库存 —— 收银、订单、成本、缺货全部收在同一个台面上。",
+      en: "A retail back office built from scratch: seven sales channels, two currencies and one inventory — till, orders, cost and stock all on the same counter.",
+      ms: "Pejabat belakang runcit yang dibina sendiri: tujuh saluran jualan, dua mata wang dan satu inventori."
+    },
+    study: {
+      subtitle: {
+        zh: "多渠道 · 双币种零售 POS 与库存系统",
+        en: "Multi-channel, dual-currency retail POS",
+        ms: "POS runcit berbilang saluran dan dua mata wang"
+      },
+      challenge: {
+        zh: "同一批货在七个地方卖：实体工作室、线下市集、Shopee 马来西亚、Shopee 新加坡、Lazada、TikTok、还有 WhatsApp 直接来的单。每个平台一个后台、一种导出格式、一套自己的口径，月底靠 Excel 手拼，数字永远对不上。\n\n更麻烦的是新币。Shopee SG 收的是 SGD，大部分系统会按当天汇率折成马币加总 —— 报表好看，但那是个假数字：汇率一天一个样，同一笔生意这个月和下个月看是两个结果。",
+        en: "The same stock sells in seven places: the studio, offline markets, Shopee Malaysia, Shopee Singapore, Lazada, TikTok, and orders that arrive straight through WhatsApp. Each platform has its own back office, its own export format and its own definitions, so month end becomes a spreadsheet assembled by hand where the numbers never quite agree.\n\nThe Singapore dollar makes it worse. Shopee SG takes SGD, and most systems convert it into ringgit at the day's rate and add the two together. The report looks tidy and the figure is fictional: the rate moves daily, so the same trade reads as two different results in two different months.",
+        ms: "Stok yang sama dijual di tujuh tempat: studio, pasar luar, Shopee Malaysia, Shopee Singapura, Lazada, TikTok dan pesanan terus melalui WhatsApp. Setiap platform mempunyai pejabat belakang dan definisi sendiri.\n\nDolar Singapura menjadikannya lebih rumit — kebanyakan sistem menukarnya kepada ringgit pada kadar hari itu dan menjumlahkannya, menghasilkan angka yang kelihatan kemas tetapi tidak benar."
+      },
+      work: {
+        zh: "七个渠道收进同一套账，每一笔销售记在它发生的渠道和币种上。\n\n最重要的一条规矩：币种从不换算、从不相加。MYR 和 SGD 永远分开显示，「Per currency, never blended」直接印在指标下面，提醒每一个看报表的人。宁可两个数字，不要一个假的。\n\n每张指标卡下面都写清楚口径 —— 订单是「已完成且已付款，取消和退款不算」，毛利是「售价减去已记录的成本」。口径不写出来，同一个数字三个人会读成三个意思。批发也按「实际收到的钱」算，不按开出的发票算；分期付款的发票仍然只算一张订单。\n\nAction Centre 把「20 个缺货 / 22 个没填成本价 / 5 个库存偏低」做成今天要处理的事，不是埋在报表里等人去翻。系统知道自己的数据有洞，会主动说出来 —— 没有成本价，毛利就是错的，与其算一个错的，不如先告诉你缺哪 22 个。\n\n界面中英混排，不做语言切换。「确认扣库存并收款」「当前待结账购物车」—— 店员本来就这样讲话，硬统一成一种语言反而慢。收银台靠结构化 SKU（FF-HB-BUG-SHIELD-25）加扫码，配 Ctrl+K 命令面板，手不用离开键盘。",
+        en: "Seven channels feed one ledger, and every sale is recorded against the channel and the currency it actually happened in.\n\nThe rule the whole system is built on: currencies are never converted and never added together. Ringgit and Singapore dollars are always shown apart, with \"per currency, never blended\" printed under the figure itself as a reminder to whoever reads the report. Two honest numbers beat one invented one.\n\nEvery metric carries its definition underneath — orders are \"completed and paid; cancelled and refunded excluded\", gross profit is \"sales minus recorded product cost\". Leave the definition off and three people read the same number three ways. Wholesale counts money actually received rather than invoices issued, and an invoice settled in instalments is still one order.\n\nThe Action Centre turns \"20 out of stock, 22 missing a cost price, 5 running low\" into today's decisions rather than something buried in a report. The system knows where its own data has holes and says so — without a cost price the gross profit is wrong, so it names the 22 rather than quietly computing a wrong number.\n\nThe interface mixes English and Chinese instead of offering a language switch, because that is how the staff already speak. The till runs on structured SKUs (FF-HB-BUG-SHIELD-25) with barcode scanning and a Ctrl+K command palette, so hands stay on the keyboard.",
+        ms: "Tujuh saluran masuk ke satu lejar, setiap jualan direkod mengikut saluran dan mata wang sebenarnya.\n\nPeraturan utama: mata wang tidak pernah ditukar dan tidak pernah dijumlahkan. Setiap metrik membawa definisinya sendiri di bawahnya. Action Centre menjadikan kehabisan stok dan harga kos yang hilang sebagai keputusan hari ini, bukan laporan yang tertimbus.\n\nAntara muka mencampurkan bahasa Inggeris dan Cina kerana begitulah cara pekerja bercakap, dengan SKU berstruktur, pengimbas kod bar dan palet arahan Ctrl+K."
+      },
+      result: {
+        zh: "⚠ 请填真实成果。这是你自己的系统，数字你手上就有，不用等谁给。最有说服力的写法是「以前 → 现在」：月底对账以前要几个钟头，现在几分钟？22 个没成本价的补完之后，发现哪几个产品其实是亏的？缺货从发现到补货快了多少？\n           这一条应该是所有作品里最容易填、也最有分量的一条 —— 因为你既是做的人，也是用的人。",
+        en: "⚠ Fill in a real outcome. This is your own system, so the numbers are already in your hands. The most convincing shape is before and after: how many hours did month-end reconciliation take, and how long does it take now? Once the 22 missing cost prices were filled in, which products turned out to be losing money? How much faster does a stock-out get noticed and restocked?\n           This should be the easiest and the strongest result of the lot — you are both the person who built it and the person who uses it.",
+        ms: "⚠ Sila isi keputusan sebenar. Ini sistem anda sendiri, jadi angkanya ada pada anda. Bentuk paling meyakinkan ialah sebelum dan selepas: berapa lama penyesuaian akhir bulan dahulu berbanding sekarang?"
+      },
+      services: ["PRODUCT DESIGN", "UI DESIGN", "DEVELOPMENT", "INVENTORY", "MULTI-CURRENCY"]
     }
   }
 ];

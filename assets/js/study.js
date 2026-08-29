@@ -129,7 +129,8 @@
     } else {
       el.visit.removeAttribute("href");          // 没有 href 就不可点、也不进 Tab 顺序
       el.visit.setAttribute("aria-disabled", "true");
-      el.visitText.textContent = t("study.offline");
+      /* 「站已经下线」和「本来就不对外」是两回事，不能用同一句话打发。 */
+      el.visitText.textContent = p.live === false ? t("study.offline") : t("study.private");
     }
     /* 自有品牌就照实说，不要冒充客户委托 */
     el.eyebrow.textContent = p.mine ? t("study.own") : t("study.eyebrow");

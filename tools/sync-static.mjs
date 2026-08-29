@@ -9,7 +9,9 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const src = readFileSync(resolve(root, "assets/js/data.js"), "utf8");
-const PROJECTS = eval(src.replace(/^const SITE\b/m, "var SITE").replace(/^const PROJECTS\b/m, "var PROJECTS") + "; PROJECTS");
+const DATA = eval(src.replace(/^const SITE\b/m, "var SITE").replace(/^const PROJECTS\b/m, "var PROJECTS") + "; ({ SITE: SITE, PROJECTS: PROJECTS })");
+const PROJECTS = DATA.PROJECTS;
+const SITE = DATA.SITE;
 
 const esc = (v) => String(v ?? "")
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -55,6 +57,35 @@ const before = html;
 html = html.replace(/(<!-- NOSCRIPT:START -->)[\s\S]*?(<!-- NOSCRIPT:END -->)/, (_, a, b) => a + block + b);
 html = html.replace(/(<!-- HEROMOB:START -->)[\s\S]*?(<!-- HEROMOB:END -->)/, (_, a, b) => a + "\n" + mob + "\n        " + b);
 
+/* ── 品牌名 ─────────────────────────────────────────────────────────
+   改名字只该改 data.js 一个地方。页面上大部分位置（顶栏、封面、页脚、
+   开机动画）是 JS 从 SITE 读的，本来就跟着变；但下面这四处是写死在
+   index.html 里的静态内容，JS 管不到 —— 分享到 WhatsApp 时显示的标题、
+   浏览器标签页、页签图标、关掉 JS 的兜底页。
+   以前要手动改四个地方，漏一个就会出现「新名字的网站，旧名字的分享卡」。 */
+const brand = String(SITE.brand || "Studio").trim();
+const mono  = String(SITE.monogram || "JH").trim();
+/* 页签图标是一段内联 SVG，住在 HTML 属性里，用的是单引号 ——
+   缩写里带引号或尖括号会把属性截断，整个 favicon 失效。先剔掉。 */
+const monoSafe = mono.replace(/[<>&"']/g, "").slice(0, 3) || "JH";
+
+html = html.replace(/<title>[^<]*<\/title>/,
+  () => `<title>${esc(brand)} — 网页设计与开发 | Web Design & Development Malaysia</title>`);
+html = html.replace(/(<meta property="og:title" content=")[^"]*(")/,
+  (_, a, b) => a + esc(brand) + " — 网页设计与开发 | Web Design & Development" + b);
+html = html.replace(/(text-anchor='middle'>)[^<]*(<\/text>)/,
+  (_, a, b) => a + monoSafe + b);
+html = html.replace(/(<h2>)[^<]*(<\/h2>)/,
+  (_, a, b) => a + esc(brand) + " — Selected Works" + b);
+/* 封面大标题上方那行、以及开机动画中间的缩写，也是写死的。
+   ⚠️ 这两处必须在 HTML 里就是对的，不能等 JS 来改：
+   开机动画在首帧就可见，JS 要等 DOMContentLoaded 才跑 ——
+   访客会先看到旧缩写闪一下再变成新的。 */
+html = html.replace(/(<span class="boot__mark" id="boot-mark">)[^<]*(<\/span>)/,
+  (_, a, b) => a + esc(monoSafe) + b);
+html = html.replace(/(<span id="cover-name">)[^<]*(<\/span>)/,
+  (_, a, b) => a + esc(brand.toUpperCase()) + b);
+
 /* 内容没变化不是错误（幂等重跑很正常）。真正的错误是标记不见了。 */
 if (!/<!-- NOSCRIPT:START -->/.test(before) || !/<!-- HEROMOB:START -->/.test(before)) {
   console.error("⚠️ index.html 里找不到 NOSCRIPT / HEROMOB 标记，无法同步");
@@ -63,4 +94,5 @@ if (!/<!-- NOSCRIPT:START -->/.test(before) || !/<!-- HEROMOB:START -->/.test(be
 writeFileSync(resolve(root, "index.html"), html);
 console.log(`✓ 已同步：noscript ${PROJECTS.length} 个作品 + 手机 Hero 4 张卡`);
 console.log(`  真实截图 ${shotList.length}/${PROJECTS.length} 个${shotList.length ? "：" + shotList.join(", ") : "（其余用占位图）"}`);
+console.log(`  品牌名「${brand}」/ 缩写「${monoSafe}」已写进标题、分享卡、页签图标、noscript`);
 console.log(`  个人照片 assets/img/me.jpg：${existsSync(resolve(root, "assets/img/me.jpg")) ? "有 ✓" : "还没放（用占位剪影）"}`);

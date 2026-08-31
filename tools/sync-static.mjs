@@ -69,10 +69,18 @@ const mono  = String(SITE.monogram || "JH").trim();
    缩写里带引号或尖括号会把属性截断，整个 favicon 失效。先剔掉。 */
 const monoSafe = mono.replace(/[<>&"']/g, "").slice(0, 3) || "JH";
 
+/* 标题后面那两个说明标签。品牌名本身已经把话说完了的时候（例如
+   brand 就叫 "Web Design & Development"），就不要再重复一遍 ——
+   「Web Design & Development — Web Design & Development」看着像出了 bug。 */
+const tags = ["网页设计与开发", "Web Design & Development"]
+  .filter((t) => !brand.toLowerCase().includes(t.toLowerCase()));
+const titleTail = tags.concat("Malaysia").join(" | ");
+const ogTail = tags.join(" | ");
+
 html = html.replace(/<title>[^<]*<\/title>/,
-  () => `<title>${esc(brand)} — 网页设计与开发 | Web Design & Development Malaysia</title>`);
+  () => `<title>${esc(brand)} — ${esc(titleTail)}</title>`);
 html = html.replace(/(<meta property="og:title" content=")[^"]*(")/,
-  (_, a, b) => a + esc(brand) + " — 网页设计与开发 | Web Design & Development" + b);
+  (_, a, b) => a + esc(brand) + (ogTail ? " — " + esc(ogTail) : "") + b);
 html = html.replace(/(text-anchor='middle'>)[^<]*(<\/text>)/,
   (_, a, b) => a + monoSafe + b);
 html = html.replace(/(<h2>)[^<]*(<\/h2>)/,
@@ -85,6 +93,12 @@ html = html.replace(/(<span class="boot__mark" id="boot-mark">)[^<]*(<\/span>)/,
   (_, a, b) => a + esc(monoSafe) + b);
 html = html.replace(/(<span id="cover-name">)[^<]*(<\/span>)/,
   (_, a, b) => a + esc(brand.toUpperCase()) + b);
+
+/* 作品详情页那个转动的印章。运行时 study.js 也会写一遍，但 HTML 里留着旧名字
+   迟早会被人当成漏改的地方 —— 规则跟 study.js 保持一致：短名字转两圈。 */
+const unit = brand.toUpperCase() + " · SELECTED WORK · ";
+html = html.replace(/(<textPath href="#fx-ring" id="fx-stamptext" startOffset="0">)[^<]*(<\/textPath>)/,
+  (_, a, b) => a + esc(unit.length <= 22 ? unit + unit : unit) + b);
 
 /* 内容没变化不是错误（幂等重跑很正常）。真正的错误是标记不见了。 */
 if (!/<!-- NOSCRIPT:START -->/.test(before) || !/<!-- HEROMOB:START -->/.test(before)) {

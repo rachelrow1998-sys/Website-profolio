@@ -35,8 +35,8 @@
 
 ```js
 const SITE = {
-  monogram: "JH",                    // 左上角的缩写
-  brand:    "JH Studio",             // 你的名字 / 工作室名
+  monogram: "WD",                    // 左上角的缩写
+  brand:    "Web Design & Development",  // 你的名字 / 工作室名
 
   whatsapp: "60123456789",           // ⚠️ 改成你的号码！
   email:    "hello@yourdomain.com",  // ⚠️ 改成你的邮箱！

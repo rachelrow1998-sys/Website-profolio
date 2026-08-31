@@ -8,10 +8,10 @@
 
 const SITE = {
   /* 显示在左上角的品牌缩写（1-3 个字母最好看） */
-  monogram: "JH",
+  monogram: "WD",
 
   /* 你的名字 / 工作室名字 */
-  brand: "JH Studio",
+  brand: "Web Design & Development",
 
   /* ⚠️ 必改：你的 WhatsApp 号码。格式 = 国码 + 号码，不要 +、不要空格、不要短横线
      例如 +60 12-345 6789  →  写成  "60123456789"                              */

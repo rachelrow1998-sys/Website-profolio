@@ -7,7 +7,9 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const src = readFileSync(resolve(root, "assets/js/data.js"), "utf8");
-const PROJECTS = eval(src.replace(/^const SITE\b/m, "var SITE").replace(/^const PROJECTS\b/m, "var PROJECTS") + "; PROJECTS");
+const DATA = eval(src.replace(/^const SITE\b/m, "var SITE").replace(/^const PROJECTS\b/m, "var PROJECTS") + "; ({ SITE: SITE, PROJECTS: PROJECTS })");
+const PROJECTS = DATA.PROJECTS;
+const SITE = DATA.SITE;
 
 const PALETTE = [
   ["#F2A93B", "#B4541E"], ["#5FBFA6", "#1E6B63"], ["#E2707F", "#8C2B4E"],
@@ -60,12 +62,17 @@ PROJECTS.forEach((p, i) => {
 });
 
 /* 分享卡片封面 og-cover.svg */
+/* 封面大字本来就写着 Web Design & Development。品牌名如果说的是同一句话，
+   小字那行就别再写一遍 —— 分享卡上同一句话出现两次很像做错了。 */
+const ogBrand = String(SITE.brand || "").trim();
+const brandLine = /web\s*design/i.test(ogBrand) ? ""
+  : `<text x="72" y="150" font-family="Georgia,serif" font-size="46" fill="#14120F">${esc(ogBrand)}</text>`;
 writeFileSync(resolve(root, "assets/img/og-cover.svg"), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#14120F"/><stop offset="100%" stop-color="#14120F"/></linearGradient></defs>
   <rect width="1200" height="630" fill="#EDEAE3"/>
   <rect x="72" y="72" width="1056" height="1" fill="#CEC8BC"/>
   
-  <text x="72" y="150" font-family="Georgia,serif" font-size="46" fill="#14120F">JH Studio</text>
+  ${brandLine}
   <text x="72" y="330" font-family="Georgia,serif" font-size="86" fill="#14120F">Web Design &amp;</text>
   <text x="72" y="412" font-family="Georgia,serif" font-size="86" fill="#14120F">Development</text>
   <text x="72" y="486" font-family="Archivo,Helvetica,Arial,sans-serif" font-size="24" fill="#8A8478" letter-spacing="3">Corporate sites · Landing pages · E-commerce · Malaysia</text>

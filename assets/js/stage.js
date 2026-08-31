@@ -243,63 +243,63 @@
   }
 
   /* =====================================================================
-     Flip：Hero ⇄ Grid   —— 白名单 #1
+     Hero ⇄ Grid：原地交叉淡出
+     ---------------------------------------------------------------------
+     ⚠️ 这里原本是 Flip —— ghost 从封面上的散落位置一路飞进作品网格。
+     位移有八百多像素，所以人只要往下滚一点，十张卡就整批往下掉；
+     看起来不像「漂浮的作品排进档案」，而像页面自己塌了一层，
+     而且飞行途中卡片会盖住刚露头的作品区标题。
+
+     换成原地交叉淡出：ghost 在封面上淡掉，真卡在网格里淡出来，
+     两边都不移动。往下滚是用户在控制节奏，页面不该抢着表演一段位移。
+     Flip 现在只剩筛选重排那一处（见下面白名单 #2）。
      ===================================================================== */
-  function flipTo(target) {
-    if (!libReady() || !live || target === mode) return;
+  var FADE = .42;
+
+  function fadeTo(target) {
+    if (!live || target === mode) return;
     if (busy) { want = target; return; }        /* 动画中来的请求排队，不打断 */
     busy = true;
     want = null;
 
-    var Flip = window.Flip, gsap = window.gsap;
+    var gsap = window.gsap;
     gsap.killTweensOf(ghosts);
+    gsap.killTweensOf(cards);
     clearParallax();
 
-    /* 做法说明：
-       动画对象始终是 ghost，真卡一次都不动，也不接受 inline 样式。
-         1. Flip.getState(ghosts)  记录「要去的地方」或「现在在哪」
-         2. Flip.fit(ghost, card)  瞬间把 ghost 摆到对应真卡的位置
-         3. Flip.from(state)       从记录的状态飞到当前状态
-       一开始试过「移除 ghost + 靠 data-flip-id 跨元素配对」，
-       Flip 返回的时间轴 duration 是 0 —— 配对没生效，什么都不会动。
-       这个写法不依赖任何隐式配对，目标自始至终是同一批元素。 */
+    function settle() {
+      mode = target; busy = false;
+      if (want && want !== mode) { var w = want; want = null; fadeTo(w); }
+    }
 
     if (target === "grid") {
-      if (!ghosts.length) { busy = false; return; }
-      var st = Flip.getState(ghosts);                    /* 起点：Hero 散落 */
-      ghosts.forEach(function (g, i) {                   /* 瞬间摆到真卡位置 */
-        if (cards[i]) Flip.fit(g, cards[i], { scale: true });
+      /* 真卡先开始淡入，和 ghost 的淡出重叠 —— 中间不留一帧空白，
+         否则会看到作品区闪一下才有东西。
+         ⚠️ 真卡的透明度用 gsap 显式补，不要在 .proj 上挂 CSS transition：
+         筛选那处 Flip 也在写同一个 opacity，两套动画抢一个属性会打架。 */
+      ghostGrid(false);
+      gsap.fromTo(cards, { opacity: 0 }, {
+        opacity: 1, duration: FADE, ease: "power2.out",
+        stagger: { each: .015, from: "start" },
+        clearProps: "opacity"
       });
-      Flip.from(st, {
-        duration: .95, ease: "expo.out", scale: true,
-        stagger: { each: .022, from: "start" },
-        onComplete: function () {
-          dropGhosts();                                  /* 落位后再撤掉 ghost 和舞台 */
-          ghostGrid(false);                              /* 真卡显形，视觉上无缝接手 */
-          mode = "grid"; busy = false;
-          if (want && want !== mode) { var w = want; want = null; flipTo(w); }
-        }
+      if (!ghosts.length) return settle();
+      gsap.to(ghosts, {
+        opacity: 0, duration: FADE, ease: "power2.out",
+        stagger: { each: .015, from: "end" },
+        onComplete: function () { dropGhosts(); settle(); }
       });
 
     } else {
-      makeGhosts();                                      /* ghost 建在 scatter 位置 */
-      if (!ghosts.length) { busy = false; return; }
-      var st2 = Flip.getState(ghosts);                   /* 记录终点：Hero 散落 */
-      ghosts.forEach(function (g, i) {                   /* 先瞬间摆到真卡位置 */
-        if (cards[i]) Flip.fit(g, cards[i], { scale: true });
-      });
-      ghostGrid(true);                                   /* 真卡隐去，ghost 接手 */
-      Flip.from(st2, {
-        duration: .95, ease: "expo.out", scale: true,
-        stagger: { each: .018, from: "end" },
-        onComplete: function () {
-          /* 清掉 GSAP 的 inline 变换，把控制权交还给 CSS 的百分比定位，
-             这样 resize 时 scatter 会自己跟着视口走。 */
-          gsap.set(ghosts, { clearProps: "all" });
-          ghosts.forEach(placeGhost);        /* clearProps 会连 --hx 一起清掉，补回来 */
-          mode = "hero"; busy = false;
-          if (want && want !== mode) { var w = want; want = null; flipTo(w); }
-        }
+      makeGhosts();
+      if (!ghosts.length) return settle();
+      ghostGrid(true);
+      gsap.fromTo(ghosts, { opacity: 0 }, {
+        opacity: 1, duration: FADE, ease: "power2.out",
+        stagger: { each: .015, from: "start" },
+        /* 交还给 CSS —— .proj--ghost 的 opacity 是 var(--eo)，
+           开场入场那段动画要用它，留着 inline 值会把入场压死。 */
+        onComplete: function () { gsap.set(ghosts, { clearProps: "opacity" }); settle(); }
       });
     }
   }
@@ -426,8 +426,8 @@
     if (key === lastKey) return;
     lastKey = key;
 
-    if (mode !== "grid" && gridTop < vh * 1.0 && y > 40) flipTo("grid");
-    else if (mode !== "hero" && gridTop > vh * 1.45) flipTo("hero");
+    if (mode !== "grid" && gridTop < vh * 1.0 && y > 40) fadeTo("grid");
+    else if (mode !== "hero" && gridTop > vh * 1.45) fadeTo("hero");
   }
 
   /* =====================================================================
@@ -474,7 +474,7 @@
     /* 键盘用户在 Hero 模式下 Tab 到作品卡 → 立刻整理成 Grid，
        否则焦点会落在一张透明的卡上，等于焦点消失。 */
     document.addEventListener("focusin", function (e) {
-      if (live && mode === "hero" && e.target.closest && e.target.closest(".proj")) flipTo("grid");
+      if (live && mode === "hero" && e.target.closest && e.target.closest(".proj")) fadeTo("grid");
     });
 
     window.JHStage = {

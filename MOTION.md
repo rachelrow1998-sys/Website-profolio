@@ -90,7 +90,7 @@ Flip 一次都不会被调用，所以脚本干脆不注入。手机端实测确
 
 | # | 场景 | 用什么 |
 |---|---|---|
-| 1 | Hero 卡片群 → Works Grid | `Flip` |
+| 1 | ~~Hero 卡片群 → Works Grid~~ | ~~`Flip`~~ **已撤销，见 2.4** |
 | 2 | Works 筛选后重排 | `Flip` |
 | 3 | Works Grid → Case Study Focus Mode（含关闭时飞回原位） | `Flip` |
 | 4 | Case Study 内部有限的 pin / scrub（**仅桌面**） | `ScrollTrigger` |
@@ -199,10 +199,23 @@ YH     → 中下      MITIC  → 右下
 ```
 各自 rotation 再加一点。
 
-然后这些 screenshot **用 Flip 直接飞进 Works Grid 的位置**。
+~~然后这些 screenshot **用 Flip 直接飞进 Works Grid 的位置**。~~
 
-> 视觉上是「漂浮的作品自动整理成作品档案」，不是 section 硬切。
-> **这就是这个作品集最有识别度的 signature interaction。**
+> ~~视觉上是「漂浮的作品自动整理成作品档案」，不是 section 硬切。~~
+> ~~**这就是这个作品集最有识别度的 signature interaction。**~~
+
+**⚠️ 2026-08 撤销：改成原地交叉淡出，Flip 不再用在这一处。**
+
+原因是实际做出来和上面这段设想不一样。封面在上、作品网格在下，两者之间隔着
+八百多像素；Flip 忠实地把这段距离走完，于是人只往下滚一点点，十张卡就整批
+往下掉。读出来不是「漂浮的作品排进档案」，而是页面自己塌了一层 ——
+而且卡片下坠途中会正好盖住刚露头的作品区标题。
+
+现在的做法：ghost 在封面上原地淡掉，真卡在网格里原地淡出来，两边都不移动
+（`stage.js` 的 `fadeTo()`）。往下滚是用户在控制节奏，页面不该在这时候
+抢过去表演一段位移。
+
+签名感交给还在的那些：开场散落入场、鼠标视差、筛选重排、Case Study 转场。
 
 ### 2.5 Works Grid
 
@@ -569,7 +582,7 @@ Opening Sequence 1.8–2.5 秒的前提是**资源已经就绪**。
 | 阶段 | 内容 | 拿到什么 | 状态 |
 |---|---|---|---|
 | 1 | Opening Sequence + Hero 卡片群 + 鼠标视差 | 第一印象直接到位 | ✅ 完成 |
-| 2 | Hero → Works Grid 的 Flip + 筛选 Flip | **signature interaction，做完即可上线** | ✅ 完成 |
+| 2 | Hero → Works Grid 的转场 + 筛选 Flip | 转场后来改成原地淡出（见 2.4），筛选仍是 Flip | ✅ 完成 |
 | 3 | Case Study Focus Mode（先用一种通用 reveal） | 结构跑通 | ✅ 完成 |
 | 4 | 10 种 bespoke reveal 逐个替换 | 差异化 | 待做 |
 | 5 | Services / Process / Contact 编排 | 收尾 | 待做 |

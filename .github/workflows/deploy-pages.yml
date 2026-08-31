@@ -1,8 +1,9 @@
 # 把网站发布到 GitHub Pages。
 # 纯静态站，没有 build 步骤 —— 直接把仓库根目录整个传上去。
 #
-# enablement: true 会在第一次跑的时候自动帮仓库打开 Pages，
-# 所以不用先去 Settings 里点。
+# ⚠️ 第一次要先去仓库 Settings → Pages → Source 选 "GitHub Actions"，
+#    只需要点这一次。（试过让流程自己开：创建 Pages 站点要仓库管理员权限，
+#    workflow 的 GITHUB_TOKEN 拿不到，会报 Resource not accessible by integration）
 name: Deploy to GitHub Pages
 
 on:
@@ -36,9 +37,6 @@ jobs:
       - run: node tools/sync-static.mjs
 
       - uses: actions/configure-pages@v5
-        with:
-          # 仓库还没开 Pages 的话，这一步直接帮忙开好。
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .

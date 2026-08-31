@@ -185,11 +185,17 @@ $env:CHROME_PATH="C:\Program Files\Google\Chrome\Application\chrome.exe"; npm ru
 
 免费、自动 HTTPS、不限流量。以后买了域名，在 Domain settings 里绑上就行。
 
-### GitHub Pages（不用注册新账号，已经配好了）
+### GitHub Pages（不用注册新账号，自动部署已经配好了）
+
+仓库里有 `.github/workflows/deploy-pages.yml`：只要往分支一推，
+它就自动重跑一次 `sync` 再发布，**不用手动上传**。
+
+**只需要点一次**（这一步必须你自己点，权限问题，脚本代劳不了）：
 
 1. 仓库 → **Settings** → **Pages**
-2. Source 选 **Deploy from a branch**，分支选你的分支，目录选 `/ (root)`
-3. 等 1 分钟，网址是 `https://<用户名>.github.io/<仓库名>/`
+2. Source 选 **GitHub Actions**（不是 Deploy from a branch）
+3. 回到 **Actions** 页签 → 选 *Deploy to GitHub Pages* → **Run workflow**
+4. 等 1 分钟，网址是 `https://<用户名>.github.io/<仓库名>/`
 
 ⚠️ 两个要注意的：
 - 网址里会带你的 GitHub 用户名和仓库名，改不了

@@ -332,6 +332,10 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 .filters button{
   padding:.6em 1.15em; font-size:.66rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
   color:var(--pencil); transition:all .3s var(--ease);
+  /* ⚠️ letter-spacing 会在最后一个字母后面也留一格。那一格算进文字宽度里，
+     所以居中之后字会整体偏左半格 —— 每个格子看起来右边空得比左边多。
+     往右推回半格（.16em 的一半）才是真的居中。 */
+  text-indent:.08em;
 }
 .filters button + button{ border-left:1px solid var(--rule); }
 .filters button:hover{ color:var(--ink); background:var(--paper-2); }

@@ -15,10 +15,10 @@ const SITE = {
 
   /* ⚠️ 必改：你的 WhatsApp 号码。格式 = 国码 + 号码，不要 +、不要空格、不要短横线
      例如 +60 12-345 6789  →  写成  "60123456789"                              */
-  whatsapp: "60123456789",
+  whatsapp: "60173046796",
 
   /* ⚠️ 必改：你的邮箱 */
-  email: "hello@yourdomain.com",
+  email: "rachelrow1998@gmail.com",
 
   /* 社交链接。不想放就留空字符串 ""，按钮会自动隐藏 */
   xiaohongshu: "",          /* 小红书主页链接 */

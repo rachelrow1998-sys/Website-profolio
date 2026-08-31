@@ -1,0 +1,43 @@
+# 把网站发布到 GitHub Pages。
+# 纯静态站，没有 build 步骤 —— 直接把仓库根目录整个传上去。
+#
+# ⚠️ 第一次要先去仓库 Settings → Pages → Source 选 "GitHub Actions"，
+#    否则这个流程会跑到最后一步失败（提示没有开启 Pages）。
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - claude/online-portfolio-website-2x0nbr
+      - claude/free-domain-portfolio-b8rz0k
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同时只跑一个部署；新的推送不打断正在进行的那一次。
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # data.js 是唯一的内容来源。这里重跑一次同步，
+      # 万一改了 data.js 忘了跑 npm run sync，线上也不会是旧的。
+      - run: node tools/sync-static.mjs
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -29,9 +29,9 @@ const SITE = {
 
   /* 客户点 WhatsApp 按钮时，自动帮他打好的第一句话 */
   waMessage: {
-    zh: "你好 JH，我在你的作品集网站看到你的作品，想咨询做网站。",
-    en: "Hi JH, I saw your portfolio site and I'd like to enquire about a website.",
-    ms: "Hai JH, saya lihat portfolio anda dan ingin bertanya tentang pembinaan laman web."
+    zh: "你好 Rachel，我在你的作品集网站看到你的作品，想咨询做网站。",
+    en: "Hi Rachel, I saw your portfolio site and I'd like to enquire about a website.",
+    ms: "Hai Rachel, saya lihat portfolio anda dan ingin bertanya tentang pembinaan laman web."
   }
 };
 
@@ -557,7 +557,7 @@ const PROFILE = {
   photo: "assets/img/me.jpg",
 
   /* 你的名字（显示在 HELLO, I AM 下面） */
-  name: "YUDHA / JH",
+  name: "Rachel",
 
   /* 年龄，不想放就写 "" */
   age: "",

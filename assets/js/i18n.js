@@ -41,7 +41,7 @@ const I18N = {
     "hero.eyebrow": "网页设计与开发 · 马来西亚",
     "hero.title.a": "让客户在 5 秒内",
     "hero.title.b": "相信你的生意",
-    "hero.sub": "我是 JH，独立网页设计师兼开发者。从企业官网、品牌落地页到电商与询盘系统，设计、开发、上线全程由我一个人负责 —— 你只需要对接一个人。",
+    "hero.sub": "我是 Rachel，独立网页设计师兼开发者。从企业官网、品牌落地页到电商与询盘系统，设计、开发、上线全程由我一个人负责 —— 你只需要对接一个人。",
     "hero.cta1": "查看作品",
     "hero.cta2": "WhatsApp 聊聊",
     "hero.scroll": "往下看",
@@ -102,7 +102,7 @@ const I18N = {
 
     "about.eyebrow": "关于我",
     "about.title": "一个人，负责到底",
-    "about.p1": "我是 JH，在马来西亚做网页设计与开发。这些年做过建筑工程、建材五金、宠物、教育、健康护理、OEM 代工等不同行业的网站 —— 行业差别很大，但客户要的东西是一样的：让人一眼看懂、一眼相信，然后愿意主动联系。",
+    "about.p1": "我是 Rachel，在马来西亚做网页设计与开发。这些年做过建筑工程、建材五金、宠物、教育、健康护理、OEM 代工等不同行业的网站 —— 行业差别很大，但客户要的东西是一样的：让人一眼看懂、一眼相信，然后愿意主动联系。",
     "about.p2": "跟大公司比，我的优势很直接：你不用经过业务、项目经理、再转给设计师。有问题直接 WhatsApp 我，改动当天就能动手。",
     "about.skills": "我做的事",
 
@@ -174,7 +174,7 @@ const I18N = {
     "hero.eyebrow": "Web Design & Development · Malaysia",
     "hero.title.a": "Make customers trust",
     "hero.title.b": "your business in 5 seconds",
-    "hero.sub": "I'm JH, an independent web designer and developer. Corporate sites, brand landing pages, e-commerce and enquiry systems — designed, built and launched by one person. You deal with me, not a department.",
+    "hero.sub": "I'm Rachel, an independent web designer and developer. Corporate sites, brand landing pages, e-commerce and enquiry systems — designed, built and launched by one person. You deal with me, not a department.",
     "hero.cta1": "View work",
     "hero.cta2": "Chat on WhatsApp",
     "hero.scroll": "Scroll",
@@ -235,7 +235,7 @@ const I18N = {
 
     "about.eyebrow": "About",
     "about.title": "One person, end to end",
-    "about.p1": "I'm JH, a web designer and developer based in Malaysia. I've built sites for construction, building materials, hardware, pets, education, healthcare and OEM manufacturing. Very different industries — but the clients all want the same thing: to be understood instantly, believed immediately, and contacted.",
+    "about.p1": "I'm Rachel, a web designer and developer based in Malaysia. I've built sites for construction, building materials, hardware, pets, education, healthcare and OEM manufacturing. Very different industries — but the clients all want the same thing: to be understood instantly, believed immediately, and contacted.",
     "about.p2": "Compared to an agency, the advantage is simple. No account manager, no handoffs. Message me directly and changes can start the same day.",
     "about.skills": "What I handle",
 
@@ -307,7 +307,7 @@ const I18N = {
     "hero.eyebrow": "Reka Bentuk & Pembinaan Laman Web · Malaysia",
     "hero.title.a": "Buat pelanggan percaya",
     "hero.title.b": "perniagaan anda dalam 5 saat",
-    "hero.sub": "Saya JH, pereka dan pembangun laman web bebas. Laman korporat, landing page jenama, e-dagang dan sistem pertanyaan — direka, dibina dan dilancarkan oleh satu orang. Anda berurusan dengan saya sahaja.",
+    "hero.sub": "Saya Rachel, pereka dan pembangun laman web bebas. Laman korporat, landing page jenama, e-dagang dan sistem pertanyaan — direka, dibina dan dilancarkan oleh satu orang. Anda berurusan dengan saya sahaja.",
     "hero.cta1": "Lihat kerja",
     "hero.cta2": "Chat WhatsApp",
     "hero.scroll": "Skrol",
@@ -368,7 +368,7 @@ const I18N = {
 
     "about.eyebrow": "Tentang saya",
     "about.title": "Satu orang, dari awal hingga akhir",
-    "about.p1": "Saya JH, pereka dan pembangun laman web di Malaysia. Saya pernah membina laman untuk pembinaan, bahan binaan, perkakasan, haiwan peliharaan, pendidikan, penjagaan kesihatan dan pembuatan OEM. Industri berbeza — tetapi pelanggan mahukan perkara yang sama: difahami serta-merta, dipercayai, dan dihubungi.",
+    "about.p1": "Saya Rachel, pereka dan pembangun laman web di Malaysia. Saya pernah membina laman untuk pembinaan, bahan binaan, perkakasan, haiwan peliharaan, pendidikan, penjagaan kesihatan dan pembuatan OEM. Industri berbeza — tetapi pelanggan mahukan perkara yang sama: difahami serta-merta, dipercayai, dan dihubungi.",
     "about.p2": "Berbanding agensi, kelebihannya mudah. Tiada perantara. WhatsApp saya terus, dan perubahan boleh bermula hari yang sama.",
     "about.skills": "Yang saya uruskan",
 

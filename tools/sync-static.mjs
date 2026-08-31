@@ -9,9 +9,10 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const src = readFileSync(resolve(root, "assets/js/data.js"), "utf8");
-const DATA = eval(src.replace(/^const SITE\b/m, "var SITE").replace(/^const PROJECTS\b/m, "var PROJECTS") + "; ({ SITE: SITE, PROJECTS: PROJECTS })");
+const DATA = eval(src.replace(/^const SITE\b/m, "var SITE").replace(/^const PROJECTS\b/m, "var PROJECTS").replace(/^const PROFILE\b/m, "var PROFILE") + "; ({ SITE: SITE, PROJECTS: PROJECTS, PROFILE: PROFILE })");
 const PROJECTS = DATA.PROJECTS;
 const SITE = DATA.SITE;
+const PROFILE = DATA.PROFILE || {};
 
 const esc = (v) => String(v ?? "")
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -96,6 +97,15 @@ html = html.replace(/(<span id="cover-name">)[^<]*(<\/span>)/,
 
 /* 作品详情页那个转动的印章。运行时 study.js 也会写一遍，但 HTML 里留着旧名字
    迟早会被人当成漏改的地方 —— 规则跟 study.js 保持一致：短名字转两圈。 */
+
+/* 顶栏缩写、页脚、个人档案和联系页的名字，运行时 JS 也会写一遍。
+   但 HTML 里如果留着旧名字，关掉 JS 的人会看到旧的，改名的人也会以为漏改了。 */
+const pname = String(PROFILE.name || brand).trim();
+html = html.replace(/(<b id="logo-mark">)[^<]*(<\/b>)/, (_, a, b) => a + esc(monoSafe) + b);
+html = html.replace(/(<span id="footer-brand">)[^<]*(<\/span>)/, (_, a, b) => a + esc(brand) + b);
+html = html.replace(/(id="profile-name">)[^<]*(<\/h2>)/, (_, a, b) => a + esc(pname) + b);
+html = html.replace(/(<p class="end__name" id="contact-name">)[^<]*(<\/p>)/, (_, a, b) => a + esc(pname) + b);
+
 const unit = brand.toUpperCase() + " · SELECTED WORK · ";
 html = html.replace(/(<textPath href="#fx-ring" id="fx-stamptext" startOffset="0">)[^<]*(<\/textPath>)/,
   (_, a, b) => a + esc(unit.length <= 22 ? unit + unit : unit) + b);

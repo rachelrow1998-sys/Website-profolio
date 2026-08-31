@@ -1,4 +1,4 @@
-# JH Studio — 在线作品集 Online Portfolio
+# Web Design & Development — 在线作品集 Online Portfolio
 
 一个给**接单的网页设计师**用的作品集网站。不是程序员求职模板 —— 它解决的是你现在的问题：
 **不用再一条条丢链接给客户，发一个网址，客户自己看得完你所有作品。**
@@ -61,7 +61,7 @@ const SITE = {
 ```js
 const PROFILE = {
   photo: "assets/img/me.jpg",   // 放一张你的照片进去，会自动显示
-  name:  "YUDHA / JH",          // 显示在 HELLO, I AM 下面
+  name:  "Rachel",              // 显示在 HELLO, I AM 下面
   software: [...],              // 你常用的软件图标
   education: {...},             // 教育背景（三语）
   experience: {...},            // 经历 / 成绩（三语）

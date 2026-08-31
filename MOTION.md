@@ -126,7 +126,7 @@ Case Study **不在主路径上**。
 
 **Loader**
 ```
-JH
+WD
 10 SELECTED WORKS
 2023 — 2026
 ```
@@ -134,7 +134,7 @@ JH
 
 **标题**
 
-`JH STUDIO'S` 收紧字距：
+`WEB DESIGN & DEVELOPMENT'S` 收紧字距：
 ```
 opacity:       0 → 1
 letterSpacing: 0.5em → 正常
@@ -386,7 +386,7 @@ Desktop 是 10 张卡在空间中漂浮 —— **手机不做这个。**
 改成 4 张精选作品组成稍微错位的 editorial stack：
 
 ```
-JH STUDIO'S
+WEB DESIGN & DEVELOPMENT'S
 
 PORTFOLIO
 ────墨迹────

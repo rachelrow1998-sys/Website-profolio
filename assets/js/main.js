@@ -551,10 +551,43 @@
     box.innerHTML = out;
   }
 
+  /* 跑马灯放客户 logo，不放客户名 —— 一排字读起来是列表，一排 logo 才是「合作过」。
+     没有 logo 文件的（域名过期抓不到、内部系统没有对外 logo）退回显示名字：
+     少一个 logo 比一排破图强。logo 由 tools/extract-logos.mjs 从截图里裁出来。 */
+  function logoSrc(p) { return "assets/img/logos/" + p.slug + ".png"; }
+
   function renderMarquee() {
     var box = $("#marquee"); if (!box) return;
-    var names = PROJECTS.map(function (p) { return "<span>" + esc(p.name) + "</span>"; }).join("");
-    box.innerHTML = names + names;
+    var run = PROJECTS.map(function (p) {
+      return p.logo
+        ? '<img class="marquee__logo" src="' + esc(logoSrc(p)) + '" alt="' + esc(p.name) + '" decoding="async">'
+        : "<span>" + esc(p.name) + "</span>";
+    }).join("");
+    box.innerHTML = run + run;
+
+    /* ⚠️ 必须等图片加载完再量宽度。滚动引擎用 scrollWidth/2 当一圈的长度，
+       图还没到的时候那个数字是错的（<img> 此刻宽度接近 0），
+       量错的后果是跑马灯循环点对不上 —— 滚到一半会突然跳一段。 */
+    var pending = 0;
+    $$("img", box).forEach(function (img) {
+      /* 客户 logo 有横排的（MASTER MATERIALS）也有上下叠的（Pure & Cure）。
+         全部按同一个高度排，叠的那种会缩成一个小方块，横的那种一枝独秀 ——
+         看起来像是有的客户比较重要。按比例给叠的多一点高度，视觉分量才拉平。 */
+      var fit = function () {
+        if (img.naturalHeight && img.naturalWidth / img.naturalHeight < 1.7)
+          img.classList.add("marquee__logo--tall");
+      };
+      if (img.complete) return fit();
+      pending++;
+      var done = function () {
+        img.removeEventListener("load", done);
+        img.removeEventListener("error", done);
+        fit();
+        if (--pending === 0) engine.refresh();
+      };
+      img.addEventListener("load", done);
+      img.addEventListener("error", done);
+    });
   }
 
   /* ======================================================================
@@ -740,6 +773,7 @@
     esc: esc,
     lang: function () { return state.lang; },
     shotSrc: shotSrc,
+    logoSrc: logoSrc,
     fallbackSrc: fallbackSrc,
     cardEl: function (slug) {
       for (var i = 0; i < CARDS.length; i++) if (CARDS[i].p.slug === slug) return CARDS[i].el;

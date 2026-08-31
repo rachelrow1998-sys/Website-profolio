@@ -42,6 +42,19 @@ html = html
   .replace(/function fallbackSrc\(p\) \{[^}]*\}/, () => 'function fallbackSrc(p) { return EMBEDDED[p.slug] || ""; }')
   .replace(/var \$ {2}= function/, () => "var EMBEDDED = " + JSON.stringify(imgs) + ";\n  var $  = function");
 
+/* 2a. 跑马灯的客户 logo 同样要内联，否则单文件版的跑马灯会是一排破图。
+       没有 logo 文件的客户 main.js 本来就退回显示名字，这里不用管。 */
+const logoDir = resolve(root, "assets/img/logos");
+const logos = {};
+if (existsSync(logoDir)) {
+  for (const f of readdirSync(logoDir)) {
+    if (!f.endsWith(".png")) continue;
+    logos[f.replace(/\.png$/, "")] = dataUri(`assets/img/logos/${f}`, "image/png");
+  }
+}
+html = html.replace(/function logoSrc\(p\) \{[^}]*\}/, () => "function logoSrc(p) { return LOGOS[p.slug] || \"\"; }");
+html = html.replace(/var EMBEDDED = /, () => "var LOGOS = " + JSON.stringify(logos) + ";\n  var EMBEDDED = ");
+
 /* 2b. 手机版 Hero 那几张 <img src="assets/img/placeholder/..."> 是静态写在 HTML 里的，
        上面那段只改了 JS 里的路径，这里要单独换成 data URI。 */
 html = html.replace(/src="assets\/img\/placeholder\/([^"]+)\.svg"/g,
@@ -67,5 +80,5 @@ writeFileSync(resolve(root, "dist/index.html"), html);
 const mb = (html.length / 1024 / 1024);
 const shots = Object.values(imgs).filter((u) => u.startsWith("data:image/jpeg")).length;
 console.log(`✓ dist/index.html  ${mb < 1 ? (html.length / 1024).toFixed(0) + " KB" : mb.toFixed(1) + " MB"}`);
-console.log(`  内嵌了 ${shots} 张真实截图，${Object.keys(imgs).length - shots} 张占位图`);
+console.log(`  内嵌了 ${shots} 张真实截图，${Object.keys(imgs).length - shots} 张占位图，${Object.keys(logos).length} 个客户 logo`);
 console.log("  这一个文件就是完整网站，双击就能打开，不需要其他文件。");

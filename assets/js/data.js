@@ -75,10 +75,13 @@ const SITE = {
 
    ⚠️ 其余 study 文案是我按行业先写的草稿。你最清楚项目细节，请逐个核对。
 
-   ── 两个可选字段（不写就是默认值）──
+   ── 三个可选字段（不写就是默认值）──
    live : false = 这个站已经下线了。卡片上会标「已下线」，
           详情页底部的「打开网站」也会自动变成不可点的说明，不会把客户
           送去一个域名停放页。死链比少一个作品更伤。
+   logo : true  = assets/img/logos/<slug>.png 里有这个客户的 logo，首屏跑马灯用图不用字。
+          logo 是 node tools/extract-logos.mjs 从截图里裁出来的 —— 没有那个文件
+          就不要写 true，跑马灯会退回显示客户名，不会变成一个破图。
    mine : true  = 这是你自己的品牌 / 产品，不是客户委托的。
           卡片和详情页都会标出来。⚠️ 一定要标 —— 把自己的品牌
           混在客户作品里，被人发现一次，前面九个的可信度一起赔进去。
@@ -89,6 +92,7 @@ const SITE = {
 const PROJECTS = [
   {
     slug: "luma-club",
+    logo: true,
     name: "The Luma Club",
     url: "https://thelumaclub.com",
     category: "lifestyle",
@@ -130,6 +134,7 @@ const PROJECTS = [
   },
   {
     slug: "exa-energy",
+    logo: true,
     name: "EXA Energy Sdn. Bhd.",
     url: "https://www.exaenergy.asia/",
     category: "industrial",
@@ -171,6 +176,7 @@ const PROJECTS = [
   },
   {
     slug: "pnc-lifecare",
+    logo: true,
     name: "Pure & Cure LifeCareLab",
     url: "https://pnclifecare.com",
     category: "lifestyle",
@@ -212,6 +218,7 @@ const PROJECTS = [
   },
   {
     slug: "furfoo-pet",
+    logo: true,
     name: "Furfoo Pet",
     url: "https://furfoopet.com",
     category: "ecommerce",
@@ -254,6 +261,7 @@ const PROJECTS = [
   },
   {
     slug: "yh-ideal-academy",
+    logo: true,
     name: "YH Ideal Academy",
     url: "https://yhidealacademy.com",
     category: "education",
@@ -337,6 +345,7 @@ const PROJECTS = [
   },
   {
     slug: "etaeta",
+    logo: true,
     name: "ÉTÀ",
     url: "https://etaeta.co",
     category: "ecommerce",
@@ -419,6 +428,7 @@ const PROJECTS = [
   },
   {
     slug: "oem4u2day",
+    logo: true,
     name: "OEM4U2DAY",
     url: "https://oem4u2day.com",
     category: "corporate",
@@ -460,6 +470,7 @@ const PROJECTS = [
   },
   {
     slug: "master-materials",
+    logo: true,
     name: "Master Materials",
     url: "https://www.mastermaterials.com.my",
     category: "industrial",

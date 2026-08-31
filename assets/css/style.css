@@ -284,26 +284,6 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 }
 .cover__meta i{ width:26px; height:1px; background:var(--rule); display:block; }
 
-.cover__menu{
-  display:flex; flex-wrap:wrap; justify-content:center; gap:0;
-  margin:clamp(34px,5vw,62px) auto 0; width:fit-content; max-width:100%;
-  border-top:1px solid var(--rule); border-bottom:1px solid var(--rule);
-}
-.cover__menu li + li{ border-left:1px solid var(--rule); }
-.cover__menu a{
-  position:relative; display:flex; align-items:center; gap:10px; padding:14px clamp(16px,2.6vw,32px);
-  font-size:.72rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-2);
-  transition:color .3s var(--ease);
-}
-.cover__menu a em{ font-style:normal; font-size:.6rem; color:var(--pencil); transition:color .3s; }
-.cover__menu a::before{
-  content:""; position:absolute; inset:auto 0 0 0; height:2px; background:var(--ink);
-  transform:scaleX(0); transition:transform .4s var(--ease2);
-}
-.cover__menu a:hover{ color:var(--ink); }
-.cover__menu a:hover em{ color:var(--seal); }
-.cover__menu a:hover::before{ transform:scaleX(1); }
-
 /* ---------- 客户跑马灯 ---------- */
 .marquee{
   margin-top:clamp(46px,6vw,84px); padding:15px 0;
@@ -311,7 +291,19 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
 }
-.marquee__track{ display:flex; gap:44px; width:max-content; will-change:transform; }
+.marquee__track{ display:flex; align-items:center; gap:52px; width:max-content; will-change:transform; }
+/* 客户 logo。统一去色压暗，一排看下来才是一条 logo 墙，
+   而不是七个牌子各自抢眼 —— 这排是「合作过谁」的证据，不是广告位。
+   ⚠️ 高度写死、宽度 auto：跑马灯靠 scrollWidth 算循环长度，
+   高度不定的话每张图加载完都会改一次总宽，循环点跟着跳。 */
+.marquee__logo{
+  height:26px; width:auto; display:block; flex:none;
+  filter:grayscale(1) contrast(1.05); opacity:.62;
+  transition:filter .45s var(--ease2), opacity .45s var(--ease2);
+}
+.marquee__logo--tall{ height:40px; }
+.marquee:hover .marquee__logo{ filter:none; opacity:.92; }
+/* 没裁到 logo 的客户退回文字，和 logo 排在同一行里 */
 .marquee__track span{
   font-size:.7rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase;
   color:var(--pencil); white-space:nowrap;
@@ -1080,11 +1072,6 @@ html[data-lang="zh"] .focus__rail span{
   .stats{ grid-template-columns:repeat(2,1fr); gap:20px 12px; }
   .cols{ grid-template-columns:1fr; gap:20px; }
   .grid{ grid-template-columns:1fr; }
-  .cover__menu{ width:100%; }
-  .cover__menu li{ flex:1 1 50%; }
-  .cover__menu li:nth-child(3){ border-left:0; }
-  .cover__menu li:nth-child(n+3){ border-top:1px solid var(--rule); }
-  .cover__menu a{ justify-content:center; padding:13px 8px; }
   .end__cta{ flex-direction:column; align-items:stretch; width:100%; }
   .btn--lg{ width:100%; }
   .reg{ display:none; }
@@ -1121,8 +1108,11 @@ html[data-lang="zh"] .focus__rail span{
 @media (min-width:961px){
   .hero-ready .cover{ text-align:left; width:46%; }
   .hero-ready .cover__word{ margin-left:0; }
-  .hero-ready .cover__menu{ margin-left:0; }
-  .hero-ready .sheet--cover{ min-height:min(92vh,900px); }
+  .hero-ready .cover__cue{ justify-content:flex-start; }
+  /* 客户 logo 墙贴着封面底边 —— 封面内容变短时它不该跟着往上跑，
+     跑上去就会压到右半边散落的作品卡上。 */
+  .hero-ready .sheet--cover{ min-height:min(92vh,900px); display:flex; flex-direction:column; }
+  .hero-ready .sheet--cover .marquee{ margin-top:auto; }
 }
 
 .proj--ghost{
@@ -1160,8 +1150,12 @@ html[data-lang="zh"] .focus__rail span{
 }
 
 /* ---------- 滚动提示 ---------- */
+/* ⚠️ display 是 flex 不是 inline-flex：上一个元素 .cover__meta 也是行内的，
+   两个行内块会并排挤在同一行上（「2023 — 2026 SELECTED WORKS SCROLL TO EXPLORE」）。
+   上边距接手了原来那排首屏菜单留下的呼吸空间。 */
 .cover__cue{
-  display:inline-flex; align-items:center; gap:10px; margin-top:26px;
+  display:flex; justify-content:center; align-items:center; gap:10px;
+  margin-top:clamp(34px,5vw,62px);
   font-size:.62rem; font-weight:600; letter-spacing:.24em; text-transform:uppercase; color:var(--pencil);
 }
 .cover__cue i{

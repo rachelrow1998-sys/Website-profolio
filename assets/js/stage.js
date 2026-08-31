@@ -53,17 +53,20 @@
      Hero 散落布局。x/y/w 都是百分比 —— resize 和 orientation change
      完全交给 CSS，JS 一行都不用重算。
      --------------------------------------------------------------------- */
+  /* 坐标直接量自参考图（1448×1087 那张首屏）：
+     把每张卡的中心点换算成 #hero-stage 盒子里的百分比，
+     宽度换算成盒子宽度的百分比。改版式时只动这张表。 */
   var SCATTER = [
-    { x: 34, y: 10, r: -3.5, s: 1.00, w: 30, z: 12 },  /* 01 luma       */
-    { x: 66, y: 20, r:  2.5, s: 0.88, w: 28, z: 10 },  /* 02 exa        */
-    { x: 86, y: 40, r: -2.0, s: 0.76, w: 24, z: 8  },  /* 03 pnc        */
-    { x: 16, y: 40, r:  3.0, s: 0.90, w: 27, z: 11 },  /* 04 furfoo     */
-    { x: 48, y: 52, r: -2.5, s: 0.96, w: 29, z: 9  },  /* 05 yh         */
-    { x: 78, y: 62, r:  2.0, s: 0.82, w: 25, z: 7  },  /* 06 mitic      */
-    { x: 14, y: 74, r: -3.0, s: 0.80, w: 24, z: 6  },  /* 07 etaeta     */
-    { x: 42, y: 84, r:  1.5, s: 0.86, w: 26, z: 5  },  /* 08 ec diy     */
-    { x: 70, y: 90, r: -1.5, s: 0.80, w: 24, z: 4  },  /* 09 oem        */
-    { x: 90, y: 76, r:  2.5, s: 0.72, w: 22, z: 3  }   /* 10 master     */
+    { x: 38.9, y: 17.0, r: -2.0, s: 1, w: 25.1, z: 1  },  /* 01 luma       */
+    { x: 62.4, y: 22.3, r:  1.5, s: 1, w: 25.1, z: 2  },  /* 02 exa        */
+    { x: 84.9, y: 34.1, r: -1.5, s: 1, w: 24.1, z: 3  },  /* 03 pnc        */
+    { x: 23.7, y: 49.2, r:  2.0, s: 1, w: 20.9, z: 4  },  /* 04 furfoo     */
+    { x: 50.1, y: 51.4, r: -1.5, s: 1, w: 28.8, z: 5  },  /* 05 yh         */
+    { x: 77.6, y: 60.2, r:  1.5, s: 1, w: 24.1, z: 6  },  /* 06 mitic      */
+    { x: 11.1, y: 74.8, r: -2.0, s: 1, w: 23.2, z: 7  },  /* 07 etaeta     */
+    { x: 35.4, y: 80.6, r:  1.0, s: 1, w: 22.7, z: 8  },  /* 08 ec diy     */
+    { x: 60.4, y: 87.6, r: -1.0, s: 1, w: 22.0, z: 9  },  /* 09 oem        */
+    { x: 85.5, y: 92.1, r:  1.5, s: 1, w: 25.1, z: 10 }   /* 10 master     */
   ];
 
   /* 入场起点。前四组来自 MOTION.md 2.3 的表，其余按同一逻辑补齐。 */
@@ -147,10 +150,11 @@
 
       /* Hero 上给一个「01 项目名」小标签，跟参考图一致 */
       var name = $(".proj__name", card);
+      var label = card.dataset.client || (name ? name.textContent : "");
       var cap = document.createElement("figcaption");
       cap.className = "ghost__cap";
       cap.innerHTML = '<b>' + String(i + 1).padStart(2, "0") + "</b>" +
-                      "<span>" + (name ? name.textContent : "") + "</span>";
+                      "<span>" + label.replace(/[<&>]/g, "") + "</span>";
       g.appendChild(cap);
       placeGhost(g, i);
       stage.appendChild(g);

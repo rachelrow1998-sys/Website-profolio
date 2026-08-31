@@ -348,9 +348,8 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 /* ---------- 作品：桌面上摊开的照片 ---------- */
 .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:clamp(26px,3.4vw,44px); }
 .proj{ position:relative; display:flex; flex-direction:column; cursor:pointer; }
-/* 只有在「Hero 舞台从未启用」的情况下才用这套 CSS 入场
-   —— 手机、减少动效、GSAP 没加载时的路径。 */
-html:not(.stage-used) .grid .proj{
+/* 作品卡的入场。封面上的那批是独立的 clone，两边互不干扰。 */
+.grid .proj{
   animation:cardin .6s var(--ease2) both;
   animation-delay:calc(var(--i,0) * 55ms);
 }
@@ -358,11 +357,6 @@ html:not(.stage-used) .grid .proj{
 
 /* 筛选掉的卡片。display:none 让 grid 真的重排，Flip 才有得算。 */
 .proj.is-out{ display:none; }
-
-/* Hero 模式下，grid 里的真卡先透明。Flip 会把它们从 Hero 位置带回来。
-   注意只降不透明度，不设 visibility/aria-hidden —— 键盘仍然要能 Tab 到，
-   Tab 到时 stage.js 会立刻整理成 Grid。 */
-.proj.is-ghosted{ opacity:0; pointer-events:none; }
 
 
 /* 卡片上的标记：自有品牌 / 已下线。
@@ -1121,7 +1115,18 @@ html[data-lang="zh"] .focus__rail span{
 @media (min-width:961px){
   .hero-ready .cover{ text-align:left; width:46%; }
   .hero-ready .cover__word{ margin-left:0; }
-  .hero-ready .cover__menu{ margin-left:0; }
+  /* 四个入口必须排成一条水平线。封面被舞台压到 46% 宽，
+     默认的 flex-wrap:wrap 会让「04 联系」掉到第二行，读起来像两组菜单。
+     所以这里不换行，改成四等分 + 收紧内边距，让它们一起变窄。 */
+  .hero-ready .cover__menu{
+    margin-left:0; flex-wrap:nowrap; width:100%;
+  }
+  .hero-ready .cover__menu li{ flex:1 1 0; min-width:0; }
+  .hero-ready .cover__menu a{
+    justify-content:center; white-space:nowrap;
+    gap:8px; padding:14px clamp(8px,1.3vw,20px);
+    font-size:clamp(.6rem,.86vw,.72rem); letter-spacing:.16em;
+  }
   .hero-ready .sheet--cover{ min-height:min(92vh,900px); }
 }
 
@@ -1142,7 +1147,13 @@ html[data-lang="zh"] .focus__rail span{
 }
 /* Hero 上的卡片只露截图，不要文字 —— 文字太小读不了，只会变噪点 */
 .proj--ghost .proj__body{ display:none; }
-.proj--ghost .proj__shot{ box-shadow:0 2px 5px rgba(20,18,15,.10), 0 26px 44px -20px rgba(20,18,15,.5); }
+/* Hero 上不要相框：没有卡纸留白、没有描边，只有截图本身 + 一点点浮起的阴影。
+   相框是 Works Grid 里的语言（那里卡片是并排的档案），
+   在封面这堆随手贴上去的截图上，它只会把每张图框成一个小盒子。 */
+.proj--ghost .proj__shot{
+  padding:0; background:none; border:0;
+  box-shadow:0 2px 5px rgba(20,18,15,.10), 0 26px 44px -20px rgba(20,18,15,.5);
+}
 .ghost__cap{
   display:flex; align-items:baseline; gap:8px; margin:9px 2px 0; max-width:100%;
   font-size:.56rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--pencil);
@@ -1151,12 +1162,15 @@ html[data-lang="zh"] .focus__rail span{
 /* 名字比卡片宽时截断，不要溢出去压到别的卡 */
 .ghost__cap span{ overflow:hidden; white-space:nowrap; text-overflow:ellipsis; min-width:0; }
 
-/* 入场：纯 CSS transition。结束后 stage.js 会撤掉这个类，
-   把 transform 的控制权交还给 Flip，两边不会打架。 */
+/* 入场：一张一张「贴上去」。纯 CSS transition，一个个错开。
+   起点在最终位置的正上方一点、稍微大一圈、多歪几度 ——
+   落下时用一条带回弹的曲线收住，像把照片按到板子上，
+   而不是从屏幕外飞进来。滚动时不再有任何位移动画：
+   这些卡片就贴在封面上，跟着封面一起滚出去。 */
 .hero-stage.is-entering .proj--ghost{
   transition:
-    transform 1.15s cubic-bezier(.16,1,.3,1) var(--ed,0ms),
-    opacity .65s ease var(--ed,0ms);
+    transform .62s cubic-bezier(.22,1.35,.36,1) var(--ed,0ms),
+    opacity .26s ease-out var(--ed,0ms);
 }
 
 /* ---------- 滚动提示 ---------- */
@@ -1219,5 +1233,5 @@ html[data-lang="zh"] .focus__rail span{
   .hero-stage{ display:none !important; }
   .hero-mob__card{ opacity:1 !important; transform:none !important; }
   .cover__cue i::after{ animation:none; }
-  html:not(.stage-used) .grid .proj{ animation:none; }
+  .grid .proj{ animation:none; }
 }

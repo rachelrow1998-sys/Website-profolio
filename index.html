@@ -513,8 +513,9 @@
 
 <!-- GSAP 自托管，只有 core + Flip（没有 ScrollTrigger，Phase 1–2 用不到）。
      ⚠️ 按条件加载：手机 / 触屏 / 开了「减少动效」的设备，Flip 一次都不会被调用
-     （舞台不启用、筛选也走普通过渡），所以那 96KB 干脆不下载。
-     stage.js 始终加载 —— 它负责手机版 Hero 的入场，而且自己会检测库在不在。 -->
+     （筛选走普通过渡，Focus Mode 也降级），所以那 96KB 干脆不下载。
+     封面舞台本身不依赖它：卡片是纯 CSS transition 贴上去的，
+     库没到、甚至 404，封面照样是完整的。 -->
 <script>
 (function () {
   var need = false;
@@ -532,9 +533,8 @@
            !matchMedia("(prefers-reduced-motion:reduce)").matches;
   } catch (e) {}
   if (!need) return;
-  /* 告诉 stage.js「库正在路上」，让它等一下再判断。
-     不然 defer 的 stage.js 可能比动态注入的脚本先执行，
-     一看 window.gsap 是 undefined 就直接降级了。 */
+  /* 库到位后广播一次。现在没有模块在等它开工（封面不依赖 GSAP），
+     留着是给筛选和 Focus Mode 做诊断用的。 */
   window.__jhGsapPending = true;
   var left = 2;
   ["assets/vendor/gsap.min.js", "assets/vendor/Flip.min.js"].forEach(function (src) {

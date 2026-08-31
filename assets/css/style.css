@@ -46,7 +46,10 @@
   --rule-2:   #DCD7CC;      /* 更淡的细线 */
 
   --seal:     #A8341F;      /* 印章红，全站只用在极少数地方 */
-  --wa:       #1FA855;      /* 只用在右下角悬浮按钮 */
+  --wa:       #1FA855;      /* WhatsApp 绿。只用在右下角那个纯图标的悬浮按钮 */
+  --wa-deep:  #15803F;     /* 带文字的 WhatsApp 按钮用这一档。
+                              #1FA855 上压白字只有 3.09:1，12px 的大写标签读不清；
+                              压深到 5.01:1 过 WCAG AA，色相还是同一支绿。 */
 
   --wrap: 1200px;
   --gut: clamp(20px, 5vw, 72px);
@@ -102,8 +105,16 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 .h-md{ font-size:clamp(1.5rem,3.4vw,2.2rem); }
 
 .kicker{
+  display:flex; align-items:baseline; gap:12px;
   margin:0 0 10px; font-size:.68rem; font-weight:600;
   letter-spacing:.24em; text-transform:uppercase; color:var(--pencil);
+}
+/* 章节序号。编号和右边缘的页码导航是同一套，别单独改一边。 */
+.kicker__n{
+  position:relative; padding-right:14px; font-weight:600; color:var(--ink);
+}
+.kicker__n::after{
+  content:""; position:absolute; right:0; top:50%; width:8px; height:1px; background:var(--rule);
 }
 .lede{ max-width:60ch; font-size:1.02rem; line-height:1.65; color:var(--ink-2); }
 .body{ max-width:62ch; font-size:.92rem; color:var(--ink-2); }
@@ -128,9 +139,15 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 .btn:hover::after{ transform:none; }
 .btn:hover{ color:var(--paper); }
 
-.btn--wa{ background:var(--ink); color:var(--paper); }
-.btn--wa::after{ background:var(--paper); }
-.btn--wa:hover{ color:var(--ink); }
+/* 全站唯一的彩色按钮。药丸形，和方角的墨色按钮区分开 ——
+   它是「联系我」这个动作，不是又一个次级链接。 */
+.btn--wa{
+  background:var(--wa-deep); border-color:var(--wa-deep); color:#fff;
+  border-radius:999px;
+}
+/* 悬停只压暗，不换色相 —— 换色相会让它看起来像另一个按钮 */
+.btn--wa::after{ background:rgba(20,18,15,.22); }
+.btn--wa:hover{ color:#fff; }
 .btn--ink{ background:transparent; }
 
 /* ---------- 载入 ---------- */
@@ -395,6 +412,7 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 .pager a.is-active b{ font-size:1.05rem; }
 .pager a.is-active span{ opacity:1; }
 .pager a:hover{ color:var(--ink); }
+.pager a:hover b{ color:var(--seal); }
 
 /* ---------- 底部客户条 ---------- */
 .clients{

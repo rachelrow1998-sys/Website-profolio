@@ -86,14 +86,17 @@ Flip 一次都不会被调用，所以脚本干脆不注入。手机端实测确
 
 ### 1.3 使用边界（锁死）
 
-**GSAP 必须有明确理由才能调用。** 允许的只有四处：
+**GSAP 必须有明确理由才能调用。** 允许的只有三处：
 
 | # | 场景 | 用什么 |
 |---|---|---|
-| 1 | Hero 卡片群 → Works Grid | `Flip` |
-| 2 | Works 筛选后重排 | `Flip` |
-| 3 | Works Grid → Case Study Focus Mode（含关闭时飞回原位） | `Flip` |
-| 4 | Case Study 内部有限的 pin / scrub（**仅桌面**） | `ScrollTrigger` |
+| 1 | Works 筛选后重排 | `Flip` |
+| 2 | Works Grid → Case Study Focus Mode（含关闭时飞回原位） | `Flip` |
+| 3 | Case Study 内部有限的 pin / scrub（**仅桌面**） | `ScrollTrigger` |
+
+> 原本还有一条「Hero 卡片群 → Works Grid 的 Flip」。**已经拿掉。**
+> 封面上的截图现在是「一张张贴上去」的：进站时按顺序落位，之后就钉在那儿，
+> 跟着封面一起滚出视口 —— 滚动时不再有任何位移动画。
 
 **其他一律不用 GSAP**，走 CSS / 原生 JS / Web Animations API：
 
@@ -199,10 +202,15 @@ YH     → 中下      MITIC  → 右下
 ```
 各自 rotation 再加一点。
 
-然后这些 screenshot **用 Flip 直接飞进 Works Grid 的位置**。
+这些 screenshot **进站时一张张贴上去**：从最终位置的正上方一点落下，
+起点稍微大一圈、多歪几度，用一条带回弹的曲线收住 —— 像把照片按到板子上。
+每张之间错开约 0.1s，看得出先后。
 
-> 视觉上是「漂浮的作品自动整理成作品档案」，不是 section 硬切。
-> **这就是这个作品集最有识别度的 signature interaction。**
+> 之后它们就钉在封面上，跟着封面一起滚出视口。
+> **滚动过程中不做任何位移动画**，也不整理进 Works Grid ——
+> 作品档案在下面本来就是完整的一份，不需要把封面这堆搬过去。
+> 封面上的卡片也不套相框：那是 Works Grid 的语言，
+> 贴在封面上的截图只要图本身 + 一点点浮起的阴影。
 
 ### 2.5 Works Grid
 
@@ -569,7 +577,7 @@ Opening Sequence 1.8–2.5 秒的前提是**资源已经就绪**。
 | 阶段 | 内容 | 拿到什么 | 状态 |
 |---|---|---|---|
 | 1 | Opening Sequence + Hero 卡片群 + 鼠标视差 | 第一印象直接到位 | ✅ 完成 |
-| 2 | Hero → Works Grid 的 Flip + 筛选 Flip | **signature interaction，做完即可上线** | ✅ 完成 |
+| 2 | Hero 卡片「贴上去」入场 + 筛选 Flip | 第一印象 + 作品区可用 | ✅ 完成 |
 | 3 | Case Study Focus Mode（先用一种通用 reveal） | 结构跑通 | ✅ 完成 |
 | 4 | 10 种 bespoke reveal 逐个替换 | 差异化 | 待做 |
 | 5 | Services / Process / Contact 编排 | 收尾 | 待做 |

@@ -172,40 +172,43 @@ $env:CHROME_PATH="C:\Program Files\Google\Chrome\Application\chrome.exe"; npm ru
 **你现在没有域名也完全没问题** —— 下面几家都送你一个免费网址，直接就能发给客户。
 以后买了域名再绑上去，网站不用重做，链接换掉就行。
 
-> 💡 **这个网址会被你贴进 WhatsApp 发给客户，所以它长什么样很重要。**
-> `jhstudio.netlify.app` 和 `rachelrow1998-sys.github.io/Website-profolio` 给客户的感觉差很远。
+> ✅ **现在已经上线：https://rachelrow1998-sys.github.io/portfolio/**
+> 改了 `data.js` 之后推一次代码，网站自动更新，不用手动上传。
 
 ### ⭐ Netlify（推荐 —— 网址可以自己取名）
 
 1. 去 [app.netlify.com/drop](https://app.netlify.com/drop)
 2. 把整个项目文件夹拖进去
 3. 上线了。会给你一个随机网址，例如 `random-name-123.netlify.app`
-4. **Site settings → Change site name**，改成 `jhstudio` 之类
-   → 你的网址变成 `https://jhstudio.netlify.app`
+4. **Site settings → Change site name**，改成 `web-design-development` 之类
+   → 你的网址变成 `https://web-design-development.netlify.app`
 
 免费、自动 HTTPS、不限流量。以后买了域名，在 Domain settings 里绑上就行。
 
-### GitHub Pages（不用注册新账号，自动部署已经配好了）
+### GitHub Pages（当前用的就是这个，已经配好）
 
-仓库里有 `.github/workflows/deploy-pages.yml`：只要往分支一推，
-它就自动重跑一次 `sync` 再发布，**不用手动上传**。
+网址：**https://rachelrow1998-sys.github.io/portfolio/**
 
-**只需要点一次**（这一步必须你自己点，权限问题，脚本代劳不了）：
+`.github/workflows/deploy-pages.yml` 负责部署：推代码 → 自动重跑一次
+`sync` → 发布。平时你什么都不用点。
 
-1. 仓库 → **Settings** → **Pages**
-2. Source 选 **GitHub Actions**（不是 Deploy from a branch）
-3. 回到 **Actions** 页签 → 选 *Deploy to GitHub Pages* → **Run workflow**
-4. 等 1 分钟，网址是 `https://<用户名>.github.io/<仓库名>/`
+⚠️ **只有推到默认分支才会真的发布。**
+`github-pages` 这个环境默认只允许默认分支部署，从别的分支跑会在第一步
+就失败（而且失败信息很难懂）。在别的分支上改完，记得合并回默认分支。
 
-⚠️ 两个要注意的：
-- 网址里会带你的 GitHub 用户名和仓库名，改不了
-- 仓库名如果拼错了（例如 `Website-profolio` 少了 t），客户会看到。
-  Settings → 最上面 **Repository name** 可以改成 `portfolio`
+要从零再配一次的话（换了新仓库时）：
+
+1. 仓库 → **Settings** → **Pages** → Source 选 **GitHub Actions**
+   （这一步必须仓库管理员点，脚本没有权限代劳）
+2. 往默认分支推一次代码，或到 **Actions** 页签手动 **Run workflow**
+3. 等约 1 分钟，网址是 `https://<用户名>.github.io/<仓库名>/`
+
+网址里会带你的 GitHub 用户名和仓库名 —— 所以仓库名别拼错，客户会看到。
 
 ### Vercel / Cloudflare Pages
 
 连 GitHub 仓库就行，**build command 留空**，**output directory 填 `/`**（纯静态站，不用编译）。
-一样送免费子域名：`jhstudio.vercel.app` / `jhstudio.pages.dev`。
+一样送免费子域名：`web-design-development.vercel.app` / `.pages.dev`。
 
 ### 以后买域名要多少钱？
 

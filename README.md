@@ -172,8 +172,9 @@ $env:CHROME_PATH="C:\Program Files\Google\Chrome\Application\chrome.exe"; npm ru
 **你现在没有域名也完全没问题** —— 下面几家都送你一个免费网址，直接就能发给客户。
 以后买了域名再绑上去，网站不用重做，链接换掉就行。
 
-> ✅ **现在已经上线：https://rachelrow1998-sys.github.io/portfolio/**
+> ✅ **现在已经上线：https://rachelrow1998-sys.github.io/Website-profolio/**
 > 改了 `data.js` 之后推一次代码，网站自动更新，不用手动上传。
+> （网址里带的是仓库名。以后仓库改名，网址跟着变，旧网址 GitHub 会自动跳转。）
 
 ### ⭐ Netlify（推荐 —— 网址可以自己取名）
 
@@ -187,7 +188,7 @@ $env:CHROME_PATH="C:\Program Files\Google\Chrome\Application\chrome.exe"; npm ru
 
 ### GitHub Pages（当前用的就是这个，已经配好）
 
-网址：**https://rachelrow1998-sys.github.io/portfolio/**
+网址：**https://rachelrow1998-sys.github.io/Website-profolio/**
 
 `.github/workflows/deploy-pages.yml` 负责部署：推代码 → 自动重跑一次
 `sync` → 发布。平时你什么都不用点。

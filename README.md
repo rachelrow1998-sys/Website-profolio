@@ -193,10 +193,13 @@ $env:CHROME_PATH="C:\Program Files\Google\Chrome\Application\chrome.exe"; npm ru
 `.github/workflows/deploy-pages.yml` 负责部署：推代码 → 自动重跑一次
 `sync` → 发布。平时你什么都不用点。
 
-⚠️ **全站只用 `main` 一个分支。** workflow 只监听 `main`，
-`github-pages` 这个环境也只允许默认分支部署 —— 所以 `main` 必须是仓库的
-默认分支（Settings → General → Default branch）。在别的分支上改完，
-记得合并回 `main`，别的分支不会发布。
+⚠️ **只有默认分支会发布。** `github-pages` 这个环境只允许默认分支部署，
+所以 workflow 监听的就是默认分支 —— 目前是 `claude/online-portfolio-website-2x0nbr`
+（不是 `main`；推 `main` 的部署会在第一步就被挡掉）。在别的分支上改完，
+记得合并回默认分支，别的分支不会发布。
+
+想改成 `main`：Settings → General → Default branch 换成 `main`，
+再把 `.github/workflows/deploy-pages.yml` 里监听的分支名一起改掉。
 
 要从零再配一次的话（换了新仓库时）：
 

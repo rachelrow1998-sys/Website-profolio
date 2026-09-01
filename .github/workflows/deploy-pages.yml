@@ -6,12 +6,15 @@
 #    workflow 的 GITHUB_TOKEN 拿不到，会报 Resource not accessible by integration）
 name: Deploy to GitHub Pages
 
-# 全站只用 main 一个分支：推 main → 自动部署。
-# （以前这里挂着两个 claude/* 分支，已经统一掉了。）
+# ⚠️ 只有仓库的默认分支能部署：github-pages 这个 environment 默认只放行默认分支，
+#    从别的分支跑会在第一步就被挡掉（日志是空的，看不出原因）。
+#    本仓库的默认分支目前是 claude/online-portfolio-website-2x0nbr，不是 main ——
+#    所以监听的是它。哪天在 Settings → Branches 把默认分支改成 main，
+#    把下面这行换成 main 就行。
 on:
   push:
     branches:
-      - main
+      - claude/online-portfolio-website-2x0nbr
   workflow_dispatch:
 
 permissions:

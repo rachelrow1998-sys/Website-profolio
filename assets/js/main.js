@@ -290,6 +290,7 @@
     if (hash === "#" || hash.length < 2) return;
     if (!$(hash)) return;
     e.preventDefault();
+    lockNav(hash);          // 底线先落到目标标签，别跟着中途经过的区块乱跑
     goTo(hash);
     closeNav();
   });
@@ -603,6 +604,36 @@
   /* 当前区块高亮。必须跑在动画循环里，不能挂 scroll 事件 ——
      惯性滚动停手后画面还在走，那时早就没有 scroll 事件了，高亮会卡住。 */
   var lastSection = "";
+
+  /* 点导航跳过去的时候，底线直接落到目标标签上，不跟着中途经过的区块走。
+     惯性滚动从「关于」「作品」上空穿过去，syncNav 每帧都在看当前区块，
+     不锁的话点「服务」会看见底线先跑去关于、作品，最后才到服务。
+     锁在真的滚到目标时解开；滚不到（比如目标区块永远压不到中线）
+     就靠 NAV_LOCK_MS 兜底，免得高亮永远卡在那里。 */
+  var NAV_LOCK_MS = 1500;
+  var navLock = "", navLockAt = 0;
+  function setActive(hash) {
+    $$("#pager a").forEach(function (a) {
+      a.classList.toggle("is-active", a.getAttribute("href") === hash);
+    });
+    if (!tabs) return;
+    var active = null;
+    $$("a", tabs).forEach(function (a) { if (a.getAttribute("href") === hash) active = a; });
+    if (!active) return;                 // 没有对应标签的区块（比如首页）保持上一个高亮
+    $$("a", tabs).forEach(function (a) { a.classList.toggle("is-active", a === active); });
+    moveGlide(active);
+  }
+  function lockNav(hash) {
+    navLock = hash.slice(1);
+    navLockAt = Date.now();
+    lastSection = navLock;
+    setActive(hash);
+  }
+  /* 用户自己动手滚，就当他改主意了，马上放开锁跟着画面走。 */
+  ["wheel", "touchstart", "keydown"].forEach(function (ev) {
+    window.addEventListener(ev, function () { navLock = ""; }, { passive: true });
+  });
+
   function syncNav() {
     if (hud) hud.classList.toggle("is-stuck", (window.scrollY || 0) > 20);
     if (!tabs) return;
@@ -611,20 +642,15 @@
       var r = s.getBoundingClientRect();
       if (r.top <= mid && r.bottom >= mid) best = s.id;
     });
+    if (navLock) {
+      if (best === navLock || Date.now() - navLockAt > NAV_LOCK_MS) navLock = "";
+      else return;                       // 锁住期间，中途经过的区块一律不算
+    }
     if (!best || best === lastSection) return;
-    // 有些区块（比如「流程」）没有对应标签 —— 那就保持上一个高亮，不要整排熄掉
-    var active = null;
-    $$("a", tabs).forEach(function (a) {
-      if (a.getAttribute("href") === "#" + best) active = a;
-    });
-    /* 右边缘页码先更新：#home 没有对应标签，但页码上有 01 HOME */
-    $$("#pager a").forEach(function (a) {
-      a.classList.toggle("is-active", a.getAttribute("href") === "#" + best);
-    });
-    if (!active) return;
     lastSection = best;
-    $$("a", tabs).forEach(function (a) { a.classList.toggle("is-active", a === active); });
-    moveGlide(active);
+    /* 有些区块（比如「流程」）没有对应标签 —— setActive 会保持上一个高亮，
+       不会把整排熄掉；右边缘页码照常更新（#home 没标签，但页码上有 01 HOME）。 */
+    setActive("#" + best);
   }
   window.__syncNav = syncNav;
 

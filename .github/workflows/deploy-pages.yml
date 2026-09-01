@@ -6,11 +6,12 @@
 #    workflow 的 GITHUB_TOKEN 拿不到，会报 Resource not accessible by integration）
 name: Deploy to GitHub Pages
 
+# 全站只用 main 一个分支：推 main → 自动部署。
+# （以前这里挂着两个 claude/* 分支，已经统一掉了。）
 on:
   push:
     branches:
-      - claude/online-portfolio-website-2x0nbr
-      - claude/free-domain-portfolio-b8rz0k
+      - main
   workflow_dispatch:
 
 permissions:

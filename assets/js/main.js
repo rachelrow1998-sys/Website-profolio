@@ -568,10 +568,23 @@
 
   function renderMarquee() {
     var box = $("#marquee"); if (!box) return;
-    var names = PROJECTS.map(function (p) {
-      return "<span>" + esc(p.client || p.name) + "</span>";
+    /* 跑马灯走的是 logo：一个小标记 + 客户自己的字标，颜色用客户的品牌色。
+       logo 定义在 data.js 的 CLIENT_LOGOS 里；没登记的客户退回纯文字，
+       所以新加一个项目时忘了画标记也不会开天窗。 */
+    var LOGOS = (typeof CLIENT_LOGOS !== "undefined") ? CLIENT_LOGOS : {};
+    var items = PROJECTS.map(function (p) {
+      var name = p.client || p.name;
+      var logo = LOGOS[p.slug];
+      if (!logo) return '<span class="marquee__item"><b class="marquee__word">' + esc(name) + "</b></span>";
+      var style = "--brand:" + logo.color + ";--brand-2:" + (logo.accent || logo.color);
+      /* logo.word 是我们自己写的字标（要双色所以带一点 HTML），
+         不是用户输入，也不是从外部抓来的 —— 只有这一栏不过 esc()。 */
+      return '<span class="marquee__item" style="' + style + '">' +
+               '<svg class="marquee__mark" viewBox="0 0 20 20" aria-hidden="true" focusable="false">' + logo.mark + "</svg>" +
+               '<b class="marquee__word">' + (logo.word || esc(name)) + "</b>" +
+             "</span>";
     }).join("");
-    box.innerHTML = names + names;
+    box.innerHTML = items + items;
   }
 
   /* ======================================================================

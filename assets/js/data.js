@@ -598,3 +598,121 @@ const PROFILE = {
     { name: { zh: "马来文", en: "Malay",   ms: "Melayu" },  level: 70  }
   ]
 };
+
+/* ============================================================================
+   CLIENT_LOGOS —— 底部客户条（跑马灯）用的客户标志
+   ----------------------------------------------------------------------------
+   跑马灯里走的是 logo，不是一行大写字母：每个客户一个小标记 + 自己的字标，
+   颜色用客户自己的品牌色（从他们官网上取的），所以那一条读起来像
+   「合作过的品牌」，而不像网站的目录。
+
+   一个客户一块，key = 上面 PROJECTS 里的 slug：
+     color : 品牌主色（标记 + 字标都用它）
+     accent: 第二色，只有双色 logo 才需要（例如 OEM4U 的琥珀色「4U」）
+     mark  : 标记本体，写在 viewBox="0 0 20 20" 里的 SVG 片段。
+             用 currentColor = 主色，用 var(--brand-2) = 第二色。
+     word  : 字标。允许一点 HTML：<i> 会变成第二色，<u> 会变成小一号的副标。
+             ⚠️ 这一栏是直接当 HTML 插进页面的（因为要双色），
+                所以只写你自己的品牌名，不要从外面粘不认识的内容进来。
+
+   没在这里登记的项目会自动退回纯文字样式，不会报错。
+   ========================================================================== */
+
+const CLIENT_LOGOS = {
+  "luma-club": {
+    color: "#8C6A3F",
+    /* 月相：LŪMA = 光 */
+    mark: '<circle cx="10" cy="10" r="7.2" fill="none" stroke="currentColor" stroke-width="1.3"/>' +
+          '<path d="M10 2.8a7.2 7.2 0 0 0 0 14.4z" fill="currentColor"/>',
+    word: 'LŪMA <u>club</u>'
+  },
+
+  "exa-energy": {
+    color: "#1C1C1C",
+    accent: "#F07C1E",
+    /* 闪电：能源 */
+    mark: '<path d="M11.6 2 4.8 11.4h4L8.2 18 15 8.6h-4z" fill="var(--brand-2)"/>',
+    word: 'e<i>X</i>a <u>energy</u>'
+  },
+
+  "pnc-lifecare": {
+    color: "#3AA0D8",
+    accent: "#7FBF4D",
+    /* 双色心：蓝绿各一半，对应他们 logo 上那颗渐变的心 */
+    mark: '<path d="M10 17.2 3.6 10.8A3.9 3.9 0 0 1 10 6.4V17.2z" fill="currentColor"/>' +
+          '<path d="M10 17.2l6.4-6.4A3.9 3.9 0 0 0 10 6.4v10.8z" fill="var(--brand-2)"/>',
+    word: 'Pure &amp; Cure <u>lifecarelab</u>'
+  },
+
+  "furfoo-pet": {
+    color: "#CE1126",
+    /* 爪印 */
+    mark: '<circle cx="5.6" cy="8.2" r="2" fill="currentColor"/>' +
+          '<circle cx="9.9" cy="6.2" r="2.1" fill="currentColor"/>' +
+          '<circle cx="14.3" cy="8.2" r="2" fill="currentColor"/>' +
+          '<path d="M10 10.4c3 0 4.8 2 4.8 3.9S12.9 17.6 10 17.6 5.2 16.2 5.2 14.3 7 10.4 10 10.4z" fill="currentColor"/>',
+    word: 'FURFOO'
+  },
+
+  "furfoo-pos": {
+    color: "#CE1126",
+    accent: "#1F7A63",
+    /* 收银机：屏幕 + 出单口 */
+    mark: '<rect x="3.2" y="4" width="13.6" height="9.4" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.4"/>' +
+          '<path d="M6 7.2h8M6 10h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>' +
+          '<path d="M4.6 16.4h10.8" stroke="var(--brand-2)" stroke-width="1.6" stroke-linecap="round"/>',
+    word: 'FURFOO <i>POS</i>'
+  },
+
+  "yh-ideal-academy": {
+    color: "#4A5AA8",
+    /* 摊开的书：历史课堂 */
+    mark: '<path d="M10 5.6C8.4 4.3 6.2 3.9 3.6 4.2v10.4c2.6-.3 4.8.1 6.4 1.4 1.6-1.3 3.8-1.7 6.4-1.4V4.2c-2.6-.3-4.8.1-6.4 1.4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>' +
+          '<path d="M10 5.6V16" stroke="currentColor" stroke-width="1.4"/>',
+    word: '赵老师 <u>历史讲堂</u>'
+  },
+
+  "mitic-asian": {
+    color: "#9E2B2B",
+    accent: "#C9A227",
+    /* 地球经纬：中马双边商会 */
+    mark: '<circle cx="10" cy="10" r="7.2" fill="none" stroke="currentColor" stroke-width="1.4"/>' +
+          '<path d="M10 2.8c2.6 2 2.6 12.4 0 14.4-2.6-2-2.6-12.4 0-14.4z" fill="none" stroke="var(--brand-2)" stroke-width="1.2"/>' +
+          '<path d="M3.2 10h13.6" stroke="var(--brand-2)" stroke-width="1.2"/>',
+    word: 'MITIC <u>asian</u>'
+  },
+
+  "etaeta": {
+    color: "#12233A",
+    /* 细线的浪：海盐 / 海洋 */
+    mark: '<path d="M2.6 12.4c2-2.4 3.5-2.4 5.5 0s3.5 2.4 5.5 0 3.5-2.4 3.8-1.4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>' +
+          '<path d="M2.6 7.8c2-2.4 3.5-2.4 5.5 0s3.5 2.4 5.5 0 3.5-2.4 3.8-1.4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>',
+    word: 'ÉTÀ'
+  },
+
+  "ec-diy-hardware": {
+    color: "#0F5C2E",
+    /* 六角螺母：五金 */
+    mark: '<path d="M10 2.6l6.4 3.7v7.4L10 17.4 3.6 13.7V6.3z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>' +
+          '<circle cx="10" cy="10" r="2.6" fill="currentColor"/>',
+    word: 'EC DIY <u>hardware</u>'
+  },
+
+  "oem4u2day": {
+    color: "#14213D",
+    accent: "#F5A623",
+    /* 他们 logo 开头那个带点的橙色圆环 */
+    mark: '<circle cx="10" cy="10" r="6.6" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
+          '<circle cx="10" cy="10" r="2.9" fill="var(--brand-2)"/>',
+    word: 'OEM<i>4U</i>'
+  },
+
+  "master-materials": {
+    color: "#B5714E",
+    accent: "#1C1C1C",
+    /* 双峰的 M：他们的山形标记 */
+    mark: '<path d="M2.4 16.2 6.9 6.4l3.1 5.4 3.1-5.4 4.5 9.8z" fill="currentColor"/>' +
+          '<circle cx="10" cy="3.6" r="1.5" fill="currentColor"/>',
+    word: 'MASTER <i>MATERIALS</i>'
+  }
+};

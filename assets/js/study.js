@@ -97,9 +97,26 @@
      内容填充
      ===================================================================== */
   function setImg(p) {
-    el.img.onerror = function () { el.img.onerror = null; el.img.src = fallbackSrc(p); };
+    el.img.onerror = function () {
+      el.img.onerror = null;
+      el.img.src = fallbackSrc(p);
+      setGlass(fallbackSrc(p));
+    };
     el.img.src = shotSrc(p);
     el.img.alt = p.name;
+    setGlass(shotSrc(p));
+  }
+
+  /* 玻璃边框后面垫的那层模糊截图。CSS 拿不到 <img> 的 src，
+     所以把地址写成自定义属性给 .focus__device::after 用 ——
+     边框里透出来的是这一屏自己的颜色，玻璃才不像一圈白塑料。 */
+  function setGlass(src) {
+    if (!el.device) return;
+    /* 写成绝对地址：相对地址在 var() 里会按「用到它的那张样式表」去解析，
+       也就是 assets/css/ 下面 —— 图就 404 了，边框会变成一圈白板。 */
+    var abs = src;
+    try { abs = new URL(src, document.baseURI).href; } catch (e) {}
+    el.device.style.setProperty("--shot", 'url("' + abs + '")');
   }
 
   function fill(i) {

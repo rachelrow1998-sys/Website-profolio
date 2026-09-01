@@ -577,8 +577,19 @@
       var logo = LOGOS[p.slug];
       if (!logo) return '<span class="marquee__item"><b class="marquee__word">' + esc(name) + "</b></span>";
       var style = "--brand:" + logo.color + ";--brand-2:" + (logo.accent || logo.color);
-      /* logo.word 是我们自己写的字标（要双色所以带一点 HTML），
-         不是用户输入，也不是从外部抓来的 —— 只有这一栏不过 esc()。 */
+
+      /* 有真 logo 文件就用客户自己的 logo，颜色是他们原本的颜色。 */
+      if (logo.img) {
+        return '<span class="marquee__item" style="' + style + '">' +
+                 '<img class="marquee__img" src="' + esc(logo.img) + '" alt="' + esc(name) + '"' +
+                 ' style="height:' + (logo.h || 22) + 'px" loading="lazy" decoding="async">' +
+                 (logo.suffix ? '<b class="marquee__word">' + logo.suffix + "</b>" : "") +
+               "</span>";
+      }
+
+      /* 没有原件的客户（官网关了、截图里没拍到页头）退回自己画的标记 + 字标。
+         logo.word / logo.suffix 是我们自己写的字标（要双色所以带一点 HTML），
+         不是用户输入，也不是从外部抓来的 —— 只有这两栏不过 esc()。 */
       return '<span class="marquee__item" style="' + style + '">' +
                '<svg class="marquee__mark" viewBox="0 0 20 20" aria-hidden="true" focusable="false">' + logo.mark + "</svg>" +
                '<b class="marquee__word">' + (logo.word || esc(name)) + "</b>" +

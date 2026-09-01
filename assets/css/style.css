@@ -458,6 +458,16 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
   padding:2px clamp(16px,2.2vw,32px); border-right:1px solid var(--rule-2);
   color:var(--brand); white-space:nowrap;
 }
+/* 客户真实 logo：颜色是他们自己的，不做灰度、不上色。
+   高度由 data.js 里的 h 逐个给（logo 的视觉重量差很多，统一高度反而不齐）。 */
+.marquee__img{
+  width:auto; flex:none; display:block;
+  /* 纸底偏暖，几个纯亮色 logo 直接放上去会发飘 —— 压一点点饱和度，
+     让它们看起来是印在纸上的，不是贴上去的贴纸。 */
+  filter:saturate(.94);
+}
+.marquee__item .marquee__img + .marquee__word{ font-size:.6rem; letter-spacing:.12em; }
+
 .marquee__mark{
   width:19px; height:19px; flex:none; color:var(--brand);
   /* 纸底偏暖，纯亮色的品牌色在上面会发飘 —— 压一点点饱和度，

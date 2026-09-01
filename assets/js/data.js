@@ -607,6 +607,13 @@ const PROFILE = {
    「合作过的品牌」，而不像网站的目录。
 
    一个客户一块，key = 上面 PROJECTS 里的 slug：
+     img   : 客户真实 logo 的文件路径（assets/img/logos/<slug>.png|svg）。
+             填了这一栏就直接显示客户自己的 logo，下面的 mark / word 只是
+             文件缺失时的退路。现有的 PNG 是 tools/crop-logos.mjs 从
+             assets/screenshots 的页头里裁出来的真图；拿到客户的原件
+             （SVG 最好）就直接覆盖同名文件，代码不用改。
+     h     : （可选）这一个 logo 显示多高，px。不写 = 22。
+             两行式或者带头像的 logo 通常要调大一点才压得住阵脚。
      color : 品牌主色（标记 + 字标都用它）
      accent: 第二色，只有双色 logo 才需要（例如 OEM4U 的琥珀色「4U」）
      mark  : 标记本体，写在 viewBox="0 0 20 20" 里的 SVG 片段。
@@ -620,6 +627,7 @@ const PROFILE = {
 
 const CLIENT_LOGOS = {
   "luma-club": {
+    img: "assets/img/logos/luma-club.png", h: 20,
     color: "#8C6A3F",
     /* 月相：LŪMA = 光 */
     mark: '<circle cx="10" cy="10" r="7.2" fill="none" stroke="currentColor" stroke-width="1.3"/>' +
@@ -628,6 +636,7 @@ const CLIENT_LOGOS = {
   },
 
   "exa-energy": {
+    img: "assets/img/logos/exa-energy.png", h: 24,
     color: "#1C1C1C",
     accent: "#F07C1E",
     /* 闪电：能源 */
@@ -636,6 +645,7 @@ const CLIENT_LOGOS = {
   },
 
   "pnc-lifecare": {
+    img: "assets/img/logos/pnc-lifecare.png", h: 28,
     color: "#3AA0D8",
     accent: "#7FBF4D",
     /* 双色心：蓝绿各一半，对应他们 logo 上那颗渐变的心 */
@@ -645,6 +655,7 @@ const CLIENT_LOGOS = {
   },
 
   "furfoo-pet": {
+    img: "assets/img/logos/furfoo-pet.png", h: 26,
     color: "#CE1126",
     /* 爪印 */
     mark: '<circle cx="5.6" cy="8.2" r="2" fill="currentColor"/>' +
@@ -655,6 +666,8 @@ const CLIENT_LOGOS = {
   },
 
   "furfoo-pos": {
+    /* POS 是 FURFOO 的内部系统，用同一个品牌 logo，加一个 POS 角标区分 */
+    img: "assets/img/logos/furfoo-pet.png", h: 26, suffix: "<i>POS</i>",
     color: "#CE1126",
     accent: "#1F7A63",
     /* 收银机：屏幕 + 出单口 */
@@ -665,6 +678,7 @@ const CLIENT_LOGOS = {
   },
 
   "yh-ideal-academy": {
+    img: "assets/img/logos/yh-ideal-academy.png", h: 26,
     color: "#4A5AA8",
     /* 摊开的书：历史课堂 */
     mark: '<path d="M10 5.6C8.4 4.3 6.2 3.9 3.6 4.2v10.4c2.6-.3 4.8.1 6.4 1.4 1.6-1.3 3.8-1.7 6.4-1.4V4.2c-2.6-.3-4.8.1-6.4 1.4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>' +
@@ -683,6 +697,7 @@ const CLIENT_LOGOS = {
   },
 
   "etaeta": {
+    img: "assets/img/logos/etaeta.png", h: 26,
     color: "#12233A",
     /* 细线的浪：海盐 / 海洋 */
     mark: '<path d="M2.6 12.4c2-2.4 3.5-2.4 5.5 0s3.5 2.4 5.5 0 3.5-2.4 3.8-1.4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>' +
@@ -699,6 +714,7 @@ const CLIENT_LOGOS = {
   },
 
   "oem4u2day": {
+    img: "assets/img/logos/oem4u2day.png", h: 22,
     color: "#14213D",
     accent: "#F5A623",
     /* 他们 logo 开头那个带点的橙色圆环 */
@@ -708,6 +724,7 @@ const CLIENT_LOGOS = {
   },
 
   "master-materials": {
+    img: "assets/img/logos/master-materials.png", h: 26,
     color: "#B5714E",
     accent: "#1C1C1C",
     /* 双峰的 M：他们的山形标记 */

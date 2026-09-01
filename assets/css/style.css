@@ -1067,14 +1067,32 @@ html[data-lang="zh"] .focus__rail span{
   perspective:1500px; perspective-origin:78% 50%;
   padding:4px 0;
 }
-/* 卡片后面那团雾。纯装饰，让 3D 卡片有个立足的地方，不像浮在白纸上。 */
-.focus__viewport::before{
-  content:""; position:absolute; z-index:0; left:-14%; top:-10%; width:86%; height:120%;
-  background:
-    radial-gradient(58% 42% at 46% 44%, rgba(20,18,15,.10), rgba(20,18,15,0) 72%),
-    radial-gradient(34% 26% at 22% 62%, rgba(20,18,15,.07), rgba(20,18,15,0) 70%);
-  filter:blur(12px); pointer-events:none;
+/* 影棚里的那块投影：一团糊开的椭圆压在卡片下方偏右
+   （光从左上来，影子就往右下走）。这是卡片唯一的背景元素，
+   没有它，再厚的机身也只是浮在白纸上的一张图。 */
+.focus__viewport::before,
+.focus__viewport::after{
+  content:""; position:absolute; z-index:0; pointer-events:none; border-radius:50%;
+  transition:opacity 1s var(--ease2);
+  opacity:0;
 }
+/* 大的那团：糊得很开，是「桌面」上的环境影 */
+.focus__viewport::before{
+  left:1%; right:-8%; bottom:-19%; height:28%;
+  background:radial-gradient(50% 50% at 50% 50%,
+    rgba(20,18,15,.30) 0%, rgba(20,18,15,.15) 44%, rgba(20,18,15,0) 76%);
+  filter:blur(24px);
+}
+/* 小的那条：紧贴卡片下沿的接触影，实一点、窄一点。
+   两条一起才像「压在桌面上」，只有一团糊影会显得飘。 */
+.focus__viewport::after{
+  left:9%; right:1%; bottom:-11%; height:12%;
+  background:radial-gradient(50% 50% at 50% 50%,
+    rgba(20,18,15,.42) 0%, rgba(20,18,15,.18) 52%, rgba(20,18,15,0) 78%);
+  filter:blur(11px);
+}
+.focus.is-ready .focus__viewport::before,
+.focus.is-ready .focus__viewport::after{ opacity:1; }
 /* 位移（左右切换）和倾斜（3D）必须分两层：
    写在同一个元素上，后写的 transform 会把前一个整条覆盖掉。 */
 .focus__slide{
@@ -1087,28 +1105,49 @@ html[data-lang="zh"] .focus__rail span{
 /* 机身是深色的（参考图那台平板），截图嵌在里面，底下压一条奶白说明。
    内侧那圈浅描边是机身的高光，没有它深色块会像一张贴上去的黑纸。 */
 .focus__device{
+  position:relative;
   transform-style:preserve-3d;
   transform:rotateY(0deg) rotateX(0deg) rotateZ(0deg);
   transition:transform .9s var(--ease2), box-shadow .9s var(--ease2);
-  padding:11px; border-radius:24px;
-  background:linear-gradient(150deg,#2A2621 0%,#17140F 46%,#221E19 100%);
+  padding:13px; border-radius:26px;
+  /* 机身正面：左上受光、右下入暗，转过去之后这条渐变正好顺着光。 */
+  background:linear-gradient(148deg,#3B3730 0%,#221E19 30%,#14110E 62%,#2A251F 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(246,244,239,.14),
+    inset 0 0 0 1px rgba(246,244,239,.16),           /* 机身外沿的高光 */
+    inset 0 1px 0 rgba(255,255,255,.10),             /* 上边缘那道亮线 */
     0 2px 6px rgba(20,18,15,.10),
     0 40px 60px -46px rgba(20,18,15,.55);
+}
+/* 背板：往后推 18px。正面和背板之间那一层就是机身的厚度 ——
+   转过去之后近端（左边）会露出侧面，所以它不是一张贴纸，是一块板。 */
+.focus__device::before{
+  content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit;
+  background:linear-gradient(148deg,#1A1713,#0A0907);
+  transform:translateZ(-18px);
+  /* 实心 spread 把正面与背板之间的缝补上，缝里不会露出纸底 */
+  box-shadow:0 0 0 2px #0E0C0A, 0 26px 30px -22px rgba(20,18,15,.55);
 }
 .focus__device.is-tilted{
   transform:rotateY(19deg) rotateX(3.6deg) rotateZ(1.8deg);
   box-shadow:
-    inset 0 0 0 1px rgba(246,244,239,.16),
+    inset 0 0 0 1px rgba(246,244,239,.18),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    -14px 10px 0 -3px #100E0B,                       /* 近端（左）那条侧面 */
     0 3px 8px rgba(20,18,15,.12),
-    0 70px 90px -46px rgba(20,18,15,.7);
+    0 70px 90px -50px rgba(20,18,15,.7);
 }
 
 .focus__screen{
   position:relative; aspect-ratio:16/10; overflow:hidden;
-  padding:0; background:var(--paper-2); border-radius:14px 14px 3px 3px;
+  padding:0; background:var(--paper-2); border-radius:15px 15px 3px 3px;
   transition:opacity .2s linear;
+}
+/* 屏幕是「嵌」在机身里的：一圈内阴影 + 左上一点点面光。
+   没有这一层，截图看起来像直接贴在黑板上。 */
+.focus__screen::after{
+  content:""; position:absolute; inset:0; z-index:2; border-radius:inherit; pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(20,18,15,.28), inset 0 2px 10px rgba(20,18,15,.22);
+  background:linear-gradient(150deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 26%);
 }
 .focus__screen img{
   width:100%; height:100%; object-fit:cover; object-position:top center;
@@ -1128,9 +1167,12 @@ html[data-lang="zh"] .focus__rail span{
 /* 说明在白框「里面」：设计稿上「01 The Luma Club」是印在卡片下沿的，
    不是卡片外面另起一行。 */
 .focus__caption{
+  position:relative; z-index:1;
   display:flex; align-items:center; gap:15px; margin:5px 0 0;
-  padding:13px clamp(14px,1.5vw,20px);
-  background:var(--mat); border-radius:3px 3px 14px 14px;
+  padding:14px clamp(15px,1.6vw,21px);
+  background:linear-gradient(180deg,#FFFDF9,#F4F1EA);
+  border-radius:3px 3px 15px 15px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
   font-family:var(--serif); font-size:1rem; letter-spacing:.01em; color:var(--ink);
 }
 .focus__caption b{
@@ -1480,8 +1522,13 @@ html[data-lang="en"] .focus__svclabel em{ display:none; }
   .focus__device{ transform:none !important; }
   .focus__slide{ transform:none !important; opacity:1 !important; transition:opacity .3s var(--ease); }
   .focus__screen{ padding:0; }
+  /* 手机不做 3D，就没有「厚度」可言：背板和影棚投影一起关掉，
+     留下机身本身的圆角和一层落影就够了。 */
   .focus__device{ padding:9px; border-radius:20px;
-    box-shadow:inset 0 0 0 1px rgba(246,244,239,.14), 0 2px 5px rgba(20,18,15,.1), 0 26px 40px -26px rgba(20,18,15,.5); }
+    box-shadow:inset 0 0 0 1px rgba(246,244,239,.14), inset 0 1px 0 rgba(255,255,255,.1),
+      0 2px 5px rgba(20,18,15,.1), 0 26px 40px -26px rgba(20,18,15,.5); }
+  .focus__device::before{ display:none; }
+  .focus__viewport::before,.focus__viewport::after{ display:none; }
   .focus__screen{ border-radius:12px 12px 3px 3px; }
   .focus__caption{ padding:11px 13px; border-radius:3px 3px 12px 12px; }
 

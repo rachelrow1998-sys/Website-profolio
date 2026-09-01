@@ -42,6 +42,10 @@ const SHOTS = ${JSON.stringify(shotList)};
 
 /* 你的照片放进来了没有。没有就别去请求它，直接用占位剪影。 */
 const HAS_PHOTO = ${existsSync(resolve(root, "assets/img/me.jpg"))};
+
+/* 第二张照片（戴头盔那张）放进来了没有。
+   有它，PROFILE 的照片才会有「圆形光标翻第二层」的效果；没有就只是一张静态照片。 */
+const HAS_PHOTO_ALT = ${existsSync(resolve(root, "assets/img/me-2.jpg"))};
 `);
 
 /* 手机 Hero：前 4 个作品，轻微错位 stack */
@@ -120,3 +124,4 @@ console.log(`✓ 已同步：noscript ${PROJECTS.length} 个作品 + 手机 Hero
 console.log(`  真实截图 ${shotList.length}/${PROJECTS.length} 个${shotList.length ? "：" + shotList.join(", ") : "（其余用占位图）"}`);
 console.log(`  品牌名「${brand}」/ 缩写「${monoSafe}」已写进标题、分享卡、页签图标、noscript`);
 console.log(`  个人照片 assets/img/me.jpg：${existsSync(resolve(root, "assets/img/me.jpg")) ? "有 ✓" : "还没放（用占位剪影）"}`);
+console.log(`  第二张 assets/img/me-2.jpg：${existsSync(resolve(root, "assets/img/me-2.jpg")) ? "有 ✓（照片会有翻层效果）" : "还没放（翻层效果先用占位剪影演示）"}`);

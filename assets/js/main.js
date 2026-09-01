@@ -100,6 +100,18 @@
       '<text x="200" y="474" text-anchor="middle" font-family="Helvetica,Arial" font-size="16" fill="#8A8478" letter-spacing="2">ADD assets/img/me.jpg</text>' +
       "</svg>");
 
+  /* 第二层的占位剪影（戴头盔）。两张真照片都还没放的时候，
+     用它来演示「圆形光标翻第二层」这个效果 —— 否则功能做了也看不见。 */
+  var PERSON_FALLBACK_ALT =
+    "data:image/svg+xml;base64," + btoa(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">' +
+      '<rect width="400" height="500" fill="#E5E1D7"/>' +
+      '<path d="M200 104c-56 0-100 45-100 105v38c0 40 22 69 52 80 14 5 31 8 48 8s34-3 48-8c30-11 52-40 52-80v-38c0-60-44-105-100-105z" fill="#C9C2B4"/>' +
+      '<path d="M118 194c17-14 50-23 82-23s65 9 82 23v50c0 14-8 24-22 27-18 5-38 7-60 7s-42-2-60-7c-14-3-22-13-22-27z" fill="#AFA79A"/>' +
+      '<path d="M62 500c0-86 62-150 138-150s138 64 138 150z" fill="#D3CDC0"/>' +
+      '<text x="200" y="474" text-anchor="middle" font-family="Helvetica,Arial" font-size="16" fill="#8A8478" letter-spacing="2">ADD assets/img/me-2.jpg</text>' +
+      "</svg>");
+
   function setPhoto(el) {
     if (!el) return;
     /* 照片文件在不在，构建时就知道了（tools/sync-static.mjs 写进 shots.js）。
@@ -108,6 +120,182 @@
     el.addEventListener("error", function h() { el.removeEventListener("error", h); el.src = PERSON_FALLBACK; });
     el.src = (ready && PROFILE.photo) ? PROFILE.photo : PERSON_FALLBACK;
     el.alt = PROFILE.name || "";
+  }
+
+  /* ======================================================================
+     3b. PROFILE 照片的「圆形光标翻第二层」
+     ----------------------------------------------------------------------
+     鼠标在照片上移动，一个圆形高光慢半拍地跟着走，圆里露出第二张照片
+     （同机位、戴头盔的那张）。划得快，圆后面会留下柔和的回声。
+
+     为什么整个效果画在一张 canvas 上，而不是叠几个 DOM 层加 CSS mask：
+     遮罩形状不止一个 —— 主光标 + 好几枚正在消散的回声。canvas 里
+     先把这些软圆画成 alpha，再用 source-in 一次性把第二张照片裁出来，
+     边缘天然是柔的，也不用每帧重建 mask-image 字符串。
+
+     两张照片必须用和 CSS 完全一致的 cover 裁切（object-position: top center
+     → 焦点 50% / 0%），差一点点圆圈里就穿帮。
+     ====================================================================== */
+  function initPhotoReveal() {
+    var fig = $(".about__photo");
+    var img = $("#profile-photo");
+    if (!fig || !img) return;
+
+    /* 用哪两张：
+         · 两张真照片都在 → 用真照片
+         · 两张都还没放   → 用占位剪影演示效果（否则做了也看不见）
+         · 只放了一张     → 不做效果。真照片上盖一个剪影会像坏图。 */
+    var hasA = (typeof HAS_PHOTO     !== "undefined" ? HAS_PHOTO     : false) && PROFILE.photo;
+    var hasB = (typeof HAS_PHOTO_ALT !== "undefined" ? HAS_PHOTO_ALT : false) && PROFILE.photoAlt;
+    var altSrc;
+    if (hasA && hasB)        altSrc = PROFILE.photoAlt;
+    else if (!hasA && !hasB) altSrc = PERSON_FALLBACK_ALT;
+    else return;
+
+    var alt = new Image();
+    alt.decoding = "async";
+    alt.src = altSrc;
+
+    var cv = document.createElement("canvas");
+    cv.className = "about__photo-reveal";
+    cv.setAttribute("aria-hidden", "true");
+    fig.insertBefore(cv, img.nextSibling);
+    var ctx = cv.getContext("2d");
+
+    var W = 0, H = 0, R = 90;
+    var tx = 0, ty = 0, cx = 0, cy = 0, lx = 0, ly = 0;
+    var power = 0, powerTo = 0, travel = 0;
+    var echoes = [], running = false;
+
+    /* canvas 必须严丝合缝地盖住「照片本身」那一块 ——
+       也就是 <img> 去掉 9px 卡纸内衬和 1px 边框之后剩下的内容框。
+       照着 CSS 写死 10px 也行，但哪天有人调了内衬就会错位，所以实算。 */
+    function size() {
+      if (!img.offsetWidth || !img.offsetHeight) return;
+      var cs = getComputedStyle(img);
+      var l = parseFloat(cs.paddingLeft)   + parseFloat(cs.borderLeftWidth);
+      var t = parseFloat(cs.paddingTop)    + parseFloat(cs.borderTopWidth);
+      var r = parseFloat(cs.paddingRight)  + parseFloat(cs.borderRightWidth);
+      var b = parseFloat(cs.paddingBottom) + parseFloat(cs.borderBottomWidth);
+
+      /* 用 offset* 而不是 getBoundingClientRect()：
+         PROFILE 这一屏入场时整块带 transform，getBoundingClientRect 给的是
+         「被缩放后的视觉尺寸」，照着它算，动画一停 canvas 就比照片大一圈。
+         offset* 是排版尺寸，跟 transform 无关。figure 是 position:relative，
+         正好是 img 和 canvas 共同的 offsetParent，所以坐标可以直接用。 */
+      W = img.offsetWidth  - l - r;
+      H = img.offsetHeight - t - b;
+      cv.style.left   = (img.offsetLeft + l) + "px";
+      cv.style.top    = (img.offsetTop  + t) + "px";
+      cv.style.width  = W + "px";
+      cv.style.height = H + "px";
+
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width  = Math.round(W * dpr);
+      cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      R = Math.max(52, Math.min(W, H) * 0.34);   /* 圆跟着照片大小走，手机上不会糊满整张 */
+    }
+
+    /* 和 CSS 的 object-fit:cover + object-position:top center 同一套算法 */
+    function cover() {
+      var iw = alt.naturalWidth, ih = alt.naturalHeight;
+      if (!iw || !ih) return null;
+      var s = Math.max(W / iw, H / ih);
+      var dw = iw * s, dh = ih * s;
+      return { x: (W - dw) * 0.5, y: 0, w: dw, h: dh };
+    }
+
+    function softCircle(x, y, r, a) {
+      if (r <= 0 || a <= 0) return;
+      var g = ctx.createRadialGradient(x, y, Math.max(r * 0.7, 0.01), x, y, r);
+      g.addColorStop(0, "rgba(0,0,0," + a + ")");
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, 6.2832);
+      ctx.fill();
+    }
+
+    function frame(now) {
+      var k = reduced ? 1 : 0.16;               /* 这一行就是「慢半拍」 */
+      cx += (tx - cx) * k;
+      cy += (ty - cy) * k;
+      power += (powerTo - power) * (reduced ? 1 : 0.14);
+
+      var dx = cx - lx, dy = cy - ly;
+      var speed = Math.sqrt(dx * dx + dy * dy);
+      lx = cx; ly = cy;
+
+      var r = R * power;
+
+      /* 划得快才留回声，按走过的距离放，不按帧数放 —— 不然快慢一个样 */
+      if (!reduced && speed > 5 && power > 0.4) {
+        travel += speed;
+        if (travel >= R * 0.24) { travel = 0; echoes.push({ x: cx, y: cy, r: r * 0.9, t: now }); }
+        if (echoes.length > 10) echoes.shift();
+      } else travel = 0;
+
+      ctx.clearRect(0, 0, W, H);
+      var alive = 0;
+      if (alt.complete && alt.naturalWidth && (r > 0.5 || echoes.length)) {
+        for (var i = 0; i < echoes.length; i++) {
+          var e = echoes[i], t = (now - e.t) / 340;
+          if (t >= 1) continue;
+          alive++;
+          var f = 1 - t; f = f * f * f;          /* easeOutCubic，收得干脆 */
+          softCircle(e.x, e.y, e.r * (0.92 + t * 0.2), 0.45 * f * power);
+          echoes[alive - 1] = e;
+        }
+        echoes.length = alive;
+        softCircle(cx, cy, r, 1);
+
+        var box = cover();
+        if (box) {
+          ctx.globalCompositeOperation = "source-in";
+          ctx.drawImage(alt, box.x, box.y, box.w, box.h);
+          ctx.globalCompositeOperation = "source-over";
+        }
+      } else echoes.length = 0;
+
+      /* 圆收干净了就停掉循环，别让一个不可见的 canvas 一直占着每一帧 */
+      if (power < 0.004 && !echoes.length && powerTo === 0) {
+        running = false;
+        ctx.clearRect(0, 0, W, H);
+        return;
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function kick() { if (!running) { running = true; requestAnimationFrame(frame); } }
+
+    function at(e) {
+      /* 这里必须用 getBoundingClientRect（要的是屏幕上的真实位置），
+         但屏幕尺寸可能被 transform 缩放过，所以换算回画布自己的坐标系。 */
+      var r = cv.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      tx = (e.clientX - r.left) * (W / r.width);
+      ty = (e.clientY - r.top)  * (H / r.height);
+      if (power === 0) { cx = tx; cy = ty; lx = cx; ly = cy; }   /* 别从上一次的位置飞过来 */
+      powerTo = 1;
+      kick();
+    }
+
+    if (coarse) {
+      /* 触屏没有 hover：点一下、拖一下，圆就跟过去，松手不灭 */
+      fig.addEventListener("pointerdown", at, { passive: true });
+      fig.addEventListener("pointermove", function (e) { if (e.buttons || e.pressure > 0) at(e); }, { passive: true });
+    } else {
+      fig.addEventListener("pointerenter", at);
+      fig.addEventListener("pointermove", at, { passive: true });
+      fig.addEventListener("pointerleave", function () { powerTo = 0; kick(); });
+    }
+
+    var rt;
+    window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(size, 150); });
+    alt.addEventListener("load", function () { size(); });
+    if (img.complete) size(); else img.addEventListener("load", size);
+    size();
   }
 
   /* ======================================================================
@@ -765,6 +953,7 @@
 
     setPhoto($("#profile-photo"));
     setPhoto($("#contact-photo"));
+    initPhotoReveal();
 
     renderMarquee();
     applyLang(detectLang());

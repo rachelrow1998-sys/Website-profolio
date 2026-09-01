@@ -550,11 +550,25 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 
 /* ---------- 关于 ---------- */
 .about{ display:grid; grid-template-columns:.72fr 1.28fr; gap:clamp(28px,4.4vw,64px); align-items:start; }
-.about__photo{ margin:0; }
+.about__photo{ margin:0; position:relative; }
 .about__photo img{
   width:100%; aspect-ratio:4/5; object-fit:cover; object-position:top center;
   padding:9px; background:var(--mat); border:1px solid var(--rule);
   box-shadow:0 1px 2px rgba(20,18,15,.06), 0 14px 28px -18px rgba(20,18,15,.35);
+}
+/* 圆形光标翻出来的第二层照片。canvas 盖在照片上，
+   inset 是 9px 内衬 + 1px 边框 —— 必须正好压住「照片本身」那一块，
+   压到卡纸边上，圆圈扫到边角就会露馅。 */
+.about__photo-reveal{
+  position:absolute;
+  pointer-events:none;          /* 事件交给 figure，canvas 不参与命中 */
+  /* left/top/width/height 由 main.js 按 <img> 的内容框实算后写上来。
+     不要在这里用 inset：<canvas> 是替换元素，上下都给了值也不会拉伸，
+     它会退回自己 300×150 的固有尺寸，然后和 JS 写的 width/height 属性
+     互相拉扯，圆圈就对不准照片了。 */
+}
+@media (hover:hover) and (pointer:fine){
+  .about__photo{ cursor:crosshair; }   /* 提示这块图是可以玩的 */
 }
 .about__photo figcaption{
   margin-top:12px; font-size:.64rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--pencil);

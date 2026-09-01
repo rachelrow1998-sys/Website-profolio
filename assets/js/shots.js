@@ -4,3 +4,7 @@ const SHOTS = ["luma-club","exa-energy","pnc-lifecare","furfoo-pet","yh-ideal-ac
 
 /* 你的照片放进来了没有。没有就别去请求它，直接用占位剪影。 */
 const HAS_PHOTO = false;
+
+/* 第二张照片（戴头盔那张）放进来了没有。
+   有它，PROFILE 的照片才会有「圆形光标翻第二层」的效果；没有就只是一张静态照片。 */
+const HAS_PHOTO_ALT = false;

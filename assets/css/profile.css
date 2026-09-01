@@ -1,0 +1,369 @@
+/* ==========================================================================
+   profile.css — F1 Profile（profile.html 专用，和作品集主站互不影响）
+
+   一屏一张照片，靠一个圆形光标去「翻」照片的第二层。
+   所有会动的东西都由 JS 每帧写进这几个 CSS 变量里：
+     --sx / --sy  圆心坐标（px，视口坐标系）
+     --sr         圆半径（px）
+     --spot       圆的显隐程度 0→1（进场、移出窗口时用它淡）
+     --px / --py  指针相对屏幕中心的位置，-1 → 1（视差用，无单位）
+   CSS 只管「长什么样」，不参与计算，改数值不用碰 JS。
+   ========================================================================== */
+
+/* Playfair Display —— 自托管，和主站一样不依赖 Google Fonts
+   （客户在中国大陆打不开 fonts.googleapis.com，字体一挂设计就垮）。
+   可变字重 400–900，只留 latin 子集。SIL Open Font License。 */
+@font-face{
+  font-family:'Playfair Display';
+  font-style:normal;
+  font-weight:400 900;
+  font-display:swap;
+  src:url('../fonts/playfair-display-400-900.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Archivo';
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+  src:url('../fonts/archivo.woff2') format('woff2');
+}
+
+:root{
+  --white:  #FFFFFF;
+  --ink:    #0B0B0C;        /* 正常状态的字色 */
+  --ink-2:  #6E6A64;
+
+  /* 照片的裁切焦点。两层照片和 canvas 都读这一组，改一处就够。
+     人脸大概在上三分之一，所以 Y 给 32%。 */
+  --focus-x: 50%;
+  --focus-y: 32%;
+
+  /* 圆形光标的基础半径。
+     auto = 跟着屏幕走（大屏 ~137px，手机 ~92px），大多数情况用这个就好；
+     想钉死就写成具体像素，例如 --spot-r: 132px。
+     JS 还会按指针速度在这个值上下浮动一点点。 */
+  --spot-r: auto;
+
+  --serif: 'Playfair Display', 'Instrument Serif', Georgia, 'Songti SC', serif;
+  --sans:  'Archivo', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+
+  --edge: clamp(20px, 4.2vw, 56px);   /* 四角到屏幕边的距离 */
+  --lit:  300ms;                       /* 文字反白的过渡时长（需求里写的 300ms） */
+
+  /* JS 还没启动时的兜底值，避免第一帧 calc() 拿到空字符串 */
+  --sx: 50vw; --sy: 50vh; --sr: 0px; --spot: 0; --px: 0; --py: 0;
+}
+
+*, *::before, *::after{ box-sizing:border-box; }
+
+html, body{ height:100%; }
+body{
+  margin:0;
+  background:var(--white);
+  color:var(--ink);
+  font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;                     /* 就一屏，不滚动 */
+  overscroll-behavior:none;
+}
+
+/* 有 JS + 有精细指针时把系统光标藏掉，圆形高光就是光标本人。
+   触屏和键盘用户不受影响（.js-hover 由 profile.html 的内联脚本判断后加）。 */
+.js-hover, .js-hover .stage{ cursor:none; }
+.js-hover a{ cursor:none; }
+
+/* --------------------------------------------------------------------------
+   1. 照片舞台
+   底层 <img> 和上层 <canvas> 用完全相同的 cover 裁切，
+   两层必须像素级对齐，否则圆圈里会看见「错位的另一张图」。
+   -------------------------------------------------------------------------- */
+.stage{ position:fixed; inset:0; z-index:1; }
+
+.stage__base{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  object-position:var(--focus-x) var(--focus-y);
+  user-select:none; -webkit-user-drag:none;
+}
+
+/* 第二张照片只当 canvas 的画料，本身不显示。
+   不用 display:none —— 那样 Safari 有时候不解码，canvas 会画出一片空白。 */
+.stage__src{
+  position:absolute; left:0; top:0;
+  width:1px; height:1px;
+  opacity:0;
+  pointer-events:none;
+}
+
+/* 圆圈里露出来的第二层照片。整层都在 canvas 里合成：
+   照片 → 只留圆形（含回声）的 alpha → 压一层深墨色。
+   压深色是必须的：两张照片都是白底棚拍，不压深，圆圈里的白字看不见。 */
+.stage__reveal{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  z-index:2;
+  pointer-events:none;
+}
+
+/* --------------------------------------------------------------------------
+   2. 网格
+   两层：一层墨色（multiply，只吃照片的白底，压在深色赛车服上几乎看不见），
+   一层白色（只在圆圈里出现，让深色圆里也有层次）。
+   两层都跟着指针反向轻移 —— 这就是「网格随光标轻微变化」。
+   -------------------------------------------------------------------------- */
+.grid{
+  position:fixed;
+  pointer-events:none;
+  background-repeat:repeat;
+  will-change:transform;
+}
+/* 墨色网格：往外撑一圈再平移，平移时不会露边。
+   这一层没有 mask，用 transform 做视差最省（合成层，不触发重绘）。 */
+.grid--ink{
+  inset:-10vmax;
+  z-index:3;
+  mix-blend-mode:multiply;
+  opacity:.55;
+  background-image:
+    linear-gradient(to right,  rgba(11,11,12,.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11,11,12,.05) 1px, transparent 1px);
+  background-size:72px 72px;
+  transform:translate3d(calc(var(--px) * -10px), calc(var(--py) * -10px), 0);
+  animation:grid-drift 32s linear infinite;   /* 极慢的漂移，盯着看才看得见 */
+}
+@keyframes grid-drift{
+  from{ background-position:0 0; }
+  to  { background-position:72px 72px; }
+}
+
+/* 细网格只在圆形高光里显影。
+   ⚠️ 这一层必须 inset:0 且不能用 transform：mask 的坐标是元素自己的坐标系，
+      元素一旦外扩或位移，圆心就会和真正的光标错开（曾经错了 144px）。
+      所以视差改用 background-position —— 它不影响 mask。 */
+.grid--lit{
+  inset:0;
+  z-index:4;
+  mix-blend-mode:plus-lighter;
+  opacity:calc(var(--spot) * .38);
+  background-image:
+    linear-gradient(to right,  rgba(255,255,255,.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.45) 1px, transparent 1px);
+  background-size:24px 24px;
+  background-position:calc(var(--px) * -18px) calc(var(--py) * -18px);
+  -webkit-mask-image:radial-gradient(circle at var(--sx) var(--sy),
+        #000 0, #000 calc(var(--sr) * .72), transparent var(--sr));
+          mask-image:radial-gradient(circle at var(--sx) var(--sy),
+        #000 0, #000 calc(var(--sr) * .72), transparent var(--sr));
+}
+
+/* --------------------------------------------------------------------------
+   3. 四角的 UI
+   -------------------------------------------------------------------------- */
+.ui{
+  position:fixed; inset:0;
+  z-index:10;
+  pointer-events:none;                  /* 只让真正能点的元素接管事件 */
+}
+.ui a{ pointer-events:auto; }
+
+.corner{ position:absolute; }
+.corner--tl{ top:var(--edge); left:var(--edge); }
+.corner--tr{ top:var(--edge); right:var(--edge); }
+.corner--br{ bottom:var(--edge); right:var(--edge); }
+.corner--bl{ bottom:var(--edge); left:var(--edge); }
+
+/* 视差：元素跟着指针「反向」走一点点，越靠前的走得越多 */
+.corner--tl{ transform:translate3d(calc(var(--px) * -14px), calc(var(--py) * -14px), 0); }
+.corner--tr{ transform:translate3d(calc(var(--px) * -10px), calc(var(--py) * -10px), 0); }
+.corner--br{ transform:translate3d(calc(var(--px) *  -8px), calc(var(--py) *  -8px), 0); }
+.corner--bl{ transform:translate3d(calc(var(--px) *  -6px), calc(var(--py) *  -6px), 0); }
+
+/* 名字：姓和名各占一行 */
+.name{
+  margin:0;
+  font-family:var(--serif);
+  font-weight:400;
+  font-size:clamp(44px, 7.2vw, 108px);
+  line-height:.92;
+  letter-spacing:-.02em;
+}
+.name span{ display:block; }
+.name .name__last{ padding-left:.06em; font-style:italic; }
+
+/* 导航链接 */
+.nav-link{
+  display:inline-block;
+  padding-top:.5em;
+  font-size:clamp(11px, 1vw, 13px);
+  font-weight:500;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  text-decoration:none;
+  color:inherit;
+}
+.nav-link::after{                       /* 细下划线，hover 时从左展开 */
+  content:"";
+  display:block;
+  height:1px;
+  margin-top:.6em;
+  background:currentColor;
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform 420ms cubic-bezier(.22,1,.36,1);
+}
+.nav-link:hover::after, .nav-link:focus-visible::after{ transform:scaleX(1); }
+
+/* 社交图标 */
+.social{
+  display:flex;
+  gap:clamp(14px, 1.8vw, 22px);
+  margin:0; padding:0;
+  list-style:none;
+}
+.social a{
+  display:grid; place-items:center;
+  width:40px; height:40px;
+  color:inherit;
+  border-radius:50%;
+  transition:transform 420ms cubic-bezier(.22,1,.36,1);
+}
+.social a:hover, .social a:focus-visible{ transform:translateY(-3px); }
+.social svg{
+  width:21px; height:21px;
+  display:block;
+  fill:currentColor;                    /* 实心图标，跟着 color 一起反白 */
+}
+
+/* 左下角的一行小字：一句提示 + 版权之类 */
+.hint{
+  margin:0;
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+  transition:color var(--lit) ease, opacity 600ms ease;
+}
+.hint .dot{
+  display:inline-block;
+  width:5px; height:5px; margin-right:.9em;
+  border-radius:50%;
+  background:currentColor;
+  vertical-align:middle;
+  animation:pulse 2.6s ease-in-out infinite;
+}
+@keyframes pulse{ 0%,100%{opacity:.25} 50%{opacity:1} }
+.has-moved .hint{ opacity:0; }          /* 用户一动鼠标就不用再提示了 */
+
+/* --------------------------------------------------------------------------
+   4. 反白
+   圆形高光压到哪个元素，哪个元素就变白。判定在 JS 里做（矩形 ↔ 圆的距离），
+   这里只负责「怎么变」—— 300ms，颜色和阴影一起走。
+   -------------------------------------------------------------------------- */
+[data-lit]{
+  color:var(--ink);
+  transition:color var(--lit) ease, text-shadow var(--lit) ease;
+}
+[data-lit].is-lit{
+  color:var(--white);
+  text-shadow:0 0 24px rgba(0,0,0,.28);  /* 白字压在照片上，给一点点托底 */
+}
+
+/* 键盘焦点圈也要跟着底色走，不然黑圈压在深色圆里看不见 */
+a:focus-visible{
+  outline:2px solid currentColor;
+  outline-offset:6px;
+  border-radius:2px;
+}
+
+/* --------------------------------------------------------------------------
+   5. F1 Records 面板
+   右上角那个链接得有地方去。一块深色薄片，Esc / 点空白关掉。
+   数字请自己填 assets/js 里没有它 —— 直接改 profile.html 的 <dd>。
+   -------------------------------------------------------------------------- */
+.records{
+  position:fixed; inset:0;
+  z-index:30;
+  display:grid;
+  place-items:end start;
+  padding:var(--edge);
+  background:rgba(11,11,12,.965);
+  color:#fff;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 480ms cubic-bezier(.22,1,.36,1), visibility 0s linear 480ms;
+}
+.records.is-open{
+  opacity:1;
+  visibility:visible;
+  transition:opacity 480ms cubic-bezier(.22,1,.36,1), visibility 0s;
+}
+.records__inner{
+  width:min(720px, 100%);
+  transform:translateY(18px);
+  transition:transform 620ms cubic-bezier(.22,1,.36,1);
+}
+.records.is-open .records__inner{ transform:none; }
+.records h2{
+  margin:0 0 clamp(20px, 3vw, 36px);
+  font-family:var(--serif);
+  font-weight:400;
+  font-size:clamp(32px, 5vw, 64px);
+  line-height:1;
+}
+.records dl{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:0;
+  margin:0;
+  border-top:1px solid rgba(255,255,255,.18);
+}
+.records dt, .records dd{
+  margin:0;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  font-size:clamp(12px, 1.3vw, 14px);
+}
+.records dt{ letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.62); }
+.records dd{ text-align:right; font-family:var(--serif); font-size:clamp(16px, 2vw, 22px); }
+.records__close{
+  position:absolute; top:var(--edge); right:var(--edge);
+  padding:8px;
+  background:none; border:0;
+  color:#fff;
+  font:inherit;
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  cursor:pointer;
+}
+
+/* --------------------------------------------------------------------------
+   6. 触屏 / 无 hover
+   没有鼠标就没有「跟随」这回事。圆圈改成按住拖动，四角字保持墨色。
+   -------------------------------------------------------------------------- */
+@media (hover:none), (pointer:coarse){
+  .name{ font-size:clamp(38px, 12vw, 68px); }
+  .hint{ font-size:10px; }
+}
+
+/* 屏幕很矮时（横过来的手机）把字压小，别糊住脸 */
+@media (max-height:520px){
+  .name{ font-size:clamp(30px, 6vh, 52px); }
+  .social a{ width:34px; height:34px; }
+}
+
+/* --------------------------------------------------------------------------
+   7. 减少动效
+   关掉回声、视差和网格漂移；圆形遮罩本身是这一页的内容，留着，只是不再插值。
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  *, *::before, *::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+  .corner, .grid{ transform:none !important; }
+}
+
+/* 没有 JS：照片和四角文字照样在，只是没有圆形光标可翻，
+   所以那句「Move to reveal」也别留着骗人 */
+.no-js .stage__reveal, .no-js .grid--lit, .no-js .hint{ display:none; }

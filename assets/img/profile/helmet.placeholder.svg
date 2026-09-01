@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1350" width="900" height="1350" role="img" aria-label="Helmet portrait placeholder">
+  <rect width="900" height="1350" fill="#F4F3F1"/>
+  <g fill="#B7B3AC">
+    <!-- 头盔 -->
+    <path d="M450 232c-104 0-186 84-186 196v70c0 74 40 128 96 148 26 10 58 14 90 14s64-4 90-14c56-20 96-74 96-148v-70c0-112-82-196-186-196z"/>
+    <!-- 肩 / 赛车服 -->
+    <path d="M450 560c-96 0-196 46-236 128-30 62-44 260-48 662h568c-4-402-18-600-48-662-40-82-140-128-236-128z"/>
+  </g>
+  <!-- 面罩 -->
+  <path d="M292 400c30-26 92-42 158-42s128 16 158 42v92c0 26-14 44-40 50-34 8-76 12-118 12s-84-4-118-12c-26-6-40-24-40-50z" fill="#8E8A84"/>
+  <g fill="#FFF" opacity=".9">
+    <rect x="300" y="900" width="300" height="26" rx="4"/>
+    <rect x="352" y="820" width="196" height="14" rx="4"/>
+  </g>
+  <g font-family="Georgia, 'Times New Roman', serif" text-anchor="middle" fill="#8D8880">
+    <text x="450" y="1218" font-size="40" letter-spacing="6">PHOTO 02</text>
+    <text x="450" y="1266" font-size="24" letter-spacing="2" fill="#A5A099">helmet.jpg — 光标里露出来的那层</text>
+    <text x="450" y="1302" font-size="20" letter-spacing="1" fill="#B4AFA8">把你的照片放到 assets/img/profile/helmet.jpg</text>
+  </g>
+</svg>

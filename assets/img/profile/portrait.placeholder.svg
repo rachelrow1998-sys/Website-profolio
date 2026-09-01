@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1350" width="900" height="1350" role="img" aria-label="Portrait placeholder">
+  <rect width="900" height="1350" fill="#F4F3F1"/>
+  <g fill="#C9C6C0">
+    <!-- 头 -->
+    <ellipse cx="450" cy="410" rx="132" ry="162"/>
+    <!-- 头发 -->
+    <path d="M318 420c0-104 59-176 132-176s132 72 132 176c0 22-6 44-6 44l-26-96c-58 34-142 40-208 12l-18 84s-6-22-6-44z"/>
+    <path d="M330 392c-14 132-30 236-44 330 26 12 52 20 78 24 4-124 6-244 6-354z"/>
+    <path d="M570 392c14 132 30 236 44 330-26 12-52 20-78 24-4-124-6-244-6-354z"/>
+    <!-- 肩 / 赛车服 -->
+    <path d="M450 560c-96 0-196 46-236 128-30 62-44 260-48 662h568c-4-402-18-600-48-662-40-82-140-128-236-128z"/>
+  </g>
+  <g fill="#FFF" opacity=".9">
+    <rect x="300" y="900" width="300" height="26" rx="4"/>
+    <rect x="352" y="820" width="196" height="14" rx="4"/>
+  </g>
+  <g font-family="Georgia, 'Times New Roman', serif" text-anchor="middle" fill="#8D8880">
+    <text x="450" y="1218" font-size="40" letter-spacing="6">PHOTO 01</text>
+    <text x="450" y="1266" font-size="24" letter-spacing="2" fill="#A5A099">portrait.jpg — 底层照片</text>
+    <text x="450" y="1302" font-size="20" letter-spacing="1" fill="#B4AFA8">把你的照片放到 assets/img/profile/portrait.jpg</text>
+  </g>
+</svg>

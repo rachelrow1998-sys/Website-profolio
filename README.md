@@ -309,3 +309,55 @@ python3 -m http.server 8000
 直接放在 `assets/fonts/`，一共只有 72KB，加载还更快。两款都是 SIL Open Font License，可以自由自托管和商用。
 
 中文则用系统自带字体（苹方 / 微软雅黑）—— 中文字体文件动辄几 MB，不值得让访客下载。
+
+---
+
+## 🏎 profile.html —— 一屏的个人页（独立页面）
+
+`profile.html` 是一个和作品集主站**完全独立**的页面：一整屏一张人物照片，
+用一个圆形高光当光标去「翻」照片的第二层。改它不会影响 `index.html`，
+反过来也一样（它自己一套 CSS / JS，只跟主站共用字体文件）。
+
+本地看：`python3 -m http.server 8000` → <http://localhost:8000/profile.html>
+
+### 它长什么样
+
+- 底图铺满整屏（`object-fit: cover`），左上角是姓名（Playfair Display，姓和名各一行），
+  右上角 `F1 Records`，右下角 Instagram / Twitter 实心图标
+- 一个圆形高光平滑跟随鼠标（**慢半拍**），圆里露出的是**第二张照片**
+- 鼠标划得快，圆后面会留下柔和的回声，约 400ms 内散掉
+- 背景一层极淡的网格：跟着光标反向轻移，还有一层细网格只在圆里显影
+- 圆压到哪个文字，哪个文字就在 300ms 内反白
+- 四角的元素都跟着光标**反方向**轻微位移（视差）
+
+### 上手要改的 4 个地方
+
+1. **两张照片** → 看 `assets/img/profile/README.md`。
+   放进去之前页面会自动用占位图，不会开天窗。
+2. **姓名** → `profile.html` 里 `.name` 那两个 `<span>`。
+3. **两个社交链接** → `profile.html` 里 `.social` 的两个 `href`（现在是 `yourhandle`）。
+   想把 Twitter 换成现在的 X 标志，那一行注释里已经写好了新的 `path`。
+4. **F1 Records 的数字** → `profile.html` 最下面那个 `<dl>`，现在全是 `—`。
+   成绩我不会替你编。
+
+### 手感不对时调哪里
+
+动效参数集中在 `assets/js/profile.js` 最上面的 `CFG`：
+
+```js
+ease:      0.14,   // 圆追鼠标的速度，越小越「拖」
+radius:    …,      // 基础半径（默认跟着屏幕走，见 CSS 的 --spot-r）
+scrim:     0.62,   // 圆里压多深 —— 调浅了圆里的白字会看不清
+echoLife:  420,    // 回声寿命 (ms)
+echoGap:   26,     // 每走多少像素放一枚回声
+```
+
+版式相关的在 `assets/css/profile.css` 的 `:root`：`--focus-x/y`（照片裁切焦点）、
+`--spot-r`（圆的大小）、`--edge`（四角留白）、`--lit`（反白过渡时长，需求里是 300ms）。
+
+> **为什么圆里要压一层深色？**
+> 因为两张照片都是白底棚拍。不压深，圆经过左上角的时候，
+> 反白后的白色姓名就是白底白字，什么都看不见 —— 这是这一页唯一必须的妥协。
+
+字体多了一款 **Playfair Display**（可变字重，latin 子集，38KB，SIL OFL），
+和其它两款一样自托管在 `assets/fonts/`，不走 Google Fonts。

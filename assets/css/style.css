@@ -1084,21 +1084,30 @@ html[data-lang="zh"] .focus__rail span{
 }
 /* 白框整块转过去：左边缘迎着人，右边缘往里退（设计稿的那一下就是这个方向）。
    转的是 .focus__device —— 位移在外面那层，两个 transform 不能写一起。 */
+/* 机身是深色的（参考图那台平板），截图嵌在里面，底下压一条奶白说明。
+   内侧那圈浅描边是机身的高光，没有它深色块会像一张贴上去的黑纸。 */
 .focus__device{
   transform-style:preserve-3d;
   transform:rotateY(0deg) rotateX(0deg) rotateZ(0deg);
   transition:transform .9s var(--ease2), box-shadow .9s var(--ease2);
-  padding:14px 14px 0; border-radius:16px; background:var(--mat);
-  box-shadow:0 2px 6px rgba(20,18,15,.06), 0 40px 60px -46px rgba(20,18,15,.5);
+  padding:11px; border-radius:24px;
+  background:linear-gradient(150deg,#2A2621 0%,#17140F 46%,#221E19 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(246,244,239,.14),
+    0 2px 6px rgba(20,18,15,.10),
+    0 40px 60px -46px rgba(20,18,15,.55);
 }
 .focus__device.is-tilted{
   transform:rotateY(19deg) rotateX(3.6deg) rotateZ(1.8deg);
-  box-shadow:0 3px 8px rgba(20,18,15,.08), 0 70px 90px -46px rgba(20,18,15,.66);
+  box-shadow:
+    inset 0 0 0 1px rgba(246,244,239,.16),
+    0 3px 8px rgba(20,18,15,.12),
+    0 70px 90px -46px rgba(20,18,15,.7);
 }
 
 .focus__screen{
   position:relative; aspect-ratio:16/10; overflow:hidden;
-  padding:0; background:var(--paper-2); border-radius:9px;
+  padding:0; background:var(--paper-2); border-radius:14px 14px 3px 3px;
   transition:opacity .2s linear;
 }
 .focus__screen img{
@@ -1119,11 +1128,13 @@ html[data-lang="zh"] .focus__rail span{
 /* 说明在白框「里面」：设计稿上「01 The Luma Club」是印在卡片下沿的，
    不是卡片外面另起一行。 */
 .focus__caption{
-  display:flex; align-items:center; gap:12px; margin:0; padding:13px 4px 15px;
-  font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2);
+  display:flex; align-items:center; gap:15px; margin:5px 0 0;
+  padding:13px clamp(14px,1.5vw,20px);
+  background:var(--mat); border-radius:3px 3px 14px 14px;
+  font-family:var(--serif); font-size:1rem; letter-spacing:.01em; color:var(--ink);
 }
 .focus__caption b{
-  font-family:var(--sans); font-weight:600; font-size:1.05rem; letter-spacing:.02em;
+  font-family:var(--sans); font-weight:600; font-size:.95rem; letter-spacing:.02em;
   color:var(--ink); font-variant-numeric:tabular-nums;
 }
 
@@ -1469,9 +1480,10 @@ html[data-lang="en"] .focus__svclabel em{ display:none; }
   .focus__device{ transform:none !important; }
   .focus__slide{ transform:none !important; opacity:1 !important; transition:opacity .3s var(--ease); }
   .focus__screen{ padding:0; }
-  .focus__device{ padding:10px 10px 0; border-radius:13px;
-    box-shadow:0 2px 5px rgba(20,18,15,.07), 0 26px 40px -26px rgba(20,18,15,.5); }
-  .focus__caption{ padding:11px 3px 12px; }
+  .focus__device{ padding:9px; border-radius:20px;
+    box-shadow:inset 0 0 0 1px rgba(246,244,239,.14), 0 2px 5px rgba(20,18,15,.1), 0 26px 40px -26px rgba(20,18,15,.5); }
+  .focus__screen{ border-radius:12px 12px 3px 3px; }
+  .focus__caption{ padding:11px 13px; border-radius:3px 3px 12px 12px; }
 
   .focus__read{ padding-top:22px; }
   .focus__cols{ grid-template-columns:1fr; gap:0; }

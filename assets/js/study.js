@@ -90,6 +90,32 @@
   var busy = false;        // 转场进行中，挡住重复触发
   var originSlug = null;   // 从哪张卡进来的 —— 关闭要飞回它
   var lastFocus = null;
+
+  /* =====================================================================
+     浏览器 / 手机的「返回」
+     ---------------------------------------------------------------------
+     案例页是盖在主页上的一层，不是另一个网页。不管历史的话，
+     人在案例里按一下返回，直接退出整个网站回到上一个页面 —— 这不对。
+     打开时往历史里压一条，返回先把这一层关掉，回到作品列表。
+     左右切换项目用 replaceState（不叠新条目），所以任何时候一次返回就出去，
+     不用按十下。pushState 在 file:// 下可能抛错，抛了就退回没有历史的老行为。
+     ===================================================================== */
+  var HASH = "#case-";
+  var histOwned = false;                 // 历史里那条是不是我们压的
+  function caseHash(slug) { return HASH + slug; }
+  function isCaseState(st) { return !!(st && st.jhStudy); }
+  function histPush(slug) {
+    try { history.pushState({ jhStudy: slug }, "", caseHash(slug)); histOwned = true; }
+    catch (e) {
+      try { history.pushState({ jhStudy: slug }, ""); histOwned = true; }
+      catch (e2) { histOwned = false; }
+    }
+  }
+  function histReplace(slug) {
+    if (!histOwned) return;
+    try { history.replaceState({ jhStudy: slug }, "", caseHash(slug)); }
+    catch (e) { try { history.replaceState({ jhStudy: slug }, ""); } catch (e2) {} }
+  }
   var autoId = 0, hovering = false;
   var AUTO_MS = 7000;
 
@@ -314,6 +340,7 @@
     lastFocus = document.activeElement;
     originSlug = p.slug;
     isOpen = true;
+    histPush(p.slug);
 
     fill(i);
     localizeDeck();
@@ -370,7 +397,35 @@
   /* =====================================================================
      关闭 —— 飞回原来那张卡
      ===================================================================== */
+  /* 对外的关闭：先退历史（我们进来时压过一条），
+     真正的收场统一由 popstate 触发的 requestClose() 走，
+     免得「按返回」和「点关闭」两条路各关一次、历史里留下脏条目。 */
   function close() {
+    if (!isOpen) return;
+    if (histOwned) { histOwned = false; try { history.back(); return; } catch (e) {} }
+    closeNow();
+  }
+
+  /* 历史已经退掉了，这一层就必须关。转场没跑完（busy）时等它，
+     不能像以前那样直接 return —— 那样会留下一个关不掉的覆盖层。 */
+  function requestClose(tries) {
+    if (!isOpen) return;
+    if (busy) {
+      if (tries > 20) return;
+      setTimeout(function () { requestClose(tries + 1); }, 120);
+      return;
+    }
+    closeNow();
+  }
+
+  window.addEventListener("popstate", function () {
+    if (!isOpen) return;
+    if (isCaseState(history.state)) return;   // 还在案例这一层
+    histOwned = false;
+    requestClose(0);
+  });
+
+  function closeNow() {
     if (!isOpen || busy) return;
     stopAuto();
 
@@ -458,6 +513,7 @@
       if (plain) el.panel.scrollTop = 0;
       revealShot();
       announce();
+      histReplace(PROJECTS[idx].slug);         // 换项目不叠历史：一次返回就出去
       busy = false;
     }, plain ? 190 : 360);
   }
@@ -616,6 +672,22 @@
   buildTicks();
   buildLogos();
   localizeDeck();
+
+  /* 直接带着 #case-xxx 进来（刷新 / 分享链接）：先把地址里的 hash 抹掉再打开。
+     open() 自己会压一条历史，于是「返回」是关掉这一层回到作品列表，
+     而不是退出网站。 */
+  function deepLink() {
+    var h = location.hash || "";
+    if (h.indexOf(HASH) !== 0) return;
+    var slug = h.slice(HASH.length), p = null;
+    for (var i = 0; i < N; i++) if (PROJECTS[i].slug === slug) { p = PROJECTS[i]; break; }
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+    if (!p) return;
+    /* 等开场动画和卡片都就位再开 —— 卡片还没渲染出来的话飞入没有起点。 */
+    setTimeout(function () { open(p, API.cardEl ? API.cardEl(slug) : null); }, 320);
+  }
+  if (document.readyState === "complete") deepLink();
+  else window.addEventListener("load", deepLink);
 
   window.JHStudy = {
     open: open,

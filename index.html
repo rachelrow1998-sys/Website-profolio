@@ -24,8 +24,14 @@
 (function(){
   var d = document.documentElement, c = " js";
   try {
+    /* ⚠️ 这三个条件必须和 stage.js 的 canStage()、以及页尾那段
+       「要不要下载 GSAP」完全一致。之前这里用的是
+       (hover:hover) and (pointer:fine)，比 stage.js 严一档 ——
+       触屏本 / 远程桌面 / headless 会报 pointer:coarse，
+       于是「舞台开了、封面却没让位」，卡片直接压在标题上。 */
+    var touchOnly = ("ontouchstart" in window) && !matchMedia("(any-hover:hover)").matches;
     if (matchMedia("(min-width:961px)").matches &&
-        matchMedia("(hover:hover) and (pointer:fine)").matches &&
+        !touchOnly &&
         !matchMedia("(prefers-reduced-motion:reduce)").matches) c += " hero-ready";
   } catch (e) {}
   d.className += c;

@@ -280,7 +280,8 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 }
 /* 桌面：ghost 挪到标题下半部偏左，像参考图那样被 Portfolio 压住一半 */
 @media (min-width:961px){
-  .hero-ready .cover__ghost{
+  .hero-ready .cover__ghost,
+  .hero-live .cover__ghost{
     left:0; top:auto; bottom:-.42em; transform:none;
     font-size:clamp(4.4rem,11vw,10rem); letter-spacing:.02em; opacity:.06;
   }
@@ -463,7 +464,13 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 .stats span{ font-size:.64rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--pencil); }
 
 /* ---------- 筛选 ---------- */
-.filters{ display:flex; flex-wrap:wrap; gap:0; margin-bottom:30px; border:1px solid var(--rule); width:fit-content; max-width:100%; }
+/* 筛选条居中：这一排是「读者要动手的地方」，居中比贴左更像一条工具栏，
+   也和下面的三栏网格对得上中轴。 */
+.filters{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:0;
+  margin:0 auto 30px; border:1px solid var(--rule);
+  width:fit-content; max-width:100%;
+}
 .filters button{
   padding:.6em 1.15em; font-size:.66rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
   color:var(--pencil); transition:all .3s var(--ease);
@@ -624,13 +631,20 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 }
 
 /* ---- 右边缘：章节标记。纯装饰，真页码在封面那一屏（.pager） ---- */
+/* 整块住在版心外面的空白里（left:100%），不是「贴着右边往里长」——
+   之前用 right:负值 定位，标签比留白宽，「SERVICES & PROCESS」两行
+   就往回压到服务表格的右边框和内容上，看着像重叠。
+   版心两侧留白不够宽时（<1380px）这块纯装饰的标记直接不显示，
+   它本来就是 aria-hidden，少了不影响任何信息。 */
 .chapter{
-  position:absolute; z-index:4; right:calc(var(--gut) * -.66); top:clamp(150px,18vw,230px);
-  display:flex; flex-direction:column; align-items:flex-end; gap:10px;
-  color:var(--pencil); pointer-events:none;
+  position:absolute; z-index:4; left:100%; top:clamp(150px,18vw,230px);
+  margin-left:clamp(14px,1.4vw,26px);
+  display:none; flex-direction:column; align-items:flex-start; gap:10px;
+  color:var(--pencil); pointer-events:none; white-space:nowrap;
 }
+@media (min-width:1380px){ .chapter{ display:flex; } }
 .chapter__n{ font-size:1.05rem; font-weight:600; letter-spacing:.2em; color:var(--ink); }
-.chapter__name{ font-size:.5rem; font-weight:600; letter-spacing:.24em; line-height:1.9; text-align:right; }
+.chapter__name{ font-size:.5rem; font-weight:600; letter-spacing:.24em; line-height:1.9; text-align:left; }
 .chapter__dots{ display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:14px; }
 .chapter__dots s{
   display:block; width:5px; height:5px; border-radius:50%;
@@ -1462,16 +1476,25 @@ html[data-lang="zh"] .focus__rail span{
 /* 舞台启用时，封面文字让到左边，把右半边腾给作品 */
 /* 用 .hero-ready（首屏前由内联脚本决定）而不是 .hero-live（JS 启动后才有），
    否则封面会重排一次，CLS 爆掉。断点收窄时这段自然失效，版式回到居中。 */
+/* .hero-live 是兜底：万一首屏那段判断和 stage.js 的判断走岔了
+   （某些设备两边的 media query 不一致），舞台开了封面却没让位，
+   卡片就会直接压在标题上。带上 .hero-live，版式至少能自己纠回来。 */
 @media (min-width:961px){
-  .hero-ready .cover{ text-align:left; width:44%; }
-  .hero-ready .cover__word{ margin-left:0; }
-  .hero-ready .cover__title{ font-size:clamp(4rem,14.3vw,13rem); }
-  .hero-ready .cover__by{ font-size:.76rem; letter-spacing:.34em; }
-  .hero-ready .sheet--cover{
+  .hero-ready .cover,
+  .hero-live .cover{ text-align:left; width:44%; }
+  .hero-ready .cover__word,
+  .hero-live .cover__word{ margin-left:0; }
+  .hero-ready .cover__title,
+  .hero-live .cover__title{ font-size:clamp(4rem,14.3vw,13rem); }
+  .hero-ready .cover__by,
+  .hero-live .cover__by{ font-size:.76rem; letter-spacing:.34em; }
+  .hero-ready .sheet--cover,
+  .hero-live .sheet--cover{
     min-height:min(97vh,1080px);
     display:flex; flex-direction:column; justify-content:flex-start;
   }
-  .hero-ready .sheet--cover .clients{ margin-top:auto; }
+  .hero-ready .sheet--cover .clients,
+  .hero-live .sheet--cover .clients{ margin-top:auto; }
 }
 
 .proj--ghost{

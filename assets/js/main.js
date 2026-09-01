@@ -229,22 +229,8 @@
     return {
       start: function () { collect(); setHeight(); requestAnimationFrame(frame); },
       refresh: function () { collect(); setHeight(); },
-      pos: function () { return current; },
-      /* 客户条左右箭头：手动推一段跑马灯 */
-      nudgeMarquee: function (dx) {
-        if (!marquee || !marqueeW) return;
-        marqueeX -= dx;
-        while (marqueeX <= -marqueeW) marqueeX += marqueeW;
-        while (marqueeX > 0) marqueeX -= marqueeW;
-      }
+      pos: function () { return current; }
     };
-  })();
-
-  /* 客户条的左右箭头 */
-  (function () {
-    var prev = $("#clients-prev"), next = $("#clients-next");
-    if (prev) prev.addEventListener("click", function () { engine.nudgeMarquee(-220); });
-    if (next) next.addEventListener("click", function () { engine.nudgeMarquee(220); });
   })();
 
   /* 站内锚点：scroller 是 fixed 的，必须自己算位置 */
@@ -328,25 +314,8 @@
   }
 
   /* ======================================================================
-     7. 自定义光标 + 磁吸
+     7. 磁吸
      ====================================================================== */
-  if (!coarse && !reduced) {
-    var cur = $("#cursor"), dot = $(".cursor__dot"), ring = $(".cursor__ring");
-    var mx = -100, my = -100, rx = -100, ry = -100;
-    window.addEventListener("mousemove", function (e) {
-      mx = e.clientX; my = e.clientY;
-      dot.style.transform = "translate(" + mx + "px," + my + "px)";
-    }, { passive: true });
-    (function loop() {
-      rx = lerp(rx, mx, 0.16); ry = lerp(ry, my, 0.16);
-      ring.style.transform = "translate(" + rx.toFixed(1) + "px," + ry.toFixed(1) + "px)";
-      requestAnimationFrame(loop);
-    })();
-    document.addEventListener("mouseover", function (e) {
-      cur.classList.toggle("is-hot", !!e.target.closest("a,button,.proj,[data-magnetic]"));
-    });
-  }
-
   function bindMagnetic(el) {
     if (coarse || reduced || el.dataset.mag) return;
     el.dataset.mag = "1";
@@ -769,7 +738,6 @@
     var yr   = $("#year");         if (yr) yr.textContent = new Date().getFullYear();
 
     setPhoto($("#hero-photo"));
-    setPhoto($("#profile-photo"));
     setPhoto($("#contact-photo"));
 
     renderMarquee();

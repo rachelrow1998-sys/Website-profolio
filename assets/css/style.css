@@ -175,17 +175,6 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23p)' opacity='.42'/%3E%3C/svg%3E");
 }
 
-/* ---------- 光标 ---------- */
-.cursor{ position:fixed; top:0; left:0; z-index:350; pointer-events:none; }
-.cursor__dot,.cursor__ring{ position:absolute; border-radius:50%; transform:translate(-50%,-50%); }
-.cursor__dot{ width:4px; height:4px; background:var(--ink); }
-.cursor__ring{
-  width:26px; height:26px; border:1px solid var(--ink); opacity:.4;
-  transition:width .35s var(--ease), height .35s var(--ease), opacity .3s;
-}
-.cursor.is-hot .cursor__ring{ width:52px; height:52px; opacity:.85; }
-@media (hover:none),(pointer:coarse){ .cursor{ display:none; } }
-
 /* ---------- 顶栏 / 底栏 ---------- */
 .rail{
   display:flex; align-items:center; gap:18px;
@@ -358,31 +347,6 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
   font-size:.6rem; font-weight:600; letter-spacing:.28em; text-transform:uppercase; color:var(--pencil);
 }
 
-/* ---- 圆盘 + 向下滚动 ---- */
-.cover__dial{ margin-top:clamp(34px,4.6vw,64px); }
-.cover__disc{
-  position:relative; display:block; width:clamp(56px,5vw,74px); height:clamp(56px,5vw,74px);
-  border:1px solid var(--rule); border-radius:50%;
-}
-.cover__disc i{
-  position:absolute; left:50%; top:16%; width:7px; height:7px; margin-left:-3.5px;
-  background:var(--ink); border-radius:50%;
-  animation:discdrop 2.8s var(--ease) infinite;
-}
-@keyframes discdrop{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(9px); } }
-.cover__down{
-  display:flex; align-items:center; gap:12px; margin-top:clamp(18px,2.4vw,34px);
-  font-size:.66rem; font-weight:600; letter-spacing:.16em; color:var(--pencil);
-}
-.cover__downline{
-  position:relative; display:block; width:1px; height:34px; background:var(--ink); flex:none;
-}
-.cover__downline::after{
-  content:""; position:absolute; left:-3px; bottom:0;
-  width:7px; height:7px; border-bottom:1px solid var(--ink); border-left:1px solid var(--ink);
-  transform:rotate(-45deg);
-}
-
 /* ---- 左边缘：刻度 + 001 ---- */
 .edge{ position:absolute; z-index:4; pointer-events:none; color:var(--pencil); }
 .edge--l{
@@ -416,7 +380,7 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 
 /* ---------- 底部客户条 ---------- */
 .clients{
-  display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center;
+  display:grid; grid-template-columns:auto minmax(0,1fr); align-items:center;
   margin-top:clamp(46px,6vw,84px); border-top:1px solid var(--rule);
   /* Hero 舞台的作品卡（.hero-stage，z-index:3）会飘到这条客户条上面来，
      压住 logo。这里抬到卡片上面并铺一层纸底，卡片就从后面走过去，
@@ -430,19 +394,6 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
   line-height:1.7; color:var(--ink-2); white-space:nowrap;
 }
 .clients__label span{ display:block; }
-.clients__nav{
-  display:flex; gap:8px; padding-left:clamp(14px,2vw,26px);
-  border-left:1px solid var(--rule);
-}
-.clients__btn{
-  width:30px; height:30px; display:grid; place-items:center;
-  padding:0; border:1px solid var(--rule); border-radius:50%;
-  background:transparent; color:var(--ink-2); cursor:pointer;
-  transition:border-color .3s var(--ease), color .3s var(--ease), background .3s var(--ease);
-}
-.clients__btn svg{ width:14px; height:14px; }
-.clients__btn:hover{ border-color:var(--ink); color:var(--ink); background:rgba(20,18,15,.04); }
-
 .marquee{
   padding:15px clamp(16px,2.4vw,34px); overflow:hidden;
   -webkit-mask-image:linear-gradient(90deg,#000 0,#000 88%,transparent);
@@ -595,16 +546,7 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 .empty{ padding:34px 0; color:var(--pencil); }
 
 /* ---------- 关于 ---------- */
-.about{ display:grid; grid-template-columns:.72fr 1.28fr; gap:clamp(28px,4.4vw,64px); align-items:start; }
-.about__photo{ margin:0; }
-.about__photo img{
-  width:100%; aspect-ratio:4/5; object-fit:cover; object-position:top center;
-  padding:9px; background:var(--mat); border:1px solid var(--rule);
-  box-shadow:0 1px 2px rgba(20,18,15,.06), 0 14px 28px -18px rgba(20,18,15,.35);
-}
-.about__photo figcaption{
-  margin-top:12px; font-size:.64rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--pencil);
-}
+.about{ display:grid; grid-template-columns:minmax(0,1fr); align-items:start; }
 .about__text{ display:flex; flex-direction:column; gap:18px; }
 .strip{ padding-top:20px; border-top:1px solid var(--rule); }
 .cols{ display:grid; grid-template-columns:1fr 1fr; gap:28px; padding-top:20px; border-top:1px solid var(--rule); }
@@ -1222,7 +1164,6 @@ html[data-lang="zh"] .focus__rail span{
 
 /* ---------- 响应式 ---------- */
 @media (max-width:960px){
-  .about{ grid-template-columns:1fr; }
   .end{ grid-template-columns:1fr; }
   .cards{ grid-template-columns:1fr; }
   .card + .card{ border-left:0; padding-left:0; }
@@ -1251,7 +1192,6 @@ html[data-lang="zh"] .focus__rail span{
   .cover__desc{ margin-left:auto; margin-right:auto; }
   .clients{ grid-template-columns:1fr; }
   .clients__label{ border-right:0; border-bottom:1px solid var(--rule); padding:12px 0; text-align:center; }
-  .clients__nav{ display:none; }
   .end__cta{ flex-direction:column; align-items:stretch; width:100%; }
   .btn--lg{ width:100%; }
   .reg{ display:none; }
@@ -1260,8 +1200,6 @@ html[data-lang="zh"] .focus__rail span{
   .edge,.pager{ display:none; }
   .cover__seal{ display:none; }
   .cover__lead{ text-align:center; }
-  .cover__dial{ display:flex; flex-direction:column; align-items:center; }
-  .cover__dial .cover__down{ margin-top:16px; }
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -1295,7 +1233,6 @@ html[data-lang="zh"] .focus__rail span{
 @media (min-width:961px){
   .hero-ready .cover{ text-align:left; width:44%; }
   .hero-ready .cover__word{ margin-left:0; }
-  .hero-ready .cover__dial{ margin-left:2px; }
   .hero-ready .cover__title{ font-size:clamp(4rem,14.3vw,13rem); }
   .hero-ready .cover__by{ font-size:.76rem; letter-spacing:.34em; }
   .hero-ready .sheet--cover{
@@ -1396,7 +1333,6 @@ html[data-lang="zh"] .focus__rail span{
 @media (prefers-reduced-motion:reduce){
   .hero-stage{ display:none !important; }
   .hero-mob__card{ opacity:1 !important; transform:none !important; }
-  .cover__disc i{ animation:none; }
   .cover__seal > text{ animation:none; }
   .grid .proj{ animation:none; }
 }

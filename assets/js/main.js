@@ -229,8 +229,22 @@
     return {
       start: function () { collect(); setHeight(); requestAnimationFrame(frame); },
       refresh: function () { collect(); setHeight(); },
-      pos: function () { return current; }
+      pos: function () { return current; },
+      /* 客户条左右箭头：手动推一段跑马灯 */
+      nudgeMarquee: function (dx) {
+        if (!marquee || !marqueeW) return;
+        marqueeX -= dx;
+        while (marqueeX <= -marqueeW) marqueeX += marqueeW;
+        while (marqueeX > 0) marqueeX -= marqueeW;
+      }
     };
+  })();
+
+  /* 客户条的左右箭头 */
+  (function () {
+    var prev = $("#clients-prev"), next = $("#clients-next");
+    if (prev) prev.addEventListener("click", function () { engine.nudgeMarquee(-220); });
+    if (next) next.addEventListener("click", function () { engine.nudgeMarquee(220); });
   })();
 
   /* 站内锚点：scroller 是 fixed 的，必须自己算位置 */
@@ -397,6 +411,7 @@
       var el = document.createElement("article");
       el.className = "proj";
       el.dataset.slug = p.slug;
+      el.dataset.client = p.client || p.name;   /* 客户短名，Hero 卡片小标签用 */
       el.dataset.cat = p.category;
       /* ⚠️ 不能叫 data-reveal —— 站点的滚动入场系统已经占用了 [data-reveal]
          这个选择器（.js [data-reveal]{opacity:0}）。用它会让 10 张作品卡
@@ -553,7 +568,9 @@
 
   function renderMarquee() {
     var box = $("#marquee"); if (!box) return;
-    var names = PROJECTS.map(function (p) { return "<span>" + esc(p.name) + "</span>"; }).join("");
+    var names = PROJECTS.map(function (p) {
+      return "<span>" + esc(p.client || p.name) + "</span>";
+    }).join("");
     box.innerHTML = names + names;
   }
 
@@ -606,6 +623,10 @@
     var active = null;
     $$("a", tabs).forEach(function (a) {
       if (a.getAttribute("href") === "#" + best) active = a;
+    });
+    /* 右边缘页码先更新：#home 没有对应标签，但页码上有 01 HOME */
+    $$("#pager a").forEach(function (a) {
+      a.classList.toggle("is-active", a.getAttribute("href") === "#" + best);
     });
     if (!active) return;
     lastSection = best;

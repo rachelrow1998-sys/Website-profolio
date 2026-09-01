@@ -138,8 +138,11 @@
   <nav class="tabs" id="tabs" aria-label="Main">
     <span class="tabs__glide" id="tabs-glide" aria-hidden="true"></span>
     <a href="#about"    data-i18n="hud.profile">档案</a>
+    <i class="tabs__sep" aria-hidden="true">/</i>
     <a href="#work"     data-i18n="hud.project">作品</a>
+    <i class="tabs__sep" aria-hidden="true">/</i>
     <a href="#services" data-i18n="hud.services">服务</a>
+    <i class="tabs__sep" aria-hidden="true">/</i>
     <a href="#contact"  data-i18n="hud.contact">联系</a>
   </nav>
 
@@ -167,11 +170,25 @@
     <span class="reg reg--tl" aria-hidden="true"></span><span class="reg reg--tr" aria-hidden="true"></span>
     <span class="reg reg--bl" aria-hidden="true"></span><span class="reg reg--br" aria-hidden="true"></span>
 
+    <!-- 左边缘：刻度 + 页码 001（参考图左侧竖排标记） -->
+    <span class="edge edge--l" aria-hidden="true">
+      <i class="edge__ticks"></i>
+      <b class="edge__no">001</b>
+    </span>
+
+    <!-- 右边缘：章节页码 01 HOME / 02 / 03 / 04 -->
+    <nav class="pager" id="pager" aria-label="Sections">
+      <a href="#home" class="is-active"><b>01</b><span>HOME</span></a>
+      <a href="#work"><b>02</b><span data-i18n="hud.project">作品</span></a>
+      <a href="#services"><b>03</b><span data-i18n="hud.services">服务</span></a>
+      <a href="#contact"><b>04</b><span data-i18n="hud.contact">联系</span></a>
+    </nav>
+
     <div class="cover">
       <p class="cover__by" data-reveal><span id="cover-name">WEB DESIGN &amp; DEVELOPMENT</span><i>'s</i></p>
 
       <div class="cover__word">
-        <span class="cover__ghost" aria-hidden="true">Portfolio</span>
+        <span class="cover__ghost" aria-hidden="true">DESIGN</span>
         <h1 class="serif cover__title" data-split>Portfolio</h1>
         <svg class="cover__stroke" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
           <defs>
@@ -180,20 +197,36 @@
           </defs>
           <path d="M14 34 C 180 20, 300 42, 470 30 S 800 18, 986 32 L 984 46 C 780 36, 560 52, 380 44 S 120 50, 16 46 Z" filter="url(#rough)"/>
         </svg>
+
+        <!-- 右上角的圆形字标：WEB DESIGN · UI/UX · BRANDING -->
+        <svg class="cover__seal" viewBox="0 0 160 160" aria-hidden="true">
+          <defs><path id="sealring" d="M80,80 m-58,0 a58,58 0 1,1 116,0 a58,58 0 1,1 -116,0"/></defs>
+          <text class="cover__sealtext"><textPath href="#sealring" startOffset="0%">WEB DESIGN &#183; UI/UX &#183; BRANDING &#183; </textPath></text>
+          <g class="cover__sealmark">
+            <circle cx="80" cy="80" r="15" fill="none" stroke="currentColor" stroke-width="1"/>
+            <path d="M80 60 V100 M60 80 H100" stroke="currentColor" stroke-width="1"/>
+            <path d="M80 68 l5 12 -5 12 -5 -12 Z" fill="currentColor"/>
+          </g>
+        </svg>
       </div>
 
-      <p class="cover__meta" data-reveal>
-        <span data-i18n="cover.years">2023 — 2026</span>
-        <i aria-hidden="true"></i>
-        <span data-i18n="cover.selected">精选作品</span>
+      <h2 class="cover__lead" data-reveal>
+        <span data-i18n="cover.lead1">真实上线的网站</span>
+        <span data-i18n="cover.lead2">真实客户的信任</span>
+      </h2>
+
+      <p class="cover__desc" data-reveal>
+        <span data-i18n="cover.desc1">我们专注高端网站设计与开发，</span>
+        <span data-i18n="cover.desc2">为品牌打造卓越的数字体验与增长引擎。</span>
       </p>
 
-      <ul class="cover__menu">
-        <li data-reveal><a href="#work"     data-magnetic><em>01</em><span data-i18n="menu.start">作品</span></a></li>
-        <li data-reveal><a href="#about"    data-magnetic><em>02</em><span data-i18n="menu.profile">关于</span></a></li>
-        <li data-reveal><a href="#services" data-magnetic><em>03</em><span data-i18n="menu.services">服务</span></a></li>
-        <li data-reveal><a href="#contact"  data-magnetic><em>04</em><span data-i18n="menu.contact">联系</span></a></li>
-      </ul>
+      <p class="cover__act" data-reveal>
+        <a class="cover__explore" href="#work" data-magnetic>
+          <span data-i18n="cover.explore">探索作品</span>
+          <i class="cover__arrow" aria-hidden="true"></i>
+        </a>
+        <span class="cover__hint" data-i18n="cover.scrollhint">SCROLL TO EXPLORE</span>
+      </p>
 
       <!-- 手机版 Hero：3–4 个精选作品的错位 stack。桌面不显示。
            这是装饰性预览，真正的作品列表在 #work，所以对读屏软件隐藏。 -->
@@ -222,20 +255,40 @@
         <!-- HEROMOB:END -->
       </div>
 
-      <p class="cover__cue" data-reveal><span data-i18n="cue.scroll">向下滚动</span><i aria-hidden="true"></i></p>
+      <div class="cover__dial" data-reveal>
+        <span class="cover__disc" aria-hidden="true"><i></i></span>
+        <span class="cover__down">
+          <i class="cover__downline" aria-hidden="true"></i>
+          <span data-i18n="cue.scroll">向下滚动</span>
+        </span>
+      </div>
     </div>
 
     <!-- 桌面版 Hero 舞台：10 张真实作品卡飞进来的地方。
          卡片本体住在 #work-grid（语义位置），JS 只是把它们暂时搬过来。 -->
     <div class="hero-stage" id="hero-stage" aria-hidden="true"></div>
 
-    <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee"></div></div>
+    <div class="clients">
+      <p class="clients__label">
+        <span data-i18n="clients.trusted">TRUSTED BY</span>
+        <span data-i18n="clients.great">GREAT CLIENTS</span>
+      </p>
+      <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee"></div></div>
+      <div class="clients__nav">
+        <button type="button" class="clients__btn" id="clients-prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="clients__btn" id="clients-next" aria-label="Next">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
   </section>
 
   <!-- ===== 作品 ===== -->
   <section class="sheet" id="work">
     <header class="head">
-      <p class="kicker" data-reveal><span data-i18n="work.eyebrow">作品集</span></p>
+      <p class="kicker" data-reveal><b class="kicker__n">02</b><span data-i18n="work.eyebrow">作品集</span></p>
       <h2 class="serif h-lg" data-split><span data-i18n="work.recap">精选作品</span></h2>
       <p class="lede" data-reveal data-i18n="work.sub"></p>
     </header>
@@ -297,7 +350,7 @@
   <!-- ===== 服务 ===== -->
   <section class="sheet" id="services">
     <header class="head">
-      <p class="kicker" data-reveal><span data-i18n="services.eyebrow">服务</span></p>
+      <p class="kicker" data-reveal><b class="kicker__n">03</b><span data-i18n="services.eyebrow">服务</span></p>
       <h2 class="serif h-lg" data-split><span data-i18n="services.title">我可以帮你做什么</span></h2>
       <p class="lede" data-reveal data-i18n="services.sub"></p>
     </header>
@@ -331,7 +384,7 @@
       </div>
 
       <div class="end__right">
-        <p class="kicker" data-reveal><span data-i18n="contact.eyebrow">联系我</span></p>
+        <p class="kicker" data-reveal><b class="kicker__n">04</b><span data-i18n="contact.eyebrow">联系我</span></p>
         <h2 class="serif h-xl" data-split><span data-i18n="contact.thankyou">谢谢观看</span></h2>
         <p class="end__year" data-reveal>2026</p>
         <p class="lede" data-reveal data-i18n="contact.sub"></p>
@@ -513,8 +566,9 @@
 
 <!-- GSAP 自托管，只有 core + Flip（没有 ScrollTrigger，Phase 1–2 用不到）。
      ⚠️ 按条件加载：手机 / 触屏 / 开了「减少动效」的设备，Flip 一次都不会被调用
-     （舞台不启用、筛选也走普通过渡），所以那 96KB 干脆不下载。
-     stage.js 始终加载 —— 它负责手机版 Hero 的入场，而且自己会检测库在不在。 -->
+     （筛选走普通过渡，Focus Mode 也降级），所以那 96KB 干脆不下载。
+     封面舞台本身不依赖它：卡片是纯 CSS transition 贴上去的，
+     库没到、甚至 404，封面照样是完整的。 -->
 <script>
 (function () {
   var need = false;
@@ -532,9 +586,8 @@
            !matchMedia("(prefers-reduced-motion:reduce)").matches;
   } catch (e) {}
   if (!need) return;
-  /* 告诉 stage.js「库正在路上」，让它等一下再判断。
-     不然 defer 的 stage.js 可能比动态注入的脚本先执行，
-     一看 window.gsap 是 undefined 就直接降级了。 */
+  /* 库到位后广播一次。现在没有模块在等它开工（封面不依赖 GSAP），
+     留着是给筛选和 Focus Mode 做诊断用的。 */
   window.__jhGsapPending = true;
   var left = 2;
   ["assets/vendor/gsap.min.js", "assets/vendor/Flip.min.js"].forEach(function (src) {

@@ -26,13 +26,19 @@ html = html.replace(/url\('\.\.\/fonts\/([^']+)'\)/g, (_, f) =>
 html = html.replace(/<link rel="preload"[^>]*>\n?/g, () => "");
 
 /* 2. 图片内联：优先真实截图，其次占位图 */
+/* ⚠️ 名单要从 data.js 的作品列表来，不能只扫 assets/img/placeholder/。
+   占位图是「还没截图时」才生成的，一个作品完全可以有真实截图却没有占位图
+   （Furfoo POS 就是这样）—— 按文件夹扫就会漏掉它，EMBEDDED 里没有这个
+   slug，shotSrc() 返回空字符串，单文件版本上那张卡就是一个破图。 */
+const SLUGS = readFileSync(resolve(root, "assets/js/data.js"), "utf8")
+  .match(/^\s*slug:\s*"([^"]+)"/gm).map((m) => m.replace(/^\s*slug:\s*"|"$/g, ""));
 const imgs = {};
-for (const f of readdirSync(resolve(root, "assets/img/placeholder"))) {
-  const slug = f.replace(/\.svg$/, "");
+for (const slug of new Set([...SLUGS, ...readdirSync(resolve(root, "assets/img/placeholder")).map((f) => f.replace(/\.svg$/, ""))])) {
   const jpg = `assets/screenshots/${slug}.jpg`;
-  imgs[slug] = existsSync(resolve(root, jpg))
-    ? dataUri(jpg, "image/jpeg")
-    : dataUri(`assets/img/placeholder/${f}`, "image/svg+xml");
+  const svg = `assets/img/placeholder/${slug}.svg`;
+  if (existsSync(resolve(root, jpg)))      imgs[slug] = dataUri(jpg, "image/jpeg");
+  else if (existsSync(resolve(root, svg))) imgs[slug] = dataUri(svg, "image/svg+xml");
+  else console.warn(`⚠️ ${slug}：既没有截图也没有占位图，卡片会是空的（跑 npm run placeholders）`);
 }
 /* ⚠️ 所有替换都用「函数」形式，不要用字符串。
    字符串替换里 $$ 是转义符号，会把 main.js 里的 $$(...) 选择器
@@ -42,9 +48,10 @@ html = html
   .replace(/function fallbackSrc\(p\) \{[^}]*\}/, () => 'function fallbackSrc(p) { return EMBEDDED[p.slug] || ""; }')
   .replace(/var \$ {2}= function/, () => "var EMBEDDED = " + JSON.stringify(imgs) + ";\n  var $  = function");
 
-/* 2b. 手机版 Hero 那几张 <img src="assets/img/placeholder/..."> 是静态写在 HTML 里的，
-       上面那段只改了 JS 里的路径，这里要单独换成 data URI。 */
-html = html.replace(/src="assets\/img\/placeholder\/([^"]+)\.svg"/g,
+/* 2b. 手机版 Hero 那几张 <img> 是 npm run sync 静态写进 HTML 的，上面那段只改了
+       JS 里的路径，这里要单独换成 data URI。截图和占位图两种路径都要换 ——
+       有真实截图的作品，sync 写进去的是 assets/screenshots/xxx.jpg。 */
+html = html.replace(/src="assets\/(?:img\/placeholder|screenshots)\/([^"]+)\.(?:svg|jpg)"/g,
   (_, slug) => `src="${imgs[slug] || ""}"`);
 
 /* 2c. GSAP 是运行时按条件注入的，单文件里那两个相对路径同样取不到。

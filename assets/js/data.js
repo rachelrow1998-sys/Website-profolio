@@ -40,6 +40,8 @@ const SITE = {
    ----------------------------------------------------------------------------
    slug     : 截图文件名（assets/screenshots/<slug>.jpg），也用作占位图名字
    name     : 客户 / 项目名称
+   client   : （可选）客户短名。封面卡片小标签和底部客户条用这个，
+              不写就退回 name。名字太长会把小标签撑爆，才需要填。
    url      : 真实网站链接
    category : 分类，必须是下面其中一个：
               corporate | industrial | ecommerce | education | lifestyle | system
@@ -131,6 +133,7 @@ const PROJECTS = [
   {
     slug: "exa-energy",
     name: "EXA Energy Sdn. Bhd.",
+    client: "EXA Energy",
     url: "https://www.exaenergy.asia/",
     category: "industrial",
     reveal: "strips",
@@ -172,6 +175,7 @@ const PROJECTS = [
   {
     slug: "pnc-lifecare",
     name: "Pure & Cure LifeCareLab",
+    client: "PNC Lifecare",
     url: "https://pnclifecare.com",
     category: "lifestyle",
     reveal: "soft",

@@ -349,15 +349,17 @@
   var engine = (function () {
     var current = 0, target = 0, velocity = 0, navTick = 0;
     var reveals = [], parallax = [];
-    var marquee = null, marqueeX = 0, marqueeW = 0;
+    var marquees = [];
 
     function collect() {
       reveals = $$("[data-reveal], [data-split], .bars li, .stats li").filter(function (el) {
         return !el.classList.contains("is-in");
       });
       parallax = $$("[data-parallax]");
-      marquee = $("#marquee");
-      if (marquee) marqueeW = marquee.scrollWidth / 2;
+      /* 跑马灯不止一条（封面 + 服务屏），逐条量自己的宽度。 */
+      marquees = $$("[data-marquee]").map(function (el) {
+        return { el: el, w: el.scrollWidth / 2, x: 0 };
+      });
     }
 
     function setHeight() {
@@ -401,11 +403,15 @@
       });
 
       /* 跑马灯：基础速度 + 滚动速度加成 */
-      if (marquee && marqueeW) {
-        marqueeX -= 0.5 + Math.abs(velocity) * 0.05;
-        if (marqueeX <= -marqueeW) marqueeX += marqueeW;
-        marquee.style.transform = "translate3d(" + marqueeX.toFixed(2) + "px,0,0)";
-      }
+      var step = 0.5 + Math.abs(velocity) * 0.05;
+      marquees.forEach(function (m) {
+        if (!m.w) return;
+        /* 每条自己记位移：两条内容宽度不一样，共用一个数字会各自跳一次。
+           走满一份就加回来，数字永远在 [-w, 0] 之间，跑再久也不会掉精度。 */
+        m.x -= step;
+        if (m.x <= -m.w) m.x += m.w;
+        m.el.style.transform = "translate3d(" + m.x.toFixed(2) + "px,0,0)";
+      });
 
       if ((++navTick & 3) === 0 && window.__syncNav) window.__syncNav();
 
@@ -658,19 +664,80 @@
 
   function renderProjects() { buildProjects(); localizeProjects(); applyFilter(); }
 
+  /* 服务与流程那一屏的图标。线稿、24 格、只用 currentColor ——
+     这一版的服务表是「表格 + 图标」，图标要和细线同一支笔，
+     所以统一 1.4 的线宽、不填色，粗细和 .cards 的分隔线看起来是一套。 */
+  var SVC_ICONS = [
+    /* 01 企业官网：显示器 */
+    '<rect x="3" y="5" width="18" height="12" rx="1.4"/><path d="M9.5 21h5M12 17v4"/>',
+    /* 02 落地页：一张长页 */
+    '<rect x="5" y="3" width="14" height="18" rx="1.4"/><path d="M8.5 7.5h7M8.5 11h7M8.5 14.5h4"/>',
+    /* 03 电商：购物车 */
+    '<path d="M3 4h2.2l2.1 10.2h9.6L19 7.2H6.1"/><circle cx="9.5" cy="18.6" r="1.4"/><circle cx="16.5" cy="18.6" r="1.4"/>',
+    /* 04 询盘表单：带勾的表单 */
+    '<rect x="4" y="3.5" width="16" height="17" rx="1.4"/><path d="M7.5 8.5h6M7.5 12h6M7.5 15.5h3.5"/>',
+    /* 05 速度与 SEO：仪表盘 */
+    '<path d="M3.6 17a9 9 0 1 1 16.8 0"/><path d="M12 16.4 16 10"/><circle cx="12" cy="17" r="1.3"/>',
+    /* 06 维护更新：循环 */
+    '<path d="M20 12a8 8 0 0 1-13.7 5.6M4 12a8 8 0 0 1 13.7-5.6"/><path d="M17.4 2.8v3.7h-3.7M6.6 21.2v-3.7h3.7"/>'
+  ];
+
+  var STEP_ICONS = [
+    /* 01 咨询：对话气泡 */
+    '<path d="M4 5.5h16v11H12l-5 4v-4H4z"/><path d="M8.5 11h7"/>',
+    /* 02 设计：笔 */
+    '<path d="M4.5 19.5 8 18.6 18.6 8a2.05 2.05 0 0 0-2.9-2.9L5.1 15.7z"/><path d="m14.4 6.6 2.9 2.9"/>',
+    /* 03 开发：尖括号 */
+    '<path d="m9 8-4 4 4 4M15 8l4 4-4 4"/>',
+    /* 04 上线：纸飞机 */
+    '<path d="M21 3 3 10.5l7 3 3 7z"/><path d="m10 13.5 4.5-4.5"/>'
+  ];
+
+  function icon(d) {
+    return '<svg class="ico-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+           'stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>";
+  }
+
   function renderServices() {
     var box = $("#cards"); if (!box) return;
+    /* 装饰用的虚线连接层写在 HTML 里，不能被这次重绘冲掉
+       （切语言会重跑一次，innerHTML=""" 会把它一起删掉）。 */
+    var flow = box.querySelector(".flow");
     box.innerHTML = "";
+    if (flow) box.appendChild(flow);
+
     for (var i = 1; i <= 6; i++) {
-      var li = document.createElement("article");
-      li.className = "card";
-      li.setAttribute("data-reveal", "");
-      li.innerHTML =
+      var el = document.createElement("article");
+      el.className = "card";
+      el.setAttribute("data-reveal", "");
+      el.innerHTML =
         '<span class="card__n">' + (i < 10 ? "0" + i : i) + "</span>" +
+        '<span class="card__ico">' + icon(SVC_ICONS[i - 1]) + "</span>" +
         "<h3>" + esc(t("services." + i + ".t")) + "</h3>" +
-        "<p>" + esc(t("services." + i + ".d")) + "</p>";
-      box.appendChild(li);
+        "<p>" + esc(t("services." + i + ".d")) + "</p>" +
+        '<a class="card__more" href="#contact">' + esc(t("svc.more")) +
+          '<i class="cover__arrow" aria-hidden="true"></i></a>';
+      box.appendChild(el);
     }
+  }
+
+  function renderProcess() {
+    var box = $("#steps"); if (!box) return;
+    var out = "";
+    for (var i = 1; i <= 4; i++) {
+      out +=
+        "<li data-reveal>" +
+          '<span class="steps__top">' +
+            '<b class="steps__n">' + ("0" + i) + "</b>" +
+            '<span class="steps__label">STEP</span>' +
+            '<span class="steps__ico">' + icon(STEP_ICONS[i - 1]) + "</span>" +
+          "</span>" +
+          "<h3>" + esc(t("process." + i + ".t")) + "</h3>" +
+          "<p>" + esc(t("process." + i + ".d")) + "</p>" +
+          '<span class="steps__days">' + esc(t("process." + i + ".days")) + "</span>" +
+        "</li>";
+    }
+    box.innerHTML = out;
   }
 
   function renderProfile() {
@@ -725,7 +792,7 @@
   }
 
   function renderMarquee() {
-    var box = $("#marquee"); if (!box) return;
+    var boxes = $$("[data-marquee]"); if (!boxes.length) return;
     /* 跑马灯走的是 logo：一个小标记 + 客户自己的字标，颜色用客户的品牌色。
        logo 定义在 data.js 的 CLIENT_LOGOS 里；没登记的客户退回纯文字，
        所以新加一个项目时忘了画标记也不会开天窗。 */
@@ -753,7 +820,8 @@
                '<b class="marquee__word">' + (logo.word || esc(name)) + "</b>" +
              "</span>";
     }).join("");
-    box.innerHTML = items + items;
+    /* 一份内容铺两遍，走完前一份正好接上后一份，看起来是无缝的。 */
+    boxes.forEach(function (box) { box.innerHTML = items + items; });
   }
 
   /* ======================================================================
@@ -865,6 +933,7 @@
     renderFilters();
     renderProjects();
     renderServices();
+    renderProcess();
     renderProfile();
     renderLinks();
     refreshWa();

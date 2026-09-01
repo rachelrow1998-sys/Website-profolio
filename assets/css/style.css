@@ -607,29 +607,235 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 }
 .bars li.is-in i::after{ transform:scaleX(1); }
 
-/* ---------- 服务 ---------- */
-.cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(272px,1fr)); gap:0; border-top:1px solid var(--rule); }
+/* ==========================================================================
+   服务与流程（#services）
+   一屏说完「我做什么」和「怎么做」：左边标题，右边六格服务表，
+   下面四步流程，最后压一条客户带。
+   细线是这一屏的骨架 —— 表格线、圆圈、虚线连线全部同一支笔（--rule），
+   改颜色前先想清楚：这一屏没有色块，全靠线的疏密撑起层次。
+   ========================================================================== */
+.sheet--svc{ padding-bottom:0; }
+
+/* ---- 左边缘：竖排章节名 ---- */
+.edge--svc{ top:clamp(96px,12vw,168px); }
+.edge__vert{
+  writing-mode:vertical-rl; text-orientation:mixed; font-style:normal;
+  font-size:.55rem; font-weight:600; letter-spacing:.3em; text-transform:uppercase;
+}
+
+/* ---- 右边缘：章节标记。纯装饰，真页码在封面那一屏（.pager） ---- */
+.chapter{
+  position:absolute; z-index:4; right:calc(var(--gut) * -.66); top:clamp(150px,18vw,230px);
+  display:flex; flex-direction:column; align-items:flex-end; gap:10px;
+  color:var(--pencil); pointer-events:none;
+}
+.chapter__n{ font-size:1.05rem; font-weight:600; letter-spacing:.2em; color:var(--ink); }
+.chapter__name{ font-size:.5rem; font-weight:600; letter-spacing:.24em; line-height:1.9; text-align:right; }
+.chapter__dots{ display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:14px; }
+.chapter__dots s{
+  display:block; width:5px; height:5px; border-radius:50%;
+  border:1px solid var(--rule); text-decoration:none;
+}
+.chapter__dots s:nth-child(-n+2){ background:var(--pencil); border-color:var(--pencil); }
+
+/* ---- 版面：左标题 / 右服务表 ---- */
+.svc{
+  display:grid; grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  gap:clamp(30px,4.4vw,70px); align-items:start;
+}
+
+.svc__intro{ position:relative; }
+.svc__kicker{ margin-bottom:clamp(14px,1.8vw,24px); }
+.svc__word{ position:relative; width:fit-content; max-width:100%; }
+.svc__title{ font-size:clamp(2.6rem,6.6vw,5.4rem); line-height:.92; letter-spacing:-.03em; }
+.svc__line{ display:block; }
+/* 拆字之后每行会被加上 .split（inline-block），要按住它继续各占一行 */
+.js .svc__title .split{ display:block; }
+.svc__stroke{
+  /* 宽度写死不写百分比：父层是 fit-content，百分比会让它按 SVG 的
+     固有宽度（viewBox 1000）去撑，整个标题块会宽出一大截。 */
+  display:block; width:min(320px,100%); height:clamp(16px,2.4vw,32px); margin-top:-.16em;
+  fill:var(--ink); opacity:.9;
+  transform:scaleX(0); transform-origin:left center;
+  transition:transform 1.1s var(--ease2) .2s;
+}
+/* 标题的字一开始入场，墨迹就跟着扫出来（和封面同一个节奏）。
+   :has 不支持的老浏览器直接把墨迹画完，不让它开天窗。 */
+.svc__word:has(.is-in) .svc__stroke{ transform:scaleX(1); }
+@supports not selector(:has(*)){ .svc__stroke{ transform:scaleX(1); } }
+/* 圆形字标：和封面同一个组件，只是换个位置和内容 */
+/* 印章挂在左栏的右上角，不能挂在标题块上 ——
+   标题块是 fit-content，中英文宽度差很多，印章会跟着乱跑，甚至压到右边的服务表。 */
+.svc__seal{
+  position:absolute; top:clamp(24px,4.4vw,64px); right:0; z-index:2;
+  width:clamp(72px,7.6vw,112px); height:clamp(72px,7.6vw,112px);
+  color:var(--ink-2); opacity:.8; pointer-events:none;
+}
+.svc__seal > text{ animation:sealspin 26s linear infinite; transform-origin:80px 80px; }
+
+.svc__lead{
+  margin:clamp(24px,3vw,40px) 0 0;
+  font-family:var(--sans); font-weight:700;
+  font-size:clamp(1.05rem,1.75vw,1.5rem); line-height:1.7; letter-spacing:.01em; color:var(--ink);
+}
+.svc__lead span{ display:block; }
+.svc__desc{
+  margin:clamp(12px,1.6vw,20px) 0 0; max-width:34em;
+  font-size:.88rem; line-height:1.95; color:var(--ink-2);
+}
+.svc__act{
+  display:flex; align-items:center; gap:clamp(18px,3vw,46px);
+  margin:clamp(22px,3vw,40px) 0 0; flex-wrap:wrap;
+}
+.svc__explore{
+  display:inline-flex; align-items:center; gap:14px;
+  font-size:.8rem; font-weight:600; letter-spacing:.06em; color:var(--ink);
+}
+.svc__explore:hover .cover__arrow{ width:clamp(62px,7.4vw,104px); }
+
+/* ---- 小节条：OUR SERVICES —— 查看全部服务 ---- */
+.svc__bar{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; padding-bottom:clamp(10px,1.2vw,16px);
+}
+.svc__barlabel{
+  font-size:.6rem; font-weight:600; letter-spacing:.28em; text-transform:uppercase; color:var(--pencil);
+}
+.svc__tag{ font-size:.72rem; letter-spacing:.04em; color:var(--ink-2); }
+.svc__all{
+  display:inline-flex; align-items:center; gap:12px;
+  font-size:.72rem; font-weight:600; color:var(--ink-2); white-space:nowrap;
+}
+.svc__all .cover__arrow{ width:clamp(28px,3vw,44px); background:var(--ink-2); }
+.svc__all .cover__arrow::after{ border-color:var(--ink-2); }
+.svc__all:hover{ color:var(--ink); }
+.svc__all:hover .cover__arrow{ width:clamp(38px,4vw,58px); }
+
+/* ---- 六格服务表 ----------------------------------------------------------
+   格线用 1px 的 gap 露出底色做的，不是逐格写 border ——
+   这样列数变成 2 或 1 的时候，线自己会跟着重排，不用再补 nth-child。
+   -------------------------------------------------------------------------- */
+.cards{
+  position:relative;
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1px; background:var(--rule); border:1px solid var(--rule);
+}
 .card{
-  position:relative; padding:26px 26px 30px 0;
-  border-bottom:1px solid var(--rule);
-  transition:padding-left .4s var(--ease);
+  /* 竖着排、「了解更多」用 margin-top:auto 顶到底 ——
+     六段文案长短不一，不这样六个箭头会各在各的高度，一眼就散了。 */
+  display:flex; flex-direction:column; align-items:flex-start;
+  position:relative; z-index:1; background:var(--paper);
+  padding:clamp(16px,1.8vw,24px) clamp(14px,1.5vw,22px) clamp(18px,2vw,26px);
+  transition:background .4s var(--ease);
 }
-.card + .card{ border-left:1px solid var(--rule); padding-left:26px; }
-.card::before{
-  content:""; position:absolute; top:-1px; left:0; width:100%; height:1px; background:var(--ink);
-  transform:scaleX(0); transform-origin:left; transition:transform .55s var(--ease2);
+.card:hover{ background:var(--mat); }
+.card__n{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:clamp(32px,3.2vw,40px); height:clamp(32px,3.2vw,40px);
+  border:1px solid var(--rule); border-radius:50%;
+  font-size:.7rem; font-weight:600; letter-spacing:.08em; color:var(--ink);
 }
-.card:hover::before{ transform:scaleX(1); }
-.card__n{ font-size:.66rem; font-weight:700; letter-spacing:.22em; color:var(--pencil); }
-.card h3{ margin:10px 0 8px; font-family:var(--serif); font-weight:400; font-size:1.32rem; letter-spacing:-.01em; color:var(--ink); }
-.card p{ font-size:.87rem; color:var(--ink-2); }
+.card__ico{ display:block; margin:clamp(14px,1.8vw,24px) 0 0; color:var(--ink); }
+.ico-line{ width:22px; height:22px; }
+.card h3{
+  margin:clamp(10px,1.2vw,16px) 0 8px;
+  font-family:var(--serif); font-weight:400; font-size:clamp(1.02rem,1.35vw,1.3rem);
+  letter-spacing:-.01em; color:var(--ink);
+}
+.card p{ font-size:.78rem; line-height:1.85; color:var(--ink-2); }
+.card__more{
+  display:inline-flex; align-items:center; gap:10px;
+  margin-top:auto; padding-top:clamp(12px,1.6vw,20px);
+  font-size:.7rem; font-weight:600; color:var(--ink-2);
+}
+.card__more .cover__arrow{ width:26px; background:var(--ink-2); }
+.card__more .cover__arrow::after{ border-color:var(--ink-2); }
+.card:hover .card__more{ color:var(--ink); }
+.card:hover .card__more .cover__arrow{ width:38px; background:var(--ink); }
+.card:hover .card__more .cover__arrow::after{ border-color:var(--ink); }
+
+/* ---- 服务表上的虚线流：纯装饰，说明这六件事是一条线上的 ---- */
+.flow{ position:absolute; inset:0; z-index:2; pointer-events:none; }
+.flow svg{ display:block; width:100%; height:100%; }
+.flow path{
+  fill:none; stroke:var(--pencil); stroke-width:1; stroke-dasharray:1 6; stroke-linecap:round;
+  opacity:.55; vector-effect:non-scaling-stroke;   /* 拉伸 viewBox 也不会把虚线拉成长条 */
+}
+.flow__dot{
+  position:absolute; left:var(--x); top:var(--y);
+  width:6px; height:6px; margin:-3px 0 0 -3px; border-radius:50%;
+  background:var(--ink); text-decoration:none;
+  box-shadow:0 0 0 3px rgba(237,234,227,.9), 0 0 14px 5px rgba(20,18,15,.28);
+  animation:flowpulse 3.4s var(--ease) infinite;
+}
+.flow__dot:nth-child(3){ animation-delay:1.1s; }
+.flow__dot:nth-child(4){ animation-delay:2.2s; }
+@keyframes flowpulse{
+  0%,100%{ opacity:.35; transform:scale(.8); }
+  50%    { opacity:1;   transform:scale(1.15); }
+}
 
 /* ---------- 流程 ---------- */
-.steps{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:26px; }
-.steps li{ position:relative; padding-top:20px; border-top:1px solid var(--ink); }
-.steps__n{ font-size:.66rem; font-weight:700; letter-spacing:.22em; color:var(--pencil); }
-.steps li h3{ margin:8px 0 7px; font-family:var(--serif); font-weight:400; font-size:1.24rem; color:var(--ink); }
-.steps li p{ font-size:.86rem; color:var(--ink-2); }
+.proc{ margin-top:clamp(44px,6vw,86px); }
+.steps{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(14px,1.8vw,26px); }
+.steps li{
+  /* 竖着排，工期那一行用 margin-top:auto 顶到底 —— 四段文案长短不一，
+     不这样四条分隔线会各在各的高度。 */
+  display:flex; flex-direction:column;
+  position:relative; padding:clamp(16px,1.8vw,24px);
+  border:1px solid var(--rule); border-radius:6px;
+  transition:background .4s var(--ease), border-color .4s var(--ease);
+}
+.steps li:hover{ background:var(--mat); border-color:var(--pencil); }
+/* 卡片之间那个小箭头 */
+.steps li + li::before{
+  content:""; position:absolute; top:50%; left:calc(clamp(14px,1.8vw,26px) / -2 - 4px);
+  width:7px; height:7px; border-top:1px solid var(--rule); border-right:1px solid var(--rule);
+  transform:translateY(-50%) rotate(45deg);
+}
+.steps__top{ display:flex; align-items:center; gap:12px; }
+.steps__n{
+  display:inline-flex; align-items:center; justify-content:center; flex:none;
+  width:clamp(32px,3.2vw,40px); height:clamp(32px,3.2vw,40px);
+  border:1px solid var(--rule); border-radius:50%;
+  font-size:.7rem; font-weight:600; letter-spacing:.08em; color:var(--ink);
+}
+.steps__label{ font-size:.55rem; font-weight:600; letter-spacing:.28em; color:var(--pencil); }
+.steps__ico{ margin-left:auto; color:var(--ink); }
+.steps li h3{
+  margin:clamp(14px,1.6vw,22px) 0 8px;
+  font-family:var(--serif); font-weight:400; font-size:clamp(1.02rem,1.3vw,1.26rem); color:var(--ink);
+}
+.steps li p{ font-size:.78rem; line-height:1.85; color:var(--ink-2); }
+.steps__days{
+  display:block; margin-top:auto; padding-top:clamp(12px,1.6vw,20px);
+  border-top:1px solid var(--rule-2);
+  font-size:.66rem; letter-spacing:.04em; color:var(--pencil);
+}
+
+/* ---- 这一屏底部的客户带 ---- */
+.clients--svc{ margin-top:clamp(44px,6vw,84px); }
+
+@media (max-width:1180px){
+  .steps{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .steps li:nth-child(3)::before{ display:none; }
+}
+@media (max-width:960px){
+  .svc{ grid-template-columns:1fr; gap:clamp(28px,5vw,44px); }
+  .svc__word{ margin-inline:auto; }
+  .svc__title{ text-align:center; }
+  .svc__lead,.svc__desc{ text-align:center; margin-inline:auto; }
+  .svc__stroke{ width:min(70%,260px); margin-inline:auto; }
+  .svc__act{ justify-content:center; }
+  .svc__seal{ display:none; }
+  .cards{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .flow{ display:none; }
+}
+@media (max-width:620px){
+  .cards{ grid-template-columns:1fr; }
+  .steps{ grid-template-columns:1fr; }
+  .steps li + li::before{ display:none; }
+}
 
 /* ---------- 结尾 ---------- */
 .end{ display:grid; grid-template-columns:.66fr 1.34fr; gap:clamp(30px,4.6vw,68px); align-items:center; }
@@ -1192,8 +1398,6 @@ html[data-lang="zh"] .focus__rail span{
 @media (max-width:960px){
   .about{ grid-template-columns:1fr; }
   .end{ grid-template-columns:1fr; }
-  .cards{ grid-template-columns:1fr; }
-  .card + .card{ border-left:0; padding-left:0; }
   .tabs{
     position:fixed; top:66px; left:14px; right:14px; margin:0;
     flex-direction:column; gap:0; padding:0;
@@ -1224,7 +1428,7 @@ html[data-lang="zh"] .focus__rail span{
   .reg{ display:none; }
 }
 @media (max-width:960px){
-  .edge,.pager{ display:none; }
+  .edge,.pager,.chapter{ display:none; }
   .cover__seal{ display:none; }
   .cover__lead{ text-align:center; }
 }
@@ -1234,7 +1438,8 @@ html[data-lang="zh"] .focus__rail span{
   html{ scroll-behavior:auto; }
   .js [data-reveal]{ opacity:1; transform:none; }
   .js .split .ch > i{ transform:none; opacity:1; }
-  .cover__stroke{ transform:scaleX(1); }
+  .cover__stroke,.svc__stroke{ transform:scaleX(1); }
+  .flow__dot{ opacity:.7; transform:none; }
   .bars li i::after{ transform:scaleX(1); }
   .paper{ display:none; }
 }

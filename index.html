@@ -264,7 +264,7 @@
         <span data-i18n="clients.trusted">TRUSTED BY</span>
         <span data-i18n="clients.great">GREAT CLIENTS</span>
       </p>
-      <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee"></div></div>
+      <div class="marquee" aria-hidden="true"><div class="marquee__track" data-marquee id="marquee"></div></div>
     </div>
   </section>
 
@@ -329,28 +329,118 @@
     </div>
   </section>
 
-  <!-- ===== 服务 ===== -->
-  <section class="sheet" id="services">
-    <header class="head">
-      <p class="kicker" data-reveal><b class="kicker__n">03</b><span data-i18n="services.eyebrow">服务</span></p>
-      <h2 class="serif h-lg" data-split><span data-i18n="services.title">我可以帮你做什么</span></h2>
-      <p class="lede" data-reveal data-i18n="services.sub"></p>
-    </header>
-    <div class="cards" id="cards"></div>
-  </section>
+  <!-- ===== 服务与流程 =====================================================
+       一屏讲完「我做什么」和「怎么做」：左边是标题，右边是六格服务表，
+       下面接四步流程，最后压一条客户带。原来的 #process 区块并进来了 ——
+       服务和流程本来就是同一件事的两面，分成两屏读者要滚两次才看懂。
+       ==================================================================== -->
+  <section class="sheet sheet--svc" id="services">
+    <!-- 左边缘：竖排章节名 + 刻度 + 页码 -->
+    <span class="edge edge--l edge--svc" aria-hidden="true">
+      <i class="edge__vert">SERVICES &amp; PROCESS</i>
+      <i class="edge__ticks"></i>
+      <b class="edge__no">003</b>
+    </span>
 
-  <!-- ===== 流程 ===== -->
-  <section class="sheet" id="process">
-    <header class="head">
-      <p class="kicker" data-reveal><span data-i18n="process.eyebrow">合作流程</span></p>
-      <h2 class="serif h-lg" data-split><span data-i18n="process.title">四步，从聊天到上线</span></h2>
-    </header>
-    <ol class="steps">
-      <li data-reveal><span class="steps__n">01</span><h3 data-i18n="process.1.t"></h3><p data-i18n="process.1.d"></p></li>
-      <li data-reveal><span class="steps__n">02</span><h3 data-i18n="process.2.t"></h3><p data-i18n="process.2.d"></p></li>
-      <li data-reveal><span class="steps__n">03</span><h3 data-i18n="process.3.t"></h3><p data-i18n="process.3.d"></p></li>
-      <li data-reveal><span class="steps__n">04</span><h3 data-i18n="process.4.t"></h3><p data-i18n="process.4.d"></p></li>
-    </ol>
+    <!-- 右边缘：章节标记。纯装饰，真正的页码导航在封面那一屏。 -->
+    <aside class="chapter" aria-hidden="true">
+      <b class="chapter__n">03</b>
+      <span class="chapter__name">SERVICES<br>&amp; PROCESS</span>
+      <i class="chapter__dots"><s></s><s></s><s></s><s></s></i>
+    </aside>
+
+    <div class="svc">
+      <!-- 左：标题 -->
+      <div class="svc__intro">
+        <p class="kicker svc__kicker" data-reveal><span data-i18n="svc.kicker">WHAT I DO &amp; HOW WE WORK</span></p>
+
+        <div class="svc__word">
+          <h2 class="serif svc__title">
+            <span class="svc__line" data-split>Services</span>
+            <span class="svc__line" data-split>&amp; Process</span>
+          </h2>
+
+          <!-- 标题下面那道墨迹。和封面同一支笔，滤镜 id 必须另起一个，
+               同名 id 在一页里只会生效第一个。 -->
+          <svg class="svc__stroke" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <filter id="rough-svc"><feTurbulence type="fractalNoise" baseFrequency="0.026 0.5" numOctaves="4" seed="11"/>
+                <feDisplacementMap in="SourceGraphic" scale="16" xChannelSelector="R" yChannelSelector="G"/></filter>
+            </defs>
+            <path d="M14 34 C 180 20, 300 42, 470 30 S 800 18, 986 32 L 984 46 C 780 36, 560 52, 380 44 S 120 50, 16 46 Z" filter="url(#rough-svc)"/>
+          </svg>
+
+          <!-- 圆形字标：WEB DESIGN · STRATEGY · DEVELOP -->
+          <svg class="svc__seal" viewBox="0 0 160 160" aria-hidden="true">
+            <defs><path id="sealring-svc" d="M80,80 m-58,0 a58,58 0 1,1 116,0 a58,58 0 1,1 -116,0"/></defs>
+            <text class="cover__sealtext"><textPath href="#sealring-svc" startOffset="0%">WEB DESIGN &#183; STRATEGY &#183; DEVELOP &#183; </textPath></text>
+            <g class="cover__sealmark">
+              <circle cx="80" cy="80" r="15" fill="none" stroke="currentColor" stroke-width="1"/>
+              <path d="M80 60 V100 M60 80 H100" stroke="currentColor" stroke-width="1"/>
+              <path d="M80 68 l5 12 -5 12 -5 -12 Z" fill="currentColor"/>
+            </g>
+          </svg>
+        </div>
+
+        <h3 class="svc__lead" data-reveal>
+          <span data-i18n="svc.lead1">从策略到上线，</span>
+          <span data-i18n="svc.lead2">为你的业务创造真实价值</span>
+        </h3>
+
+        <p class="svc__desc" data-reveal data-i18n="svc.desc"></p>
+
+        <p class="svc__act" data-reveal>
+          <a class="svc__explore" href="#process" data-magnetic>
+            <span data-i18n="svc.explore">探索流程</span>
+            <i class="cover__arrow" aria-hidden="true"></i>
+          </a>
+          <span class="cover__hint">SCROLL TO PROCESS</span>
+        </p>
+      </div>
+
+      <!-- 右：六项服务 -->
+      <div class="svc__list">
+        <div class="svc__bar">
+          <p class="svc__barlabel">OUR SERVICES</p>
+          <a class="svc__all" href="#contact" data-magnetic>
+            <span data-i18n="svc.all">查看全部服务</span>
+            <i class="cover__arrow" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <!-- 六格服务表。内容由 main.js 按 i18n 生成（三语共用同一套结构）。 -->
+        <div class="cards" id="cards">
+          <span class="flow flow--cards" aria-hidden="true">
+            <svg viewBox="0 0 600 400" preserveAspectRatio="none">
+              <path d="M70 46 C 150 46, 170 32, 250 32"/>
+              <path d="M70 248 C 150 248, 172 234, 252 234"/>
+              <path d="M270 252 C 352 252, 374 238, 452 238"/>
+            </svg>
+            <s class="flow__dot" style="--x:26%;--y:10%"></s>
+            <s class="flow__dot" style="--x:26%;--y:60.5%"></s>
+            <s class="flow__dot" style="--x:60%;--y:61.5%"></s>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 四步流程 ===== -->
+    <div class="proc" id="process">
+      <div class="svc__bar">
+        <p class="svc__barlabel">OUR PROCESS</p>
+        <p class="svc__tag" data-i18n="svc.tag">透明流程 · 合作无忧</p>
+      </div>
+      <ol class="steps" id="steps"></ol>
+    </div>
+
+    <!-- ===== 客户带 ===== -->
+    <div class="clients clients--svc">
+      <p class="clients__label">
+        <span data-i18n="clients.trusted">TRUSTED BY</span>
+        <span data-i18n="clients.great">GREAT CLIENTS</span>
+      </p>
+      <div class="marquee" aria-hidden="true"><div class="marquee__track" data-marquee id="marquee-svc"></div></div>
+    </div>
   </section>
 
   <!-- ===== 联系 ===== -->

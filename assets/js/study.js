@@ -72,6 +72,9 @@
     eyebrow:   $(".focus__eyebrow span"),
     deck:      $("#fx-deck"),
     ticks:     $("#fx-ticks"),
+    now:       $("#fx-now"),
+    fill:      $("#fx-fill"),
+    logos:     $("#fx-logos"),
     auto:      $("#fx-auto"),
     autotext:  $("#fx-autotext"),
     prev:      $("#fx-prev"),
@@ -160,12 +163,21 @@
       var li = document.createElement("li");
       li.innerHTML =
         '<button class="focus__card" type="button">' +
-          "<b>" + pad(i + 1) + "</b>" +
-          '<span class="focus__cardcat"></span>' +
-          '<span class="focus__cardname">' + esc(p.name) + "</span>" +
-          '<span class="focus__cardblurb"></span>' +
-          '<span class="focus__cardgo">' + ARROW + "</span>" +
+          '<span class="focus__cardshot" aria-hidden="true">' +
+            '<img alt="" loading="lazy" decoding="async" src="' + esc(shotSrc(p)) + '">' +
+          "</span>" +
+          '<span class="focus__cardtx">' +
+            "<b>" + pad(i + 1) + "</b>" +
+            '<span class="focus__cardcat"></span>' +
+            '<span class="focus__cardname">' + esc(p.name) + "</span>" +
+            '<span class="focus__cardblurb"></span>' +
+            '<span class="focus__cardgo">' + ARROW + "</span>" +
+          "</span>" +
         "</button>";
+      /* 截图 404（还没截 / 换了域名）就退回占位图，卡片不能开天窗 */
+      (function (img, proj) {
+        img.onerror = function () { img.onerror = null; img.src = fallbackSrc(proj); };
+      })(li.querySelector("img"), p);
       li.querySelector("button").addEventListener("click", function () {
         stopAuto();
         jump(i, i > idx ? 1 : -1);
@@ -217,7 +229,11 @@
     TICKS.forEach(function (b, i) {
       if (i === idx) b.setAttribute("aria-current", "true");
       else b.removeAttribute("aria-current");
+      b.parentNode.classList.toggle("is-current", i === idx);
     });
+    /* 左边的大号数字 + 进度条填充：进度条是「第几个 / 一共几个」，不是滚动进度 */
+    if (el.now)  el.now.textContent = pad(idx + 1);
+    if (el.fill) el.fill.style.width = (((idx + 1) / N) * 100).toFixed(2) + "%";
   }
 
   /* =====================================================================
@@ -294,24 +310,37 @@
     var src = cardEl && cardEl.querySelector(".proj__shot");
     var srcImg = src && src.querySelector("img");
 
+    /* Flip 只是「更好看的那条路」。它抛错也不能把人卡在这一层里：
+       busy 会一直是 true，之后左右切换和关闭全都点不动。
+       所以整段包起来，出事就当场退回没有 Flip 的那条路。 */
+    var flew = false;
     if (canFlip() && src && src.getBoundingClientRect().width > 4) {
-      busy = true;
-      root.classList.add("is-flying");
-      var fly = makeFly(src.getBoundingClientRect(), (srcImg && (srcImg.currentSrc || srcImg.src)) || shotSrc(p));
-      var st = window.Flip.getState(fly);
-      window.Flip.fit(fly, el.screen, { scale: true });
-      window.Flip.from(st, {
-        duration: 0.72, ease: "expo.inOut", scale: true,
-        onComplete: function () {
-          fly.parentNode && fly.parentNode.removeChild(fly);
-          root.classList.remove("is-flying");
-          tilt(true);                            // 先落位再倾斜，顺序不能反
-          busy = false;
-        }
-      });
-      /* 版面不等 Flip 跑完，快到的时候就开始浮现 —— 全等完会显得卡一下 */
-      setTimeout(function () { root.classList.add("is-ready"); }, 240);
-    } else {
+      try {
+        busy = true;
+        root.classList.add("is-flying");
+        var fly = makeFly(src.getBoundingClientRect(), (srcImg && (srcImg.currentSrc || srcImg.src)) || shotSrc(p));
+        var st = window.Flip.getState(fly);
+        window.Flip.fit(fly, el.screen, { scale: true });
+        window.Flip.from(st, {
+          duration: 0.72, ease: "expo.inOut", scale: true,
+          onComplete: function () {
+            fly.parentNode && fly.parentNode.removeChild(fly);
+            root.classList.remove("is-flying");
+            tilt(true);                            // 先落位再倾斜，顺序不能反
+            busy = false;
+          }
+        });
+        flew = true;
+        /* 版面不等 Flip 跑完，快到的时候就开始浮现 —— 全等完会显得卡一下 */
+        setTimeout(function () { root.classList.add("is-ready"); }, 240);
+      } catch (e) {
+        if (fly && fly.parentNode) fly.parentNode.removeChild(fly);
+        root.classList.remove("is-flying");
+        busy = false;
+        flew = false;
+      }
+    }
+    if (!flew) {
       root.classList.add("is-ready");
       revealShot();                              // 没有 Flip 时，揭示就是入场
       tilt(true);
@@ -338,19 +367,27 @@
        拿它当起点，图片会从一个偏掉的位置飞出去。 */
     tilt(false);
     setTimeout(function () {
-      var from = el.screen.getBoundingClientRect();
-      root.classList.add("is-flying");
-      var fly = makeFly(from, el.img.currentSrc || el.img.src);
-      var st = window.Flip.getState(fly);
-      window.Flip.fit(fly, home.shot, { scale: true });
-      window.Flip.from(st, {
-        duration: 0.6, ease: "expo.inOut", scale: true,
-        onComplete: function () {
-          fly.parentNode && fly.parentNode.removeChild(fly);
-          busy = false;
-          finish();
-        }
-      });
+      var fly = null;
+      try {
+        var from = el.screen.getBoundingClientRect();
+        root.classList.add("is-flying");
+        fly = makeFly(from, el.img.currentSrc || el.img.src);
+        var st = window.Flip.getState(fly);
+        window.Flip.fit(fly, home.shot, { scale: true });
+        window.Flip.from(st, {
+          duration: 0.6, ease: "expo.inOut", scale: true,
+          onComplete: function () {
+            fly.parentNode && fly.parentNode.removeChild(fly);
+            busy = false;
+            finish();
+          }
+        });
+      } catch (e) {
+        /* 飞不回去就直接收掉。关不掉的弹层比不好看的关闭严重得多。 */
+        if (fly && fly.parentNode) fly.parentNode.removeChild(fly);
+        busy = false;
+        finish();
+      }
     }, 300);
   }
 
@@ -507,14 +544,60 @@
 
   /* 印章上的字用你自己的品牌名 */
   if (el.stamp) {
-    var brand = ((typeof SITE !== "undefined" && SITE.brand) || "JH STUDIO").toUpperCase();
-    var unit = brand + " · SELECTED WORK · ";
+    /* 印章上是「品牌 · EXPERIENCE」。用 monogram 不用 brand ——
+       brand 是一整句（"Web Design & Development"），绕一圈会自己首尾叠上。 */
+    var mono = ((typeof SITE !== "undefined" && SITE.monogram) || "JH").toUpperCase();
+    var unit = "· " + mono + " STUDIO · EXPERIENCE ";
     /* 圆周约 264px，一个字符约 6px —— 太长会自己首尾重叠，按长度决定重复几遍 */
     el.stamp.textContent = unit.length <= 22 ? unit + unit : unit;
   }
 
+  /* =====================================================================
+     底部客户条
+     ---------------------------------------------------------------------
+     和封面那条同一批 logo（data.js 的 CLIENT_LOGOS），但这里不跑马灯 ——
+     案例页正在读东西，旁边一直在动的东西会抢注意力。改成左右箭头翻。
+     ===================================================================== */
+  function buildLogos() {
+    if (!el.logos) return;
+    var LOGOS = (typeof CLIENT_LOGOS !== "undefined") ? CLIENT_LOGOS : {};
+    el.logos.innerHTML = PROJECTS.map(function (p) {
+      var name = p.client || p.name;
+      var logo = LOGOS[p.slug];
+      if (!logo) return '<span class="marquee__item"><b class="marquee__word">' + esc(name) + "</b></span>";
+      var style = "--brand:" + logo.color + ";--brand-2:" + (logo.accent || logo.color);
+      if (logo.img) {
+        return '<span class="marquee__item" style="' + style + '">' +
+                 '<img class="marquee__img" src="' + esc(logo.img) + '" alt="" ' +
+                 'style="height:' + (logo.h || 22) + 'px" loading="lazy" decoding="async">' +
+                 (logo.suffix ? '<b class="marquee__word">' + logo.suffix + "</b>" : "") +
+               "</span>";
+      }
+      /* logo.mark / logo.word / logo.suffix 是我们自己写的字标（要双色所以带 HTML），
+         不是用户输入 —— 和 main.js 的 renderMarquee 同一条理由，不过 esc()。 */
+      return '<span class="marquee__item" style="' + style + '">' +
+               '<svg class="marquee__mark" viewBox="0 0 20 20" aria-hidden="true" focusable="false">' + logo.mark + "</svg>" +
+               '<b class="marquee__word">' + (logo.word || esc(name)) + "</b>" +
+             "</span>";
+    }).join("");
+  }
+  $$("[data-logo-nav]", root).forEach(function (b) {
+    b.addEventListener("click", function () {
+      if (!el.logos) return;
+      var dir = parseInt(b.getAttribute("data-logo-nav"), 10) || 1;
+      el.logos.scrollBy({ left: dir * Math.max(240, el.logos.clientWidth * 0.6), behavior: "smooth" });
+    });
+  });
+
+  /* 顶栏在案例页是露出来的（设计稿如此）。点导航就是「我要回主页面」，
+     所以先把这一层关掉，再让锚点自己跳 —— 不然人会卡在案例页里出不去。 */
+  $$("#hud .tabs a, #hud .rail__brand, #hud .rail__cta").forEach(function (a) {
+    a.addEventListener("click", function () { if (isOpen) close(); });
+  });
+
   buildDeck();
   buildTicks();
+  buildLogos();
   localizeDeck();
 
   window.JHStudy = {

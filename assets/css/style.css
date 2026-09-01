@@ -884,8 +884,26 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
   overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap; border:0;
 }
 
-.focus{ position:fixed; inset:0; z-index:420; }
+.focus{ position:fixed; inset:0; z-index:420; --hud-h:75px; }
 .focus[hidden]{ display:none; }
+
+/* 案例页打开时顶栏抬到这一层上面 —— 导航、语言、WhatsApp 全程都在。
+   点导航会先关掉案例页再跳（study.js），所以不会卡在这一层里。 */
+body.is-locked .rail--top{
+  z-index:430; background:var(--paper); border-bottom-color:var(--rule);
+  backdrop-filter:none; -webkit-backdrop-filter:none;
+}
+
+/* 面板自己的版面标记（四角十字 + 页码），和主页面同一套 */
+.focus__panel > .reg{ opacity:.5; }
+.focus__panel > .reg--tl,.focus__panel > .reg--tr{ top:calc(var(--hud-h) + 22px); }
+.focus__panel > .reg--tl{ left:18px; } .focus__panel > .reg--tr{ right:18px; }
+.focus__panel > .reg--bl{ bottom:18px; left:18px; } .focus__panel > .reg--br{ bottom:18px; right:18px; }
+.focus__no{
+  position:absolute; left:14px; top:calc(var(--hud-h) + 62px);
+  font-family:var(--sans); font-size:.58rem; font-weight:600; letter-spacing:.22em;
+  color:var(--pencil); pointer-events:none;
+}
 
 .focus__scrim{
   position:absolute; inset:0; background:rgba(20,18,15,.42);
@@ -897,7 +915,8 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
   position:relative; height:100%; overflow-y:auto; overflow-x:hidden;
   display:flex; flex-direction:column;
   background:var(--paper); color:var(--ink);
-  padding:20px clamp(72px,6.4vw,110px) 0 clamp(64px,6vw,104px);   /* 两边各留一条边槽：左边给竖排导轨，右边给「下一个」圆钮 */
+  /* 上边留出顶栏的高度：案例页里顶栏是露着的（设计稿如此），不是被盖住 */
+  padding:calc(var(--hud-h) + 12px) clamp(72px,6.4vw,110px) 0 clamp(64px,6vw,104px);
   opacity:0; transition:opacity .3s var(--ease);
   scrollbar-gutter:stable;
 }
@@ -947,8 +966,8 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 
 /* ---------- 顶栏 ---------- */
 .focus__top{
-  display:grid; grid-template-columns:1fr auto auto; align-items:center;
-  gap:clamp(14px,2vw,28px); padding-bottom:10px; border-bottom:1px solid var(--rule);
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center;
+  gap:clamp(12px,1.6vw,20px); padding-bottom:12px; border-bottom:1px solid var(--rule);
   flex:none;
 }
 .focus__label{
@@ -957,20 +976,22 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 }
 .focus__label i{ flex:1; height:1px; max-width:190px; background:var(--rule); }
 
+/* 「01 / 10」大号数字，下面一行小字 PROJECT INDEX（设计稿是两行叠着的） */
 .focus__idx{
-  display:flex; align-items:baseline; gap:5px; margin:0;
-  font-variant-numeric:tabular-nums; color:var(--pencil);
+  display:flex; flex-direction:column; align-items:flex-end; gap:2px; margin:0;
+  font-variant-numeric:tabular-nums; color:var(--pencil); text-align:right;
 }
-.focus__idx b{ font-family:var(--sans); font-weight:600; font-size:1.25rem; line-height:1; letter-spacing:-.01em; color:var(--ink); }
-.focus__idx i{ font-style:normal; opacity:.55; }
+.focus__idxnum{ display:flex; align-items:baseline; gap:5px; }
+.focus__idx b{ font-family:var(--sans); font-weight:600; font-size:1.5rem; line-height:1; letter-spacing:-.02em; color:var(--ink); }
+.focus__idx i{ font-style:normal; opacity:.5; }
 .focus__idx em{ font-style:normal; font-size:.86rem; }
 .focus__idxname{
-  margin-left:10px; font-size:.6rem; font-weight:600;
+  font-size:.55rem; font-weight:600;
   letter-spacing:.22em; text-transform:uppercase; color:var(--pencil);
 }
 
 .focus__x{
-  width:38px; height:38px; display:grid; place-items:center; cursor:pointer;
+  width:34px; height:34px; display:grid; place-items:center; cursor:pointer;
   border:1px solid var(--rule); border-radius:50%; background:transparent; color:var(--ink);
   transition:background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), transform .3s var(--ease);
 }
@@ -1015,11 +1036,11 @@ html[data-lang="zh"] .focus__rail span{
 .focus__stage{
   flex:1 0 auto;
   display:grid;
-  grid-template-columns:52% 1fr;
+  grid-template-columns:48% 1fr;
   grid-template-areas:"view head" "view read";
-  gap:0 clamp(26px,3.2vw,56px);
+  gap:0 clamp(24px,3vw,52px);
   align-content:center;
-  padding:clamp(10px,1.4vw,20px) 0;
+  padding:clamp(6px,1vw,14px) 0;
 }
 
 .focus__head{ grid-area:head; align-self:end; }
@@ -1030,39 +1051,54 @@ html[data-lang="zh"] .focus__rail span{
 .focus__eyebrow i{ font-style:normal; color:var(--seal); font-size:.8rem; line-height:1; }
 
 .focus__title{
-  font-size:clamp(2.1rem,4.4vw,4rem); line-height:.94; letter-spacing:-.02em;
+  font-size:clamp(2rem,4.1vw,3.7rem); line-height:.94; letter-spacing:-.02em;
   margin:0; text-wrap:balance;
 }
 .focus__sub{
-  display:flex; align-items:center; gap:11px; margin:14px 0 0;
+  display:flex; align-items:center; gap:11px; margin:12px 0 0;
   font-size:.78rem; letter-spacing:.03em; color:var(--ink-2);
 }
 .focus__sub::before{ content:""; flex:none; width:26px; height:1px; background:var(--ink); }
 
 /* ---------- 设备图 ---------- */
 .focus__viewport{
-  grid-area:view; align-self:center;
+  grid-area:view; align-self:center; position:relative;
   display:grid; place-items:center;
-  perspective:1600px; perspective-origin:60% 50%;
+  perspective:1500px; perspective-origin:78% 50%;
   padding:4px 0;
+}
+/* 卡片后面那团雾。纯装饰，让 3D 卡片有个立足的地方，不像浮在白纸上。 */
+.focus__viewport::before{
+  content:""; position:absolute; z-index:0; left:-14%; top:-10%; width:86%; height:120%;
+  background:
+    radial-gradient(58% 42% at 46% 44%, rgba(20,18,15,.10), rgba(20,18,15,0) 72%),
+    radial-gradient(34% 26% at 22% 62%, rgba(20,18,15,.07), rgba(20,18,15,0) 70%);
+  filter:blur(12px); pointer-events:none;
 }
 /* 位移（左右切换）和倾斜（3D）必须分两层：
    写在同一个元素上，后写的 transform 会把前一个整条覆盖掉。 */
 .focus__slide{
-  width:100%; max-width:min(100%,620px); transform-style:preserve-3d;
+  position:relative; z-index:1;
+  width:100%; max-width:min(100%,600px); transform-style:preserve-3d;
   transition:transform .62s var(--ease2), opacity .38s var(--ease);
 }
+/* 白框整块转过去：左边缘迎着人，右边缘往里退（设计稿的那一下就是这个方向）。
+   转的是 .focus__device —— 位移在外面那层，两个 transform 不能写一起。 */
 .focus__device{
   transform-style:preserve-3d;
   transform:rotateY(0deg) rotateX(0deg) rotateZ(0deg);
-  transition:transform .9s var(--ease2);
+  transition:transform .9s var(--ease2), box-shadow .9s var(--ease2);
+  padding:14px 14px 0; border-radius:16px; background:var(--mat);
+  box-shadow:0 2px 6px rgba(20,18,15,.06), 0 40px 60px -46px rgba(20,18,15,.5);
 }
-.focus__device.is-tilted{ transform:rotateY(-11deg) rotateX(5deg) rotateZ(-1.1deg); }
+.focus__device.is-tilted{
+  transform:rotateY(19deg) rotateX(3.6deg) rotateZ(1.8deg);
+  box-shadow:0 3px 8px rgba(20,18,15,.08), 0 70px 90px -46px rgba(20,18,15,.66);
+}
 
 .focus__screen{
   position:relative; aspect-ratio:16/10; overflow:hidden;
-  padding:11px; background:var(--mat); border:1px solid var(--rule);
-  box-shadow:0 2px 5px rgba(20,18,15,.07), 0 48px 70px -40px rgba(20,18,15,.62);
+  padding:0; background:var(--paper-2); border-radius:9px;
   transition:opacity .2s linear;
 }
 .focus__screen img{
@@ -1080,9 +1116,10 @@ html[data-lang="zh"] .focus__rail span{
   to{ clip-path:inset(0 0 0 0); transform:scale(1); }
 }
 
+/* 说明在白框「里面」：设计稿上「01 The Luma Club」是印在卡片下沿的，
+   不是卡片外面另起一行。 */
 .focus__caption{
-  display:flex; align-items:center; gap:12px; margin:12px 0 0; padding-top:11px;
-  border-top:1px solid var(--rule);
+  display:flex; align-items:center; gap:12px; margin:0; padding:13px 4px 15px;
   font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2);
 }
 .focus__caption b{
@@ -1091,8 +1128,8 @@ html[data-lang="zh"] .focus__rail span{
 }
 
 /* ---------- 右侧正文 ---------- */
-.focus__read{ grid-area:read; position:relative; padding-top:clamp(18px,2vw,28px); }
-.focus__lede{ margin:0; max-width:48ch; font-size:.88rem; line-height:1.66; color:var(--ink-2); }
+.focus__read{ grid-area:read; position:relative; padding-top:clamp(14px,1.6vw,22px); }
+.focus__lede{ margin:0; max-width:47ch; font-size:.82rem; line-height:1.62; color:var(--ink-2); }
 
 .focus__cols{
   display:grid; grid-template-columns:repeat(3,1fr); gap:0 clamp(14px,1.5vw,22px);
@@ -1103,13 +1140,27 @@ html[data-lang="zh"] .focus__rail span{
 .focus__ico{ display:block; color:var(--pencil); }
 .focus__ico svg{ width:22px; height:22px; }
 .focus__col h3{
+  display:flex; align-items:baseline; gap:6px;
   margin:11px 0 8px; font-size:.68rem; font-weight:700;
   letter-spacing:.16em; text-transform:uppercase; color:var(--ink);
 }
-.focus__col p{ margin:0; font-size:.765rem; line-height:1.58; color:var(--ink-2); }
+/* 双语标签的后半截（挑战 / Challenge）。英文版本身就是那个词，重复一次没意义，
+   所以只在中 / 马来文下出现。 */
+.focus__col h3 i,.focus__col h3 em,
+.focus__svclabel i,.focus__svclabel em{
+  font-style:normal; font-weight:600; color:var(--pencil);
+  text-transform:none; letter-spacing:.06em;
+}
+.focus__col h3 i,.focus__svclabel i{ opacity:.55; }
+html[data-lang="en"] .focus__col h3 i,
+html[data-lang="en"] .focus__col h3 em,
+html[data-lang="en"] .focus__svclabel i,
+html[data-lang="en"] .focus__svclabel em{ display:none; }
+.focus__col p{ margin:0; font-size:.72rem; line-height:1.52; color:var(--ink-2); }
 
 .focus__svc{ margin-top:clamp(13px,1.6vw,18px); padding-right:clamp(88px,7.4vw,108px); }  /* 右边留给印章，不然窄桌面上会压住最后一个标签 */
 .focus__svclabel{
+  display:flex; align-items:baseline; gap:6px;
   margin:0 0 10px; font-size:.6rem; font-weight:600;
   letter-spacing:.22em; text-transform:uppercase; color:var(--pencil);
 }
@@ -1167,112 +1218,184 @@ html[data-lang="zh"] .focus__rail span{
   letter-spacing:1.5px; fill:currentColor;
 }
 @keyframes stampspin{ to{ transform:rotate(360deg); } }
+/* 圆心那颗四角星（设计稿里是星，不是圆点） */
 .focus__stampdot{
-  position:absolute; width:7px; height:7px; border-radius:50%; background:var(--seal);
+  position:absolute; width:13px; height:13px; color:var(--ink);
+  background:currentColor;
+  -webkit-mask:radial-gradient(circle at 0 0, transparent 68%, #000 69%) 0 0/50% 50% no-repeat,
+        radial-gradient(circle at 100% 0, transparent 68%, #000 69%) 100% 0/50% 50% no-repeat,
+        radial-gradient(circle at 0 100%, transparent 68%, #000 69%) 0 100%/50% 50% no-repeat,
+        radial-gradient(circle at 100% 100%, transparent 68%, #000 69%) 100% 100%/50% 50% no-repeat;
+  mask:radial-gradient(circle at 0 0, transparent 68%, #000 69%) 0 0/50% 50% no-repeat,
+       radial-gradient(circle at 100% 0, transparent 68%, #000 69%) 100% 0/50% 50% no-repeat,
+       radial-gradient(circle at 0 100%, transparent 68%, #000 69%) 0 100%/50% 50% no-repeat,
+       radial-gradient(circle at 100% 100%, transparent 68%, #000 69%) 100% 100%/50% 50% no-repeat;
 }
 
 /* ---------- 底部：其他作品 ---------- */
-.focus__deck{ flex:none; border-top:1px solid var(--rule); padding:11px 0 0; }
+.focus__deck{ position:relative; flex:none; border-top:1px solid var(--rule); padding:11px 0 0; }
 .focus__decklabel{
-  display:flex; align-items:center; gap:12px; margin:0 0 9px;
+  display:flex; align-items:center; gap:12px; margin:0 0 10px;
   font-size:.6rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--pencil);
 }
 .focus__decklabel i{ flex:1; height:1px; background:var(--rule-2); }
 
 .focus__list{
-  display:flex; gap:0; margin:0; padding:0 0 4px; list-style:none;
-  overflow-x:auto; scroll-snap-type:x proximity; scrollbar-width:thin;
+  display:flex; gap:12px; margin:0; padding:0 0 6px; list-style:none;
+  overflow-x:auto; scroll-snap-type:x proximity; scrollbar-width:none;
 }
-.focus__list li{ flex:0 0 clamp(196px,20vw,248px); scroll-snap-align:start; }
-.focus__list li + li{ border-left:1px solid var(--rule-2); }
+.focus__list::-webkit-scrollbar{ display:none; }
+.focus__list li{ flex:0 0 clamp(238px,23vw,330px); scroll-snap-align:start; }
 /* 当前这一个不出现在「其他作品」里。order 由 JS 写，让后面的项目排在前面。 */
 .focus__list li.is-current{ display:none; }
 
+/* 一张卡 = 一整张截图 + 压在上面的字。设计稿上这一排是缩略图卡，不是文字列。 */
 .focus__card{
-  display:block; width:100%; text-align:left; cursor:pointer;
-  padding:2px clamp(14px,1.4vw,20px) 6px; background:transparent; border:0; color:inherit;
-  font-family:inherit;
+  position:relative; display:block; width:100%; height:clamp(120px,11.2vw,152px);
+  text-align:left; cursor:pointer; overflow:hidden;
+  padding:0; background:var(--paper-2); border:1px solid var(--rule); border-radius:12px;
+  color:inherit; font-family:inherit;
+  box-shadow:0 1px 2px rgba(20,18,15,.05), 0 18px 26px -22px rgba(20,18,15,.5);
+  transition:transform .4s var(--ease2), box-shadow .4s var(--ease2), border-color .3s var(--ease);
+}
+.focus__cardshot{ position:absolute; inset:0; }
+.focus__cardshot img{ width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
+/* 左边压一层纸色，字才读得出来 —— 深色截图和浅色截图共用同一套文字颜色。 */
+.focus__cardshot::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(97deg,
+    rgba(237,234,227,.97) 0%, rgba(237,234,227,.9) 38%,
+    rgba(237,234,227,.42) 64%, rgba(237,234,227,0) 96%);
+}
+.focus__cardtx{
+  position:relative; z-index:2; display:block;
+  padding:11px clamp(12px,1.1vw,16px) 10px;
 }
 .focus__card b{
-  display:block; font-family:var(--sans); font-weight:600; font-size:.95rem; line-height:1;
-  color:var(--pencil); font-variant-numeric:tabular-nums;
-  transition:color .3s var(--ease);
+  display:block; font-family:var(--sans); font-weight:600; font-size:.82rem; line-height:1;
+  color:var(--ink); font-variant-numeric:tabular-nums;
 }
 .focus__cardcat{
-  display:block; margin-top:7px; font-size:.55rem; font-weight:600;
+  display:block; margin-top:8px; font-size:.53rem; font-weight:600;
   letter-spacing:.2em; text-transform:uppercase; color:var(--pencil);
 }
 .focus__cardname{
-  display:block; margin-top:5px; font-size:.86rem; font-weight:600; color:var(--ink);
+  display:block; margin-top:3px; max-width:64%;
+  font-family:var(--serif); font-size:1rem; font-weight:400; line-height:1.15; color:var(--ink);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 .focus__cardblurb{
-  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
-  margin-top:6px; font-size:.7rem; line-height:1.5; color:var(--ink-2);
+  display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;
+  margin-top:5px; max-width:62%; font-size:.66rem; line-height:1.5; color:var(--ink-2);
 }
 .focus__cardgo{
-  display:grid; place-items:center; width:28px; height:28px; margin-top:10px;
-  border:1px solid var(--rule); border-radius:50%; color:var(--ink);
+  display:grid; place-items:center; width:26px; height:26px; margin-top:8px;
+  border:1px solid var(--rule); border-radius:50%; color:var(--ink); background:rgba(237,234,227,.7);
   transition:background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
 }
 .focus__cardgo svg{ width:13px; height:13px; }
-.focus__card:hover b{ color:var(--ink); }
+.focus__card:hover{ transform:translateY(-3px); border-color:var(--ink); box-shadow:0 2px 4px rgba(20,18,15,.07), 0 26px 34px -22px rgba(20,18,15,.6); }
 .focus__card:hover .focus__cardgo{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
 
 /* ---------- 进度条 + 自动播放 ---------- */
 .focus__bar{
-  flex:none; display:flex; align-items:center; justify-content:space-between; gap:20px;
-  border-top:1px solid var(--rule); padding:9px 0 13px;
+  flex:none; display:flex; align-items:center; gap:clamp(12px,1.4vw,20px);
+  padding:10px 0 11px;
 }
-.focus__ticks{ display:flex; align-items:center; gap:0; margin:0; padding:0; list-style:none; flex-wrap:wrap; }
+/* 左边的大号数字就是「现在第几个」 */
+.focus__now{
+  font-family:var(--sans); font-weight:600; font-size:1.45rem; line-height:1; letter-spacing:-.02em;
+  color:var(--ink); font-variant-numeric:tabular-nums; flex:none;
+}
+.focus__track{ position:relative; flex:0 1 clamp(120px,26vw,380px); height:1px; background:var(--rule); }
+.focus__track i{
+  position:absolute; left:0; top:-1px; height:3px; width:10%; background:var(--ink);
+  transition:width .6s var(--ease2);
+}
+.focus__ticks{
+  flex:1 1 auto; display:flex; align-items:center; justify-content:space-between;
+  gap:0; margin:0; padding:0 clamp(8px,1.4vw,20px); list-style:none;
+}
 .focus__tick{
-  display:flex; align-items:center; gap:8px; padding:4px 0; cursor:pointer;
+  display:block; padding:4px 2px; cursor:pointer;
   background:transparent; border:0; color:var(--pencil); font-family:inherit;
-  font-size:.62rem; font-weight:600; letter-spacing:.1em; font-variant-numeric:tabular-nums;
+  font-size:.66rem; font-weight:600; letter-spacing:.06em; font-variant-numeric:tabular-nums;
   transition:color .3s var(--ease);
 }
-.focus__tick::after{
-  content:""; display:block; width:16px; height:1px; margin:0 9px; background:var(--rule);
-  transition:width .5s var(--ease2), background .3s var(--ease);
-}
-.focus__ticks li:last-child .focus__tick::after{ display:none; }
+.focus__ticks li.is-current{ display:none; }   /* 当前这个已经大号写在左边了 */
 .focus__tick:hover{ color:var(--ink); }
-.focus__tick[aria-current="true"]{ color:var(--ink); }
-.focus__tick[aria-current="true"]::after{ width:34px; background:var(--ink); }
 
 .focus__auto{
-  display:inline-flex; align-items:center; gap:9px; padding:7px 13px; cursor:pointer;
-  border:1px solid var(--rule); background:transparent; color:var(--ink-2); font-family:inherit;
-  font-size:.6rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; white-space:nowrap;
-  transition:border-color .3s var(--ease), color .3s var(--ease);
+  flex:none; display:inline-flex; align-items:center; gap:12px; padding:0; cursor:pointer;
+  border:0; background:transparent; color:var(--ink-2); font-family:inherit;
+  font-size:.62rem; font-weight:600; letter-spacing:.14em; white-space:nowrap;
+  transition:color .3s var(--ease);
 }
-.focus__auto:hover{ border-color:var(--ink); color:var(--ink); }
-/* ▶ 用边框画的三角，不多一个 svg */
+.focus__auto:hover{ color:var(--ink); }
+/* ▶ 用边框画的三角，装在一个圆里 */
 .focus__autoico{
-  width:0; height:0; border-style:solid; border-width:5px 0 5px 8px;
-  border-color:transparent transparent transparent currentColor;
+  position:relative; display:grid; place-items:center; width:34px; height:34px;
+  border:1px solid var(--rule); border-radius:50%; color:var(--ink);
+  transition:background .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease);
 }
-.focus__auto[aria-pressed="true"]{ border-color:var(--ink); color:var(--ink); }
+.focus__autoico::before{
+  content:""; width:0; height:0; margin-left:2px; border-style:solid;
+  border-width:5px 0 5px 8px; border-color:transparent transparent transparent currentColor;
+}
+.focus__auto:hover .focus__autoico{ border-color:var(--ink); }
+.focus__auto[aria-pressed="true"]{ color:var(--ink); }
+.focus__auto[aria-pressed="true"] .focus__autoico{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
 /* 播放中变成 ❚❚ */
-.focus__auto[aria-pressed="true"] .focus__autoico{
-  width:8px; height:10px; border:0;
+.focus__auto[aria-pressed="true"] .focus__autoico::before{
+  width:8px; height:10px; margin-left:0; border:0;
   border-left:3px solid currentColor; border-right:3px solid currentColor;
 }
 
+/* ---------- 底部客户条 ---------- */
+.focus__clients{
+  flex:none; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center;
+  border-top:1px solid var(--rule);
+}
+.focus__clients .clients__label{
+  margin:0; padding:11px clamp(14px,2vw,30px) 11px 0; border-right:1px solid var(--rule);
+  font-size:.54rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase;
+  line-height:1.7; color:var(--ink-2); white-space:nowrap;
+}
+.focus__clients .clients__label span{ display:block; }
+.focus__logos{
+  display:flex; align-items:center; gap:0; overflow-x:auto; scrollbar-width:none;
+  padding:8px clamp(10px,1.6vw,24px); scroll-behavior:smooth;
+  -webkit-mask-image:linear-gradient(90deg,#000 0,#000 92%,transparent);
+  mask-image:linear-gradient(90deg,#000 0,#000 92%,transparent);
+}
+.focus__logos::-webkit-scrollbar{ display:none; }
+/* flex 子项默认可以被压缩：logo 是图，压扁就成了一条线 */
+.focus__logos .marquee__item{ flex:none; }
+.focus__logonav{ display:flex; gap:6px; padding-left:10px; }
+.focus__logobtn{
+  width:26px; height:26px; display:grid; place-items:center; cursor:pointer;
+  border:1px solid var(--rule); border-radius:50%; background:transparent; color:var(--ink-2);
+  transition:background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+}
+.focus__logobtn svg{ width:13px; height:13px; }
+.focus__logobtn:hover{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
+
 /* ---------- 上一个 / 下一个 ---------- */
+/* 圆钮和卡列同一条水平线（设计稿如此）：所以它们住在 .focus__deck 里，
+   定位参照的是卡列这一条，不是整块面板。 */
 .focus__foot{ display:contents; }
 .focus__nav{
-  position:absolute; top:46%; z-index:3;
-  width:50px; height:50px; display:grid; place-items:center; cursor:pointer;
+  position:absolute; top:calc(50% + 12px); transform:translateY(-50%); z-index:3;
+  width:46px; height:46px; display:grid; place-items:center; cursor:pointer;
   border:1px solid var(--rule); border-radius:50%; background:var(--paper); color:var(--ink);
   transition:background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), transform .35s var(--ease2);
 }
-.focus__nav svg{ width:19px; height:19px; }
-.focus__nav--prev{ left:clamp(34px,3.2vw,48px); }
-.focus__nav--next{ right:clamp(10px,1.4vw,20px); }
+.focus__nav svg{ width:18px; height:18px; }
+.focus__nav--prev{ left:calc(clamp(40px,3.8vw,58px) * -1); }
+.focus__nav--next{ right:calc(clamp(34px,3.2vw,50px) * -1); }
 .focus__nav:hover{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
-.focus__nav--prev:hover{ transform:translateX(-4px); }
-.focus__nav--next:hover{ transform:translateX(4px); }
+.focus__nav--prev:hover{ transform:translate(-4px,-50%); }
+.focus__nav--next:hover{ transform:translate(4px,-50%); }
 .focus__navname{ display:none; }
 
 .focus__back{ display:none; }
@@ -1310,9 +1433,15 @@ html[data-lang="zh"] .focus__rail span{
    手机版（MOTION.md 3.3）—— 独立顺序，不是桌面缩小版
    ========================================================================== */
 @media (max-width:960px){
-  .focus__panel{ padding:14px 18px 34px; }
+  /* 顶栏在案例页是露着的，上边必须让开它，不然「返回作品」被压在下面 */
+  .focus{ --hud-h:69px; }
+  .focus__panel{ padding:calc(var(--hud-h) + 8px) 18px 34px; }
+  .focus__panel > .reg,.focus__no{ display:none; }
 
-  .focus__rail,.focus__deck,.focus__bar,.focus__x,.focus__stamp{ display:none; }
+  .focus__rail,.focus__bar,.focus__x,.focus__stamp,
+  .focus__decklabel,.focus__list,.focus__clients{ display:none; }
+  /* 卡列本身不出现，但它里面的「上一个 / 下一个」要留着（3.3） */
+  .focus__deck{ border-top:0; padding:0; }
   .focus__svc{ padding-right:0; }   /* 手机没有印章，不用留位 */
 
   .focus__back{
@@ -1339,7 +1468,10 @@ html[data-lang="zh"] .focus__rail span{
   .focus__viewport{ perspective:none; padding:20px 0 0; }
   .focus__device{ transform:none !important; }
   .focus__slide{ transform:none !important; opacity:1 !important; transition:opacity .3s var(--ease); }
-  .focus__screen{ box-shadow:0 2px 5px rgba(20,18,15,.07), 0 26px 40px -26px rgba(20,18,15,.5); padding:8px; }
+  .focus__screen{ padding:0; }
+  .focus__device{ padding:10px 10px 0; border-radius:13px;
+    box-shadow:0 2px 5px rgba(20,18,15,.07), 0 26px 40px -26px rgba(20,18,15,.5); }
+  .focus__caption{ padding:11px 3px 12px; }
 
   .focus__read{ padding-top:22px; }
   .focus__cols{ grid-template-columns:1fr; gap:0; }
@@ -1357,11 +1489,12 @@ html[data-lang="zh"] .focus__rail span{
     margin-top:26px; padding-top:16px; border-top:1px solid var(--rule);
   }
   .focus__nav{
-    position:static; width:auto; height:auto; border-radius:0; border:0;
+    position:static; transform:none; width:auto; height:auto; border-radius:0; border:0;
     display:flex; align-items:center; gap:9px; padding:8px 2px; max-width:48%;
     background:transparent;
   }
   .focus__nav:hover{ background:transparent; color:var(--ink); }
+  .focus__nav--prev,.focus__nav--next{ left:auto; right:auto; }
   .focus__nav--prev:hover,.focus__nav--next:hover{ transform:none; }
   .focus__nav--next{ text-align:right; }
   .focus__navname{

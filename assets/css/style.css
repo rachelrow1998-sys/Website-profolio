@@ -85,6 +85,9 @@ body{
 body.is-locked,body.boot-on{ overflow:hidden; }
 
 img{ max-width:100%; display:block; }
+/* 作者样式表里的 img{display:block} 会盖掉浏览器默认的 [hidden]{display:none}，
+   hidden 属性在 img 上就失效了（#hero-photo 曾因此铺满整行显示出来）。这里补回来。 */
+[hidden]{ display:none !important; }
 a{ color:inherit; text-decoration:none; }
 ul,ol{ margin:0; padding:0; list-style:none; }
 p{ margin:0; }
@@ -546,7 +549,16 @@ html.smooth .scroller{ position:fixed; top:0; left:0; width:100%; }
 .empty{ padding:34px 0; color:var(--pencil); }
 
 /* ---------- 关于 ---------- */
-.about{ display:grid; grid-template-columns:minmax(0,1fr); align-items:start; }
+.about{ display:grid; grid-template-columns:.72fr 1.28fr; gap:clamp(28px,4.4vw,64px); align-items:start; }
+.about__photo{ margin:0; }
+.about__photo img{
+  width:100%; aspect-ratio:4/5; object-fit:cover; object-position:top center;
+  padding:9px; background:var(--mat); border:1px solid var(--rule);
+  box-shadow:0 1px 2px rgba(20,18,15,.06), 0 14px 28px -18px rgba(20,18,15,.35);
+}
+.about__photo figcaption{
+  margin-top:12px; font-size:.64rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--pencil);
+}
 .about__text{ display:flex; flex-direction:column; gap:18px; }
 .strip{ padding-top:20px; border-top:1px solid var(--rule); }
 .cols{ display:grid; grid-template-columns:1fr 1fr; gap:28px; padding-top:20px; border-top:1px solid var(--rule); }
@@ -1164,6 +1176,7 @@ html[data-lang="zh"] .focus__rail span{
 
 /* ---------- 响应式 ---------- */
 @media (max-width:960px){
+  .about{ grid-template-columns:1fr; }
   .end{ grid-template-columns:1fr; }
   .cards{ grid-template-columns:1fr; }
   .card + .card{ border-left:0; padding-left:0; }

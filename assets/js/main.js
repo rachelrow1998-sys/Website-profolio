@@ -737,7 +737,7 @@
     var fb   = $("#footer-brand"); if (fb) fb.textContent = SITE.brand || "";
     var yr   = $("#year");         if (yr) yr.textContent = new Date().getFullYear();
 
-    setPhoto($("#hero-photo"));
+    setPhoto($("#profile-photo"));
     setPhoto($("#contact-photo"));
 
     renderMarquee();

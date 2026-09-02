@@ -10,7 +10,7 @@
   position:absolute;
   right:clamp(8px,3vw,64px);
   bottom:0;
-  z-index:3;
+  z-index:6;                   /* above .hero-stage (z-index:3) */
   width:clamp(150px,15vw,240px);
   aspect-ratio:1024/1536;      /* frame canvas ratio — keeps the box fixed */
   pointer-events:none;         /* never steals hover from the cover content */
@@ -71,4 +71,15 @@
 
 @media (prefers-reduced-motion:reduce){
   .mascot-test__frame{ transition:none; }
+}
+
+/* Shown only while the real PNGs are missing and the SVG stand-ins are used. */
+.mascot-test__note{
+  display:block;
+  margin-top:3px;
+  font-style:normal;
+  font-size:.92em;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#b4472c;
 }

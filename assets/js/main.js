@@ -485,8 +485,41 @@
     if (!$(hash)) return;
     e.preventDefault();
     lockNav(hash);          // 底线先落到目标标签，别跟着中途经过的区块乱跑
+    pushSection(hash);      // 让「返回」能退回上一个区块，而不是直接退出网站
     goTo(hash);
     closeNav();
+  });
+
+  /* ======================================================================
+     5b. 站内导航接上浏览器的「返回」
+     ----------------------------------------------------------------------
+     这是一页式网站，但点导航在用户眼里就是「换了一页」。
+     以前锚点点击 preventDefault 之后地址栏一动不动，历史里永远只有一条，
+     于是人在「作品」里按返回 —— 直接退出整个网站回到浏览器上一页。
+     现在每次点导航压一条历史，返回就是回到上一个区块。
+     pushState 在 file:// 下可能抛错，抛了就当没有这功能，其余照旧。
+     ====================================================================== */
+  var histOK = true;
+  /* 滚动位置我们自己管：这个站的滚动是 fixed 容器 + 缓动接管的，
+     浏览器那套「返回时自动还原滚动条」算的是另一套坐标，
+     会在我们滚过去之后再盖一次，结果返回停在上一个区块。 */
+  try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+
+  function pushSection(hash) {
+    if (!histOK) return;
+    if (location.hash === hash) return;            // 同一个区块不叠历史
+    try { history.pushState({ jhSec: hash }, "", hash); }
+    catch (e) { histOK = false; }
+  }
+
+  window.addEventListener("popstate", function () {
+    /* 案例详情那一层自己管自己的历史（study.js）。它开着的时候这次返回是「关案例」，
+       主页面不要跟着再滚一次。 */
+    if (window.JHStudy && window.JHStudy.isOpen && window.JHStudy.isOpen()) return;
+    var hash = location.hash;
+    if (hash && hash.indexOf("#case-") === 0) return;   // 案例的地址，交给 study.js
+    if (hash && hash.length > 1 && $(hash)) { lockNav(hash); goTo(hash); }
+    else window.scrollTo(0, 0);                          // 回到最开始那一条：封面
   });
 
   /* ======================================================================

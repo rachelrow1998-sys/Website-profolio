@@ -1,0 +1,74 @@
+/* =========================================================================
+   TEMPORARY — mascot animation test
+   Delete this file, assets/js/mascot-test.js, assets/img/mascot/ and the
+   MASCOT-TEST block in index.html to remove the whole experiment.
+   Nothing here touches existing layout: the mascot is absolutely positioned
+   inside .sheet--cover and is pointer-events:none.
+   ========================================================================= */
+
+.mascot-test{
+  position:absolute;
+  right:clamp(8px,3vw,64px);
+  bottom:0;
+  z-index:3;
+  width:clamp(150px,15vw,240px);
+  aspect-ratio:1024/1536;      /* frame canvas ratio — keeps the box fixed */
+  pointer-events:none;         /* never steals hover from the cover content */
+  user-select:none;
+}
+
+/* Both frames occupy the exact same box, so switching cannot move,
+   resize or jump the character. */
+.mascot-test__frame{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:bottom center;
+  opacity:0;
+  transition:opacity 300ms ease-in-out;
+  will-change:opacity;
+}
+
+/* Default state: idle frame visible, hover frame stacked underneath at 0. */
+.mascot-test__frame--idle{ opacity:1; }
+
+/* Hover state: crossfade — both transitions run at once and are reversible
+   mid-flight because we only ever animate opacity. */
+.mascot-test.is-looking .mascot-test__frame--idle{ opacity:0; }
+.mascot-test.is-looking .mascot-test__frame--look{ opacity:1; }
+
+/* Temporary visible test label */
+.mascot-test__label{
+  position:absolute;
+  left:50%;
+  top:-2.2em;
+  transform:translateX(-50%);
+  max-width:min(78vw,420px);
+  padding:4px 9px;
+  border:1px solid var(--rule,#ddd);
+  border-radius:4px;
+  background:var(--paper,#fff);
+  font-size:.6rem;
+  line-height:1.4;
+  letter-spacing:.04em;
+  text-align:center;
+  color:var(--ink-2,#555);
+  white-space:normal;
+  pointer-events:none;
+}
+.mascot-test__label b{
+  font-weight:700;
+  color:var(--ink,#111);
+}
+
+/* Below the desktop breakpoint the cover is a different composition —
+   keep the test out of the way rather than altering the mobile hero. */
+@media (max-width:900px){
+  .mascot-test{ display:none; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .mascot-test__frame{ transition:none; }
+}
